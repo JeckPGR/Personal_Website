@@ -3,14 +3,16 @@ import { useCallback, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import SplashScreen from './components/SplashScreen'
-import { SmoothCursor } from './components/ui/smooth-cursor'
 import About from './pages/About'
+import Certification from './pages/Certification'
 import Education from './pages/Education'
 import Home from './pages/Home'
+import Project from './pages/Project'
 import TechStack from './pages/TechStack'
 import WhatIDo from './pages/WhatIDo'
 import Work from './pages/Work'
 import WorkDetail from './pages/WorkDetail'
+import ChatWidget from './components/ui/ChatWidget'
 
 function PortfolioRoutes() {
   return (
@@ -21,9 +23,11 @@ function PortfolioRoutes() {
         <Route path="about" element={<About />} />
         <Route path="what-i-do" element={<WhatIDo />} />
         <Route path="work" element={<Work />} />
+        <Route path="project" element={<Project />} />
         <Route path="work/:slug" element={<WorkDetail />} />
         <Route path="tech-stack" element={<TechStack />} />
         <Route path="education" element={<Education />} />
+        <Route path="certification" element={<Certification />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
@@ -41,7 +45,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <SmoothCursor />
       <motion.div
         initial={false}
         animate={{ opacity: splashDone ? 1 : 0 }}
@@ -52,6 +55,8 @@ function App() {
       <AnimatePresence>
         {!splashDone ? <SplashScreen onDone={handleSplashDone} /> : null}
       </AnimatePresence>
+
+      <ChatWidget/>
     </BrowserRouter>
   )
 }

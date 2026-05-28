@@ -12,7 +12,6 @@ import {
   TbToolsKitchen2,
   TbX,
 } from 'react-icons/tb'
-import { Link } from 'react-router-dom'
 
 type Experience = {
   company: string
@@ -169,20 +168,13 @@ function Work() {
       transition={{ duration: 0.3 }}
       className="min-w-0"
     >
-      <Link
-        to="/"
-        className="inline-flex w-fit items-center rounded-lg border border-[rgba(201,191,255,0.12)] bg-surface px-3 py-2 text-xs font-medium text-text-secondary transition duration-200 hover:border-[rgba(150,100,255,0.35)] hover:text-accent-lavender"
-      >
-        &larr; Back
-      </Link>
-
       <section className="relative mt-5 overflow-hidden rounded-[20px] border border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.018)] px-5 py-7 md:px-8 md:py-10 lg:px-10">
-        <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(rgba(160,130,255,0.38)_1.2px,transparent_1.2px)] [background-size:20px_20px]" />
+        <div className="pointer-events-none absolute inset-0 opacity-25 bg-[radial-gradient(rgba(160,130,255,0.38)_1.2px,transparent_1.2px)] bg-size-[20px_20px]" />
         <div className="pointer-events-none absolute -right-16 top-8 font-heading text-[8rem] font-bold leading-none text-accent-lavender/[0.035] md:text-[12rem] lg:text-[16rem]">
           WORK
         </div>
 
-        <div className="pointer-events-none absolute bottom-8 left-[30px] top-8 z-0 md:left-[18%] lg:left-[18%]">
+        <div className="pointer-events-none absolute bottom-8 left-7.5 top-8 z-0 md:left-[18%] lg:left-[18%]">
           <div className="work-stair-rail h-full w-px bg-[linear-gradient(180deg,transparent,rgba(124,80,224,0.62)_10%,rgba(201,191,255,0.18)_88%,transparent)]" />
         </div>
 
@@ -207,10 +199,10 @@ function Work() {
               }}
               type="button"
               onClick={() => setSelectedExperience(item)}
-              className={`group relative w-full max-w-[360px] text-left md:w-[300px] lg:w-[320px] ${stairOffsets[index]}`}
+              className={`group relative w-full max-w-90 text-left md:w-75 lg:w-[320px] ${stairOffsets[index]}`}
             >
               <span
-                className="absolute -left-[48px] top-[33px] z-20 h-3 w-3 rounded-full border bg-base md:-left-8"
+                className="absolute -left-12 top-8.25 z-20 h-3 w-3 rounded-full border bg-base md:-left-8"
                 style={{
                   borderColor: item.accent,
                   boxShadow: `0 0 0 4px rgba(10,10,18,0.96), 0 0 18px ${item.accent}66`,
@@ -260,7 +252,7 @@ function ExperienceModal({ experience, onClose }: ExperienceModalProps) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/68 px-4 py-6 backdrop-blur-md"
+      className="fixed inset-0 z-9998 flex items-center justify-center bg-black/68 px-4 py-6 backdrop-blur-md"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -297,7 +289,7 @@ function ExperienceModal({ experience, onClose }: ExperienceModalProps) {
             <Icon size={23} />
           </div>
           <div className="min-w-0">
-            <h2 className="break-words font-heading text-2xl font-bold leading-tight text-text-primary">
+            <h2 className="wrap-break-word font-heading text-2xl font-bold leading-tight text-text-primary">
               {experience.company}
             </h2>
             <p

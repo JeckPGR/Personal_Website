@@ -1,57 +1,97 @@
-import { useRef, useState } from 'react'
-import { FaInstagram, FaLinkedinIn, FaTiktok } from 'react-icons/fa'
+import { useRef } from 'react'
+import type { IconType } from 'react-icons'
 import {
+  TbArrowRight,
   TbBriefcase,
+  TbCertificate,
   TbFolder,
-  TbMessageCircle,
-  TbRobot,
-  TbSend,
   TbSparkles,
   TbUser,
 } from 'react-icons/tb'
 import { Link } from 'react-router-dom'
 import meImage from '../assets/Me.png'
-import { workItems } from '../data/portfolio'
+import { certificationItems, workItems } from '../data/portfolio'
 import { AnimatedBeam } from './ui/animated-beam'
-
-const socialLinks = [
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/ahmad-dzaky-67b630248/',
-    Icon: FaLinkedinIn,
-  },
-  {
-    label: 'Instagram',
-    href: 'https://www.instagram.com/dzaky_arrazy',
-    Icon: FaInstagram,
-  },
-  {
-    label: 'TikTok',
-    href: 'https://www.tiktok.com/@jeckyyes0',
-    Icon: FaTiktok,
-  },
-]
 
 type BentoCardProps = {
   children: React.ReactNode
   className?: string
   to?: string
+  showHoverHint?: boolean
 }
 
-function BentoCard({ children, className = '', to }: BentoCardProps) {
+type BentoTimelineItem = {
+  title: string
+  meta: string
+  detail?: string
+}
+
+type BentoTimelinePanelProps = {
+  eyebrow: string
+  title: string
+  Icon: IconType
+  items: BentoTimelineItem[]
+  viewLabel: string
+  compactWide?: boolean
+}
+
+const experiencePreviewItems: BentoTimelineItem[] = workItems
+  .slice(0, 3)
+  .map(({ title, subtitle, tag, period }) => ({
+    title,
+    meta: `${subtitle} | ${tag}`,
+    detail: period,
+  }))
+
+const projectPreviewItems: BentoTimelineItem[] = [
+  {
+    title: 'Procurement Ecosystem Mapping',
+    meta: 'Enterprise workflow | PT Bank Mandiri',
+    detail: 'Procurement applications and integration map',
+  },
+  {
+    title: 'Internal Staff Management Platform',
+    meta: 'Full stack platform | CAATIS F&B Group',
+    detail: 'Scheduling and payroll workflow system',
+  },
+  {
+    title: 'IT Project Delivery Backlog',
+    meta: 'Project management | Telkom Property',
+    detail: 'Backlog, testing, and delivery coordination',
+  },
+]
+
+const certificationPreviewItems: BentoTimelineItem[] = certificationItems
+  .slice(0, 3)
+  .map(({ title, issuer, period }) => ({
+    title,
+    meta: issuer,
+    detail: period,
+  }))
+
+function BentoCard({
+  children,
+  className = '',
+  to,
+  showHoverHint = true,
+}: BentoCardProps) {
   const sharedClassName = `group relative min-w-0 max-w-full overflow-hidden rounded-[18px] border border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.025)] shadow-[inset_0_1px_0_rgba(255,255,255,0.025)] transition duration-200 hover:border-[rgba(160,130,255,0.32)] ${className}`
 
   if (to) {
     return (
       <Link to={to} className={sharedClassName}>
         {children}
-        <span className="pointer-events-none absolute bottom-4 right-4 z-20 inline-flex translate-y-2 items-center gap-2 rounded-full border border-[rgba(201,191,255,0.12)] bg-[rgba(12,10,24,0.72)] px-3 py-1.5 text-[10px] font-medium text-accent-lavender opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.24),0_0_22px_rgba(124,80,224,0.12)] backdrop-blur-md transition duration-300 ease-out group-hover:translate-y-0 group-hover:border-[rgba(201,191,255,0.24)] group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-          Find more
-          <span className="translate-x-0 transition-transform duration-300 group-hover:translate-x-1">
-            →
-          </span>
-        </span>
-        <span className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 translate-y-8 bg-[linear-gradient(180deg,transparent,rgba(124,80,224,0.1))] opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
+        {showHoverHint ? (
+          <>
+            <span className="pointer-events-none absolute bottom-4 right-4 z-20 inline-flex translate-y-2 items-center gap-2 rounded-full border border-[rgba(201,191,255,0.12)] bg-[rgba(12,10,24,0.72)] px-3 py-1.5 text-[10px] font-medium text-accent-lavender opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.24),0_0_22px_rgba(124,80,224,0.12)] backdrop-blur-md transition duration-300 ease-out group-hover:translate-y-0 group-hover:border-[rgba(201,191,255,0.24)] group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+              Find more
+              <span className="translate-x-0 transition-transform duration-300 group-hover:translate-x-1">
+                -&gt;
+              </span>
+            </span>
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 translate-y-8 bg-[linear-gradient(180deg,transparent,rgba(124,80,224,0.1))] opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
+          </>
+        ) : null}
       </Link>
     )
   }
@@ -59,55 +99,105 @@ function BentoCard({ children, className = '', to }: BentoCardProps) {
   return <article className={sharedClassName}>{children}</article>
 }
 
+function BentoTimelinePanel({
+  eyebrow,
+  title,
+  Icon,
+  items,
+  viewLabel,
+  compactWide = false,
+}: BentoTimelinePanelProps) {
+  return (
+    <div className="relative z-10 flex h-full min-h-72 flex-col lg:min-h-0">
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 lg:text-[9px]">
+            {eyebrow}
+          </p>
+          <h2 className="mt-3 font-heading text-3xl font-bold leading-tight text-text-primary md:text-4xl lg:mt-2 lg:text-[clamp(1.25rem,1.85vw,1.75rem)]">
+            {title}
+          </h2>
+        </div>
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
+          <Icon size={20} />
+        </div>
+      </div>
+
+      <BentoTimelineList items={items} compactWide={compactWide} />
+
+      <div className="mt-auto flex items-center justify-between border-t border-[rgba(201,191,255,0.1)] pt-4 text-[11px] font-medium text-accent-lavender lg:pt-3">
+        <span>{viewLabel}</span>
+        <TbArrowRight size={16} />
+      </div>
+    </div>
+  )
+}
+
+function BentoTimelineList({
+  items,
+  compactWide = false,
+}: {
+  items: BentoTimelineItem[]
+  compactWide?: boolean
+}) {
+  if (compactWide) {
+    return (
+      <div className="relative mt-6 grid gap-5 pl-6 lg:mt-4 lg:grid-cols-3 lg:gap-3 lg:pl-0">
+        <span className="absolute bottom-2 left-0 top-2 w-px bg-[linear-gradient(180deg,transparent,rgba(201,191,255,0.32),transparent)] lg:hidden" />
+        {items.map(({ title, meta, detail }, index) => (
+          <div key={`${title}-${index}`} className="relative min-w-0 lg:pl-5">
+            <span className="absolute -left-7 top-2 h-2.5 w-2.5 rounded-full border border-[rgba(201,191,255,0.55)] bg-base shadow-[0_0_14px_rgba(201,191,255,0.35)] lg:left-0 lg:top-1.5" />
+            <p className="font-heading text-sm font-semibold leading-tight text-text-primary lg:truncate lg:text-[12px] xl:text-[13px]">
+              {title}
+            </p>
+            <p className="mt-1 text-[11px] leading-4 text-text-secondary lg:line-clamp-1 lg:text-[9.5px] xl:text-[10px]">
+              {meta}
+            </p>
+            {detail ? (
+              <p className="mt-1 text-[10px] leading-4 text-text-muted lg:line-clamp-1 lg:text-[9px] xl:text-[9.5px]">
+                {detail}
+              </p>
+            ) : null}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative mt-7 flex min-h-0 flex-1 flex-col justify-between gap-6 pl-6 lg:mt-5 lg:gap-4">
+      <span className="absolute bottom-2 left-0 top-2 w-px bg-[linear-gradient(180deg,transparent,rgba(201,191,255,0.32),transparent)]" />
+      {items.map(({ title, meta, detail }, index) => (
+        <div key={`${title}-${index}`} className="relative min-w-0">
+          <span className="absolute -left-7 top-2 h-2.5 w-2.5 rounded-full border border-[rgba(201,191,255,0.55)] bg-base shadow-[0_0_14px_rgba(201,191,255,0.35)]" />
+          <p className="font-heading text-sm font-semibold leading-tight text-text-primary lg:text-[13px]">
+            {title}
+          </p>
+          <p className="mt-1 text-[11px] leading-4 text-text-secondary lg:text-[10px]">
+            {meta}
+          </p>
+          {detail ? (
+            <p className="mt-1 text-[10px] leading-4 text-text-muted lg:text-[9.5px]">
+              {detail}
+            </p>
+          ) : null}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function BentoGrid() {
-  const [aiPrompt, setAiPrompt] = useState('')
   const heroContainerRef = useRef<HTMLDivElement>(null)
   const techNodeRef = useRef<HTMLDivElement>(null)
   const productNodeRef = useRef<HTMLDivElement>(null)
 
   return (
-    <section className="grid min-w-0 max-w-full grid-cols-1 gap-3 lg:h-full lg:min-h-0 lg:flex-1 lg:gap-3 lg:[grid-template-areas:'about_about_tagline'_'work_profile_chat'_'work_projects_socmed'] lg:grid-cols-[minmax(0,1.35fr)_minmax(0,4.3fr)_minmax(0,1.55fr)] lg:grid-rows-[minmax(178px,0.86fr)_minmax(0,1.42fr)_minmax(116px,0.52fr)] xl:grid-cols-[minmax(0,1.4fr)_minmax(0,4.5fr)_minmax(0,1.5fr)] xl:grid-rows-[minmax(194px,0.9fr)_minmax(0,1.45fr)_minmax(126px,0.56fr)]">
-      <BentoCard
-        to="/work"
-        className="order-5 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:projects]"
-      >
-        <div className="relative z-10 flex h-full min-h-37.5ex-col justify-between lg:min-h-0">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-[9px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 lg:text-[8px]">
-                Selected work
-              </p>
-              <h2 className="mt-3 font-heading text-3xl font-bold leading-tight text-text-primary md:text-4xl lg:mt-1 lg:text-[clamp(1.35rem,2vw,1.75rem)]">
-                Projects
-              </h2>
-            </div>
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-8 lg:w-8">
-              <TbFolder size={20} />
-            </div>
-          </div>
-          <div className="grid gap-2 pt-6 sm:grid-cols-3 lg:gap-1.5 lg:pt-2">
-            {workItems.map(({ slug, title, tag }) => (
-              <div
-                key={slug}
-                className="min-w-0 rounded-xl border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.025)] px-3 py-2 lg:px-2.5 lg:py-1"
-              >
-                <p className="text-[9px] font-semibold uppercase text-text-muted lg:text-[8px]">
-                  {tag}
-                </p>
-                <p className="mt-1 truncate font-heading text-xs font-semibold text-text-primary lg:text-[9.5px] xl:text-[10px]">
-                  {title}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </BentoCard>
-
+    <section className="grid min-w-0 max-w-full grid-cols-1 gap-5 md:gap-5 lg:h-full lg:min-h-0 lg:flex-1 lg:gap-3 lg:[grid-template-areas:'about_about_tagline'_'work_profile_cert'_'work_projects_cert'] lg:grid-cols-[minmax(0,1.35fr)_minmax(0,4.3fr)_minmax(0,1.55fr)] lg:grid-rows-[minmax(178px,0.86fr)_minmax(0,1.42fr)_minmax(116px,0.52fr)] xl:grid-cols-[minmax(0,1.4fr)_minmax(0,4.5fr)_minmax(0,1.5fr)] xl:grid-rows-[minmax(194px,0.9fr)_minmax(0,1.45fr)_minmax(126px,0.56fr)]">
       <BentoCard
         to="/what-i-do"
         className="order-1 flex min-h-37.5 flex-col justify-between p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:tagline] xl:p-5"
       >
-      
         <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-9 lg:w-9">
           <TbSparkles size={18} />
         </div>
@@ -123,38 +213,30 @@ function BentoGrid() {
       </BentoCard>
 
       <BentoCard
-        to="/work"
-        className="order-2 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:work] xl:p-5"
+        to="/about"
+        className="order-2 lg:order-0 lg:min-h-0 lg:[grid-area:about]"
       >
-        <div className="flex h-full min-h-65 flex-col justify-between lg:min-h-0">
-          <div>
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-9 lg:w-9">
-              <TbBriefcase size={18} />
-            </div>
-            <h2 className="mt-5 font-heading text-2xl font-bold leading-tight text-text-primary lg:mt-4 lg:text-[clamp(1.1rem,1.8vw,1.5rem)]">
-              Work Experience
+        <div className="relative z-10 flex h-full min-h-29 items-center justify-between gap-4 p-5 lg:min-h-0 lg:p-5 xl:p-6">
+          <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_18%_85%,rgba(124,80,224,0.14),transparent_32%),radial-gradient(circle_at_86%_15%,rgba(192,96,240,0.1),transparent_35%)]" />
+          <div className="relative z-10 min-w-0">
+            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 lg:text-[9px]">
+              Profile
+            </p>
+            <h2 className="mt-2 font-heading text-3xl font-bold text-text-primary lg:text-[clamp(2rem,3.2vw,3rem)]">
+              About me
             </h2>
+            <p className="mt-1 text-xs text-text-secondary lg:text-[12px]">
+              I'm a product-minded software builder focused on creating practical digital systems, internal tools, and workflow automation.
+My work combines product thinking, web development, and operational understanding to solve real business problems.
+            </p>
           </div>
-          <div className="work-timeline relative mt-8 flex min-h-57.5 flex-1 flex-col justify-between pb-2 pl-6 pt-4 lg:mt-6 lg:min-h-0">
-            {workItems.map(({ slug, title, subtitle, tag, period }) => (
-              <div key={slug} className="relative">
-                <span className="absolute -left-7 top-2 h-2.5 w-2.5 rounded-full border border-[rgba(201,191,255,0.55)] bg-base shadow-[0_0_14px_rgba(201,191,255,0.35)]" />
-                <p className="font-heading text-sm font-semibold leading-tight text-text-primary lg:text-[13px]">
-                  {title}
-                </p>
-                <p className="mt-1 text-[11px] leading-4 text-text-secondary lg:text-[10px]">
-                  {subtitle} <span className="text-text-muted">|</span> {tag}
-                </p>
-                <p className="mt-1 text-[10px] leading-4 text-text-muted lg:text-[9.5px]">
-                  {period}
-                </p>
-              </div>
-            ))}
+          <div className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
+            <TbUser size={20} />
           </div>
         </div>
       </BentoCard>
 
-      <BentoCard className="order-4 min-h-90 sm:min-h-107.5 md:min-h-125 lg:order-0 lg:min-h-0 lg:[grid-area:profile]">
+      <BentoCard className="order-3 min-h-90 sm:min-h-107.5 md:min-h-125 lg:order-0 lg:min-h-0 lg:[grid-area:profile]">
         <div
           ref={heroContainerRef}
           className="pointer-events-none absolute inset-0 z-2 hidden overflow-hidden sm:block"
@@ -242,7 +324,6 @@ function BentoGrid() {
               <span className="h-2 w-3 rounded-full bg-accent-lavender/35" />
             </div>
           </div>
-
         </div>
         <img
           src={meImage}
@@ -263,108 +344,47 @@ function BentoGrid() {
         </div>
       </BentoCard>
 
-      <BentoCard className="order-6 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:chat] xl:p-5">
-
-        <div className="relative z-10 flex h-full min-h-57.5 flex-col lg:min-h-0">
-          <div className="flex items-center justify-between gap-3">
-            <div className='flex items-center gap-2'>
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender">
-                <TbRobot size={18} />
-              </div>
-              <h2 className=" font-heading text-xl font-bold text-text-primary lg:text-[clamp(1rem,1.45vw,1.25rem)]">
-                Ask AI about Dzaky
-              </h2>
-            </div>
-          </div>
-
-          <div className="mt-4 min-h-0 flex-1 rounded-2xl border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.02)] p-3">
-            <div className="flex gap-2">
-              <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[rgba(120,80,220,0.16)] text-accent-lavender">
-                <TbMessageCircle size={15} />
-              </div>
-              <p className="text-[11px] leading-5 text-text-secondary">
-                Ask about my experience, product work, tech stack, or project
-                decisions.
-              </p>
-            </div>
-          </div>
-
-          <form
-            className="mt-3 flex items-center gap-2 rounded-2xl border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.035)] p-1.5"
-            onSubmit={(event) => event.preventDefault()}
-          >
-            <textarea
-              aria-label="Ask Dzaky AI"
-              placeholder="Ask something..."
-              maxLength={90}
-              value={aiPrompt}
-              onChange={(event) => setAiPrompt(event.target.value)}
-              rows={2}
-              className="min-w-0 flex-1 min-h-12 resize-none bg-transparent px-2 py-2 text-xs text-text-primary outline-none placeholder:text-text-muted"
-            />
-            <span className="shrink-0 px-1 text-[10px] tabular-nums text-text-muted">
-              {aiPrompt.length}/10
-            </span>
-            <button
-              type="submit"
-              aria-label="Send message"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[rgba(120,80,220,0.22)] text-accent-lavender transition hover:bg-border-accent"
-            >
-              <TbSend size={15} />
-            </button>
-          </form>
-        </div>
-      </BentoCard>
-
-      <BentoCard className="hidden p-5 lg:block lg:min-h-0 lg:p-4 lg:[grid-area:socmed] xl:p-5">
-        <div className="relative z-10 flex h-full min-h-37.5 flex-col justify-between lg:min-h-0">
-          <div>
-            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 lg:text-[9px]">
-              Socials
-            </p>
-            <h2 className="mt-3 font-heading text-3xl font-bold text-text-primary lg:mt-2 lg:text-[clamp(1.35rem,2vw,1.875rem)]">
-              Socmed
-            </h2>
-          </div>
-          <div className="flex gap-3 lg:gap-2">
-            {socialLinks.map(({ label, href, Icon }) => (
-              <a
-                key={label}
-                href={href}
-                aria-label={label}
-                target="_blank"
-                rel="noreferrer"
-                className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-[#a089d8] transition hover:border-[rgba(150,100,255,0.35)] hover:bg-border-accent hover:text-accent-lavender lg:h-10 lg:w-10"
-              >
-                <Icon size={17} />
-              </a>
-            ))}
-          </div>
-        </div>
+      <BentoCard
+        to="/work"
+        showHoverHint={false}
+        className="order-4 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:work] xl:p-5"
+      >
+        <BentoTimelinePanel
+          eyebrow="Experience"
+          title="Work Experience"
+          Icon={TbBriefcase}
+          items={experiencePreviewItems}
+          viewLabel="View all work"
+        />
       </BentoCard>
 
       <BentoCard
-        to="/about"
-        className="order-3 lg:order-0 lg:min-h-0 lg:[grid-area:about]"
+        to="/project"
+        showHoverHint={false}
+        className="order-5 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:projects] xl:p-5"
       >
-        <div className="relative z-10 flex h-full min-h-29 items-center justify-between gap-4 p-5 lg:min-h-0 lg:p-5 xl:p-6">
-          <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_18%_85%,rgba(124,80,224,0.14),transparent_32%),radial-gradient(circle_at_86%_15%,rgba(192,96,240,0.1),transparent_35%)]" />
-          <div className="relative z-10 min-w-0">
-            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 lg:text-[9px]">
-              Profile
-            </p>
-            <h2 className="mt-2 font-heading text-3xl font-bold text-text-primary lg:text-[clamp(2rem,3.2vw,3rem)]">
-              About me
-            </h2>
-            <p className="mt-1 text-xs text-text-secondary lg:text-[12px]">
-              I'm a product-minded software builder focused on creating practical digital systems, internal tools, and workflow automation.
-My work combines product thinking, web development, and operational understanding to solve real business problems.
-            </p>
-          </div>
-          <div className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
-            <TbUser size={20} />
-          </div>
-        </div>
+        <BentoTimelinePanel
+          eyebrow="Projects"
+          title="Projects"
+          Icon={TbFolder}
+          items={projectPreviewItems}
+          viewLabel="View all projects"
+          compactWide
+        />
+      </BentoCard>
+
+      <BentoCard
+        to="/certification"
+        showHoverHint={false}
+        className="order-6 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:cert] xl:p-5"
+      >
+        <BentoTimelinePanel
+          eyebrow="Learning"
+          title="Certification"
+          Icon={TbCertificate}
+          items={certificationPreviewItems}
+          viewLabel="View all certification"
+        />
       </BentoCard>
     </section>
   )

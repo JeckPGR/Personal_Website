@@ -14,7 +14,7 @@ const splashTexts = [
   'From writing code to shaping products.',
   'Because great experiences are built beyond the screen.',
   'User-focused. Data-informed. Built with intention.',
-  'Welcome to my product journey.',
+  'Welcome to my Portofolio.',
 ]
 
 function SplashScreen({ onDone }: SplashScreenProps) {
