@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useState } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import SplashScreen from './components/SplashScreen'
 import About from './pages/About'
@@ -9,10 +9,10 @@ import Education from './pages/Education'
 import Home from './pages/Home'
 import Project from './pages/Project'
 import TechStack from './pages/TechStack'
-import WhatIDo from './pages/WhatIDo'
 import Work from './pages/Work'
 import WorkDetail from './pages/WorkDetail'
 import ChatWidget from './components/ui/ChatWidget'
+import NotFound from './pages/NotFound'
 
 function PortfolioRoutes() {
   return (
@@ -20,15 +20,14 @@ function PortfolioRoutes() {
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="home" element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="what-i-do" element={<WhatIDo />} />
+        <Route path="about" element={<About />} />  
         <Route path="work" element={<Work />} />
         <Route path="project" element={<Project />} />
         <Route path="work/:slug" element={<WorkDetail />} />
         <Route path="tech-stack" element={<TechStack />} />
         <Route path="education" element={<Education />} />
         <Route path="certification" element={<Certification />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   )

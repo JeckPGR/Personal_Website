@@ -63,7 +63,7 @@ import {
 export type BentoItem = {
   title: string
   subtitle: string
-  route: string
+  route?: string 
   tag: string
   gradient: string
   coverHeight: number

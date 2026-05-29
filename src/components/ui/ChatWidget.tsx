@@ -115,11 +115,14 @@ export default function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    // PERBAIKAN: Margin disesuaikan untuk layar kecil (bottom-4 right-4) dan besar (sm:bottom-6 sm:right-6)
+    <div className="fixed inset-x-4 bottom-4 z-50 flex flex-col items-end sm:inset-x-auto sm:bottom-6 sm:right-6">
       
       {/* 1. Jendela Chat Utama */}
       {isOpen && (
-        <div className="mb-4 w-[400px] bg-[#0a0a12]/95 rounded-2xl shadow-[0_0_30px_rgba(124,80,224,0.15)] border border-[rgba(255,255,255,0.08)] overflow-hidden flex flex-col h-[550px] backdrop-blur-xl transition-all duration-300 transform origin-bottom-right animate-in zoom-in-95">
+        // PERBAIKAN: w-[calc(100vw-32px)] dan h-[calc(100dvh-120px)] memastikan layout pas di HP. 
+        // sm:w-[400px] sm:h-[550px] mengembalikannya ke ukuran normal di Laptop/Tablet.
+        <div className="mb-4 w-full sm:w-[400px] h-[calc(100dvh-120px)] max-h-[600px] sm:h-[550px] bg-[#0a0a12]/95 rounded-2xl shadow-[0_0_30px_rgba(124,80,224,0.15)] border border-[rgba(255,255,255,0.08)] overflow-hidden flex flex-col backdrop-blur-xl transition-all duration-300 transform origin-bottom-right animate-in zoom-in-95">
           
           <div className="bg-gradient-to-r from-[rgba(255,255,255,0.03)] to-[rgba(124,80,224,0.05)] border-b border-[rgba(255,255,255,0.08)] p-4 text-[#f0ecff] font-semibold flex justify-between items-center">
             <div className="flex items-center gap-3">
@@ -144,7 +147,7 @@ export default function ChatWidget() {
                 </div>
 
                 {i === 0 && messages.length === 1 && (
-                  <div className="flex flex-col gap-2 mt-4 max-w-[95%]">
+                  <div className="flex flex-col gap-2 mt-4 max-w-[100%] sm:max-w-[95%]">
                     {QUICK_PROMPTS.map((prompt, idx) => (
                       <button
                         key={idx}
@@ -183,7 +186,6 @@ export default function ChatWidget() {
               </div>
             ) : (
               <div className="flex gap-2 items-end">
-                {/* Perbaikan: Tambahan class untuk menyembunyikan scrollbar */}
                 <textarea 
                   ref={textareaRef}
                   rows={1}
@@ -210,7 +212,7 @@ export default function ChatWidget() {
                 <button 
                   onClick={() => sendMessage()} 
                   disabled={isLoading || cooldown > 0 || !input.trim()}
-                  className={`px-5 rounded-xl h-[44px] text-sm font-semibold transition-all duration-300 flex items-center justify-center ${
+                  className={`px-4 sm:px-5 rounded-xl h-[44px] text-sm font-semibold transition-all duration-300 flex items-center justify-center ${
                     isLoading || cooldown > 0 || !input.trim()
                       ? 'bg-[rgba(255,255,255,0.05)] text-[#6e6898] cursor-not-allowed'
                       : 'bg-gradient-to-r from-[#7c50e0] to-[#603ba8] text-white hover:shadow-[0_0_15px_rgba(124,80,224,0.4)] hover:scale-[1.02]'

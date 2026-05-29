@@ -165,8 +165,8 @@ function BentoTimelineList({
   }
 
   return (
-    <div className="relative mt-7 flex min-h-0 flex-1 flex-col justify-between gap-6 pl-6 lg:mt-5 lg:gap-4">
-      <span className="absolute bottom-2 left-0 top-2 w-px bg-[linear-gradient(180deg,transparent,rgba(201,191,255,0.32),transparent)]" />
+    <div className="relative mt-7 flex min-h-0 flex-1 flex-col justify-between gap-6 pl-6 pb-6 lg:mt-5 lg:gap-4 lg:pb-7">
+  <span className="absolute bottom-8 left-0 top-2 w-px bg-[linear-gradient(180deg,transparent,rgba(201,191,255,0.32),transparent)]" />
       {items.map(({ title, meta, detail }, index) => (
         <div key={`${title}-${index}`} className="relative min-w-0">
           <span className="absolute -left-7 top-2 h-2.5 w-2.5 rounded-full border border-[rgba(201,191,255,0.55)] bg-base shadow-[0_0_14px_rgba(201,191,255,0.35)]" />
@@ -193,9 +193,8 @@ function BentoGrid() {
   const productNodeRef = useRef<HTMLDivElement>(null)
 
   return (
-    <section className="grid min-w-0 max-w-full grid-cols-1 gap-5 md:gap-5 lg:h-full lg:min-h-0 lg:flex-1 lg:gap-3 lg:[grid-template-areas:'about_about_tagline'_'work_profile_cert'_'work_projects_cert'] lg:grid-cols-[minmax(0,1.35fr)_minmax(0,4.3fr)_minmax(0,1.55fr)] lg:grid-rows-[minmax(178px,0.86fr)_minmax(0,1.42fr)_minmax(116px,0.52fr)] xl:grid-cols-[minmax(0,1.4fr)_minmax(0,4.5fr)_minmax(0,1.5fr)] xl:grid-rows-[minmax(194px,0.9fr)_minmax(0,1.45fr)_minmax(126px,0.56fr)]">
+    <section className="grid min-w-0 max-w-full grid-cols-1 gap-5 md:gap-5 lg:h-full lg:min-h-[760px] lg:flex-1 lg:gap-3 lg:[grid-template-areas:'about_about_tagline'_'work_profile_cert'_'work_projects_cert'] lg:grid-cols-[minmax(0,1.35fr)_minmax(0,4.3fr)_minmax(0,1.55fr)] lg:grid-rows-[minmax(178px,0.86fr)_minmax(320px,1.42fr)_minmax(126px,0.52fr)] xl:grid-cols-[minmax(0,1.4fr)_minmax(0,4.5fr)_minmax(0,1.5fr)] xl:grid-rows-[minmax(194px,0.9fr)_minmax(340px,1.45fr)_minmax(136px,0.56fr)]">
       <BentoCard
-        to="/what-i-do"
         className="order-1 flex min-h-37.5 flex-col justify-between p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:tagline] xl:p-5"
       >
         <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-9 lg:w-9">
@@ -203,7 +202,7 @@ function BentoGrid() {
         </div>
         <div className="relative z-10">
           <p className="mt-2 wrap-break-words font-heading text-2xl font-bold leading-tight text-text-primary lg:text-[clamp(1rem,1.7vw,1.5rem)]">
-            Product-minded builder for digital systems.
+            Product-minded   builder for digital systems.
           </p>
           <p className="mt-3 text-xs leading-5 text-text-secondary lg:mt-2 lg:line-clamp-2">
             PM, developer, and analyst working across discovery, delivery, and
@@ -347,7 +346,7 @@ My work combines product thinking, web development, and operational understandin
       <BentoCard
         to="/work"
         showHoverHint={false}
-        className="order-4 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:work] xl:p-5"
+        className="order-4 p-5 lg:order-0 lg:min-h-[460px] lg:p-4 lg:[grid-area:work] xl:min-h-[500px] xl:p-5"
       >
         <BentoTimelinePanel
           eyebrow="Experience"
@@ -376,7 +375,7 @@ My work combines product thinking, web development, and operational understandin
       <BentoCard
         to="/certification"
         showHoverHint={false}
-        className="order-6 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:cert] xl:p-5"
+        className="order-6 p-5 lg:order-0 lg:min-h-115 lg:p-4 lg:[grid-area:cert] xl:min-h-125 xl:p-5"
       >
         <BentoTimelinePanel
           eyebrow="Learning"
