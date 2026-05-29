@@ -17,7 +17,13 @@ function BentoBox({ item, children }: BentoBoxProps) {
   const navigate = useNavigate()
   const Icon = item.Icon
 
-  const openRoute = () => navigate(item.route)
+  
+  const isClickable = Boolean(item.route)
+
+  const openRoute = () => {
+    if (!item.route) return
+    navigate(item.route)
+  }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter' || event.key === ' ') {
@@ -54,10 +60,13 @@ function BentoBox({ item, children }: BentoBoxProps) {
         <p className="mt-1 wrap-break-words font-body text-[11px] leading-4 text-[#7a72a8] sm:text-xs">
           {item.subtitle}
         </p>
-        <p className="mt-2 text-[9px] font-medium text-[rgba(160,130,255,0.45)] sm:mt-3">
-          Click to explore &rarr;
-        </p>
+         {isClickable && (
+          <p className="mt-2 text-[9px] font-medium text-[rgba(160,130,255,0.45)] sm:mt-3">
+            Click to explore &rarr;
+          </p>
+        )}
       </div>
+
       {children}
     </article>
   )

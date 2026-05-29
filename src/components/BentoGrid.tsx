@@ -193,7 +193,7 @@ function BentoGrid() {
   const productNodeRef = useRef<HTMLDivElement>(null)
 
   return (
-    <section className="grid min-w-0 max-w-full grid-cols-1 gap-5 md:gap-5 lg:h-full lg:min-h-[760px] lg:flex-1 lg:gap-3 lg:[grid-template-areas:'about_about_tagline'_'work_profile_cert'_'work_projects_cert'] lg:grid-cols-[minmax(0,1.35fr)_minmax(0,4.3fr)_minmax(0,1.55fr)] lg:grid-rows-[minmax(178px,0.86fr)_minmax(320px,1.42fr)_minmax(126px,0.52fr)] xl:grid-cols-[minmax(0,1.4fr)_minmax(0,4.5fr)_minmax(0,1.5fr)] xl:grid-rows-[minmax(194px,0.9fr)_minmax(340px,1.45fr)_minmax(136px,0.56fr)]">
+    <section className="grid min-w-0 max-w-full grid-cols-1 gap-5 md:gap-5 lg:h-full lg:min-h-190flex-1 lg:gap-3 lg:[grid-template-areas:'about_about_tagline'_'work_profile_cert'_'work_projects_cert'] lg:grid-cols-[minmax(0,1.35fr)_minmax(0,4.3fr)_minmax(0,1.55fr)] lg:grid-rows-[minmax(178px,0.86fr)_minmax(320px,1.42fr)_minmax(126px,0.52fr)] xl:grid-cols-[minmax(0,1.4fr)_minmax(0,4.5fr)_minmax(0,1.5fr)] xl:grid-rows-[minmax(194px,0.9fr)_minmax(340px,1.45fr)_minmax(136px,0.56fr)]">
       <BentoCard
         className="order-1 flex min-h-37.5 flex-col justify-between p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:tagline] xl:p-5"
       >
@@ -235,7 +235,10 @@ My work combines product thinking, web development, and operational understandin
         </div>
       </BentoCard>
 
-      <BentoCard className="order-3 min-h-90 sm:min-h-107.5 md:min-h-125 lg:order-0 lg:min-h-0 lg:[grid-area:profile]">
+      <BentoCard
+        to="/about"
+        className="order-3 min-h-90 sm:min-h-107.5 md:min-h-125 lg:order-0 lg:min-h-0 lg:[grid-area:profile]"
+      >
         <div
           ref={heroContainerRef}
           className="pointer-events-none absolute inset-0 z-2 hidden overflow-hidden sm:block"
@@ -345,8 +348,8 @@ My work combines product thinking, web development, and operational understandin
 
       <BentoCard
         to="/work"
-        showHoverHint={false}
-        className="order-4 p-5 lg:order-0 lg:min-h-[460px] lg:p-4 lg:[grid-area:work] xl:min-h-[500px] xl:p-5"
+        showHoverHint={true}
+        className="order-4 p-5 lg:order-0 lg:min-h-115 lg:p-4 lg:[grid-area:work] xl:min-h-125 xl:p-5"
       >
         <BentoTimelinePanel
           eyebrow="Experience"
@@ -359,7 +362,7 @@ My work combines product thinking, web development, and operational understandin
 
       <BentoCard
         to="/project"
-        showHoverHint={false}
+        showHoverHint={true}
         className="order-5 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:projects] xl:p-5"
       >
         <BentoTimelinePanel
@@ -374,7 +377,7 @@ My work combines product thinking, web development, and operational understandin
 
       <BentoCard
         to="/certification"
-        showHoverHint={false}
+        showHoverHint={true}
         className="order-6 p-5 lg:order-0 lg:min-h-115 lg:p-4 lg:[grid-area:cert] xl:min-h-125 xl:p-5"
       >
         <BentoTimelinePanel
