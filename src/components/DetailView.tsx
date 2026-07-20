@@ -38,6 +38,10 @@ export type DetailViewProps = {
   showcase?: string[]
   /** When set, always render this many showcase slots, filling missing ones with a "no image" template */
   showcaseSlots?: number
+  /** Heading label shown above the showcase (e.g. "Showcase" / "Journey & Proof") */
+  showcaseHeading?: string
+  /** Caption suffix on each showcase slot (e.g. "Key Point" / "Key Results") */
+  proofLabel?: string
 }
 
 /* ─── Utility: hex → rgba string ─── */
@@ -138,6 +142,8 @@ function DetailView({
   externalUrl,
   showcase,
   showcaseSlots,
+  showcaseHeading,
+  proofLabel = 'Proof',
 }: DetailViewProps) {
   const containerRef = useRef<HTMLElement>(null)
   const bannerRef = useRef<HTMLDivElement>(null)
@@ -203,13 +209,29 @@ function DetailView({
         {/* Background Image/Gradient */}
         <div
           ref={bannerRef}
-          className="absolute inset-0 scale-110"
-          style={{
-            background: image
-              ? `url(${image}) center/cover no-repeat`
-              : `linear-gradient(135deg, ${accent}20 0%, rgba(10,9,20,0.98) 60%, #0a0914 100%)`,
-          }}
+          className="absolute inset-0 scale-105 md:scale-110"
+          style={
+            image
+              ? undefined
+              : {
+                  background: `linear-gradient(135deg, ${accent}20 0%, rgba(10,9,20,0.98) 60%, #0a0914 100%)`,
+                }
+          }
         >
+          {image && (
+            <>
+              {/* Blurred fill so letterboxed areas on mobile stay on-brand */}
+              <div
+                className="absolute inset-0 scale-125 opacity-30 blur-2xl md:hidden"
+                style={{ background: `url(${image}) center/cover no-repeat` }}
+              />
+              <img
+                src={image}
+                alt={title}
+                className="absolute inset-0 h-full w-full object-contain object-center md:object-cover"
+              />
+            </>
+          )}
           {!image && (
             <>
               {/* Animated gradient orbs */}
@@ -259,7 +281,7 @@ function DetailView({
           {/* Title */}
           <h1
             ref={titleRef}
-            className="max-w-4xl font-heading text-[clamp(2.5rem,7vw,5rem)] font-black uppercase leading-[0.95] tracking-tight text-white"
+            className="max-w-4xl font-heading text-[clamp(1.75rem,6vw,5rem)] font-black uppercase leading-[1.02] tracking-tight text-white sm:leading-[0.95]"
           >
             <RevealText text={title} delay={0.4} />
           </h1>
@@ -406,6 +428,14 @@ function DetailView({
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-10 flex-1"
             >
+              {showcaseHeading ? (
+                <h3
+                  className="mb-4 font-heading text-[10px] font-bold uppercase tracking-[0.2em]"
+                  style={{ color: accent }}
+                >
+                  {showcaseHeading}
+                </h3>
+              ) : null}
               {(() => {
                 // With showcaseSlots, always render that many slots (missing → "no image").
                 // Otherwise use provided images, or fall back to the branded panel.
@@ -443,7 +473,7 @@ function DetailView({
                                 className="absolute bottom-3 left-3 rounded-full border border-[rgba(201,191,255,0.15)] bg-[rgba(10,9,20,0.6)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
                                 style={{ color: accent }}
                               >
-                                {String(idx + 1).padStart(2, '0')} / Proof
+                                {String(idx + 1).padStart(2, '0')} / {proofLabel}
                               </figcaption>
                             </>
                           ) : (
@@ -639,7 +669,7 @@ function DetailView({
                 >
                   &ldquo;
                 </span>
-                <p className="relative max-w-3xl text-lg font-light italic leading-[1.9] text-text-secondary sm:text-xl">
+                <p className="relative max-w-6xl text-lg font-light italic leading-[1.9] text-text-secondary sm:text-xl">
                   {quote}
                 </p>
               </div>

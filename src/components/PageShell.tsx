@@ -43,11 +43,8 @@ function PageShell({
         <div className="pointer-events-none absolute -right-12 top-8 font-heading text-[6rem] font-bold leading-none text-accent-lavender/[0.035] md:text-[10rem] lg:text-[15rem]">
           {watermark}
         </div>
-        <div className="pointer-events-none absolute bottom-8 left-7.5 top-8 z-0 md:left-[18%]">
-          <div className="h-full w-px bg-[linear-gradient(180deg,transparent,rgba(124,80,224,0.62)_10%,rgba(201,191,255,0.18)_88%,transparent)]" />
-        </div>
 
-        <div className="relative z-10 ml-10 max-w-3xl md:ml-[21%]">
+        <div className="relative z-10 max-w-3xl">
           <span className="inline-flex rounded-full border border-border-accent bg-[rgba(120,80,220,0.12)] px-3 py-1 text-[10px] font-medium text-accent-lavender">
             {tag} /&gt;
           </span>

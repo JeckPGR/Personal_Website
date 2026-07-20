@@ -11,7 +11,7 @@ function WorkDetail() {
   return (
     <DetailView
       backTo="/work"
-      backLabel="Back to Work"
+      backLabel="Back"
       eyebrow={item.tag}
       title={item.company}
       description={item.summary}
@@ -19,6 +19,9 @@ function WorkDetail() {
       Icon={item.Icon}
       image={item.image}
       showcase={item.proof}
+      showcaseSlots={3}
+      showcaseHeading="Journey & Proof"
+      proofLabel="Key Results"
       externalUrl={item.website}
       meta={[
         { label: 'Role', value: item.role },

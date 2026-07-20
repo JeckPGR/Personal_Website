@@ -40,7 +40,7 @@ export const workExperiences: WorkExperience[] = [
     company: 'PT Bank Mandiri (Persero) Tbk.',
     location: 'Jakarta, Indonesia',
     role: 'Research & Development Intern - Strategic Procurement',
-    tag: 'R&D / Procurement',
+    tag: 'Research & Devlopment',
     period: 'October 2025 - April 2026',
     accent: '#70aaff',
     Icon: TbBuildingBank,
@@ -63,7 +63,7 @@ export const workExperiences: WorkExperience[] = [
       'TELOS-based recommendation',
     ],
     reflection:
-      'This role taught me that meaningful system improvement starts from understanding how people actually work — mapping the ecosystem first, then letting real pain points guide the recommendations.',
+      'This role taught me that meaningful system improvement starts from understanding how people actually work, mapping the ecosystem first, then letting real pain points guide the recommendations.',
   },
   {
     slug: 'telkom-property',
@@ -71,7 +71,7 @@ export const workExperiences: WorkExperience[] = [
     company: 'Telkom Property',
     location: 'Jakarta, Indonesia',
     role: 'IT Project Manager',
-    tag: 'IT Project Manager / Web & Mobile App',
+    tag: 'IT Project Manager',
     period: 'October 2024 - February 2025',
     accent: '#e090c8',
     Icon: TbBuildingSkyscraper,
@@ -93,7 +93,7 @@ export const workExperiences: WorkExperience[] = [
       'End-to-end delivery',
     ],
     reflection:
-      'Coordinating a full delivery team showed me that clarity is the real deliverable — aligning scope, people, and testing is what keeps a product moving steadily toward release.',
+      'Coordinating a full delivery team showed me that clarity is the real deliverable, aligning scope, people, and testing is what keeps a product moving steadily toward release.',
   },
   {
     slug: 'informatics-lab',
@@ -101,11 +101,11 @@ export const workExperiences: WorkExperience[] = [
     company: 'Informatics Laboratory Telkom University',
     location: 'Bandung, Indonesia',
     role: 'Web Development Practicum Assistant',
-    tag: 'Web Dev Mentor / Lab Assistant',
+    tag: 'Web Dev Lab Assistant',
     period: 'September 2024 - January 2025',
     accent: '#c9bfff',
     Icon: TbSchool,
-    image: '/Works/Lab.jfif',
+    image: '/Works/Lab.jpg',
     summary:
       'Mentored students across web development lab classes, strengthening their grasp of core web concepts and hands-on troubleshooting.',
     tags: ['Web Development', 'Mentoring', 'Lab Assistant'],
@@ -121,7 +121,7 @@ export const workExperiences: WorkExperience[] = [
       'Full web stack coverage',
     ],
     reflection:
-      'Mentoring dozens of students sharpened how I explain technical concepts — teaching something well turned out to be the fastest way to truly understand it myself.',
+      'Mentoring dozens of students sharpened how I explain technical concepts, teaching something well turned out to be the fastest way to truly understand it myself.',
   },
   {
     slug: 'caatis',
@@ -129,11 +129,11 @@ export const workExperiences: WorkExperience[] = [
     company: 'CAATIS FnB Group',
     location: 'Bandung, Indonesia',
     role: 'Full Stack Developer',
-    tag: 'Full Stack Dev / F&B Operations',
+    tag: 'Full Stack Dev',
     period: 'September 2024 - December 2024',
     accent: '#60d9aa',
     Icon: TbToolsKitchen2,
-    image: '/Works/CAATIS.jfif',
+    image: '/Works/CAATIS.png',
     summary:
       'Designed and built an internal staff management platform that centralized scheduling and payroll across multiple F&B outlets.',
     tags: ['Fullstack Developer', 'Internal Platform', 'F&B Operations'],
@@ -157,7 +157,7 @@ export const workExperiences: WorkExperience[] = [
     company: 'Jokiwithsora',
     location: 'Bandung, Indonesia',
     role: 'Business Process Optimization & IT Support',
-    tag: 'Business Process / Gaming and Service',
+    tag: 'Business Process',
     period: 'January 2023 - January 2025',
     accent: '#c060f0',
     Icon: TbTable,

@@ -19,7 +19,7 @@ function ProjectDetail() {
   return (
     <DetailView
       backTo="/project"
-      backLabel="Back to Projects"
+      backLabel="Back"
       eyebrow={project.context}
       title={project.title}
       description={project.description}
@@ -28,6 +28,8 @@ function ProjectDetail() {
       image={project.images[0]}
       showcase={project.proof}
       showcaseSlots={3}
+      showcaseHeading="Showcase"
+      proofLabel="Key Point"
       externalUrl={project.website}
       meta={meta}
       tags={project.stack}

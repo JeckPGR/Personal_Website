@@ -345,7 +345,7 @@ export const certificationItems: CertificationItem[] = [
     issuer: 'Digitalent / BNSP',
     period: 'September 2023 - November 2023',
     description:
-      'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+      'Build an web app using PHP.',
     Icon: TbCode,
   },
   {

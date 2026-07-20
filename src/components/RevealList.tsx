@@ -158,7 +158,7 @@ function RevealList({ items, countLabel }: RevealListProps) {
                   </span>
                 ) : null}
                 <span className="min-w-0">
-                  <span className="block truncate font-heading text-xl font-bold leading-tight text-text-primary transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-lavender sm:text-2xl lg:text-[28px]">
+                  <span className="block truncate font-heading text-lg font-bold leading-tight text-text-primary transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-lavender sm:text-xl lg:text-2xl">
                     {item.title}
                   </span>
                   {item.sub ? (
