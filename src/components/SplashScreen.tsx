@@ -8,11 +8,10 @@ type SplashScreenProps = {
 
 const SCENE_DURATION_MS = 3000
 const EXIT_DURATION_MS = 3000
-const EXIT_START_MS = SCENE_DURATION_MS * 5
+const EXIT_START_MS = SCENE_DURATION_MS * 4
 
 const splashTexts = [
   'From writing code to shaping products.',
-  'Because great experiences are built beyond the screen.',
   'User-focused. Data-informed. Built with intention.',
   'Welcome to my Portofolio.',
 ]

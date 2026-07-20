@@ -1,15 +1,16 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import {
+  TbArrowUpRight,
   TbBriefcase,
   TbCertificate,
   TbFolder,
   TbHome,
-  TbMenu2,
   TbUser,
   TbX,
 } from 'react-icons/tb'
+import GridMenuButton from './GridMenuButton'
 
 function Layout() {
   const location = useLocation()
@@ -26,7 +27,7 @@ function Layout() {
         className={`relative mx-auto flex w-full min-w-0 max-w-480 flex-1 flex-col gap-3 overflow-x-hidden px-3 sm:px-4 md:px-5 lg:gap-3 ${
           isHome
             ? 'min-h-screen pb-8 pt-4 md:pb-4 md:pt-4 lg:h-dvh lg:max-h-dvh lg:min-h-0 lg:overflow-hidden lg:py-2'
-            : 'pb-8 pt-22 md:pt-24'
+            : 'pb-28 pt-8 md:pb-32 md:pt-10'
         } ${
           isHome ? 'home-page-main' : ''
         }`}
@@ -56,101 +57,171 @@ const menuItems = [
 
 function TopNavbar() {
   const [isOpen, setIsOpen] = useState(false)
+  const location = useLocation()
+
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => {
+    setIsOpen(false)
+  }, [location.pathname])
+
+  // Lock body scroll + allow Escape to close while the full-screen menu is open.
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false)
+    }
+
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isOpen])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-999 px-3 pt-3 sm:px-4 md:px-5">
-      <nav className="mx-auto max-w-480 rounded-2xl border border-[rgba(201,191,255,0.14)] bg-[rgba(13,12,22,0.78)] px-3 py-2 shadow-[0_18px_55px_rgba(0,0,0,0.42),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
-        <div className="flex items-center justify-between gap-3">
+    <>
+      <header className="pointer-events-none fixed inset-x-0 bottom-0 z-999 flex justify-center px-3 pb-4 sm:px-4 md:pb-6">
+        <motion.nav
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
+          className="pointer-events-auto relative flex w-fit items-center gap-4 rounded-2xl border border-[rgba(201,191,255,0.14)] bg-[rgba(10,9,16,0.72)] px-4 py-2 shadow-[0_16px_44px_rgba(0,0,0,0.45)] backdrop-blur-xl md:gap-6 md:px-5"
+        >
           <NavLink
             to="/"
             end
             onClick={() => setIsOpen(false)}
-            className="flex min-w-0 items-center gap-2"
+            className="group flex min-w-0 items-center gap-2 rounded-xl px-1 py-1"
           >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[rgba(201,191,255,0.14)] bg-[rgba(124,80,224,0.18)] font-heading text-sm font-bold text-accent-lavender">
-              DZ
-            </span>
-            <span className="truncate font-heading text-sm font-semibold text-text-primary">
-              Dzaky
+            <span className="truncate font-heading text-sm font-semibold text-text-primary transition-colors duration-200 group-hover:text-accent-lavender">
+              Dzaky Razi
             </span>
           </NavLink>
 
-          <div className="hidden items-center gap-1 md:flex">
-            {menuItems.map(({ label, to, Icon, end }) => (
-              <MenuLink
-                key={to}
-                label={label}
-                to={to}
-                Icon={Icon}
-                end={end}
-                onClick={() => setIsOpen(false)}
-              />
-            ))}
-          </div>
+          <GridMenuButton
+            isOpen={isOpen}
+            onClick={() => setIsOpen(true)}
+            text="Menu"
+          />
+        </motion.nav>
+      </header>
 
-          <button
-            type="button"
-            aria-label="Open navigation menu"
-            aria-expanded={isOpen}
-            onClick={() => setIsOpen((current) => !current)}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.04)] text-text-secondary transition hover:border-[rgba(201,191,255,0.28)] hover:text-accent-lavender md:hidden"
-          >
-            {isOpen ? <TbX size={19} /> : <TbMenu2 size={19} />}
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {isOpen ? (
-            <motion.div
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.2 }}
-              className="mt-2 grid gap-1 border-t border-[rgba(201,191,255,0.1)] pt-2 md:hidden"
-            >
-              {menuItems.map(({ label, to, Icon, end }) => (
-                <MenuLink
-                  key={to}
-                  label={label}
-                  to={to}
-                  Icon={Icon}
-                  end={end}
-                  onClick={() => setIsOpen(false)}
-                />
-              ))}
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </nav>
-    </header>
+      <MobileMenuOverlay isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </>
   )
 }
 
-type MenuLinkProps = {
-  label: string
-  to: string
-  Icon: typeof TbHome
-  end: boolean
-  onClick: () => void
+type MobileMenuOverlayProps = {
+  isOpen: boolean
+  onClose: () => void
 }
 
-function MenuLink({ label, to, Icon, end, onClick }: MenuLinkProps) {
+function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
   return (
-    <NavLink
-      to={to}
-      end={end}
-      onClick={onClick}
-      className={({ isActive }) =>
-        `flex min-w-0 items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium transition duration-200 ${
-          isActive
-            ? 'bg-[rgba(124,80,224,0.22)] text-accent-lavender shadow-[0_0_22px_rgba(124,80,224,0.14)]'
-            : 'text-text-muted hover:bg-[rgba(255,255,255,0.05)] hover:text-text-secondary'
-        }`
-      }
-    >
-      <Icon size={15} />
-      <span className="truncate">{label}</span>
-    </NavLink>
+    <AnimatePresence>
+      {isOpen ? (
+        <motion.div
+          key="mobile-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
+          className="fixed inset-0 z-1000 flex flex-col bg-[#08070f]"
+        >
+          {/* Ambient background */}
+          <div className="pointer-events-none absolute inset-0 opacity-40 bg-[radial-gradient(circle_at_15%_10%,rgba(124,80,224,0.28),transparent_45%),radial-gradient(circle_at_90%_90%,rgba(192,96,240,0.18),transparent_45%)]" />
+          <div className="pointer-events-none absolute inset-0 opacity-[0.04] bg-[linear-gradient(rgba(201,191,255,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,.6)_1px,transparent_1px)] bg-size-[44px_44px]" />
+
+          {/* Top bar */}
+          <div className="relative flex items-center justify-between px-5 pt-5 sm:px-6">
+            <span className="font-heading text-base font-semibold text-text-primary">
+              Dzaky Razi
+            </span>
+            <button
+              type="button"
+              aria-label="Close navigation menu"
+              onClick={onClose}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(255,255,255,0.04)] text-text-secondary transition hover:rotate-90 hover:border-[rgba(201,191,255,0.36)] hover:text-accent-lavender"
+            >
+              <TbX size={20} />
+            </button>
+          </div>
+
+          {/* Numbered menu list */}
+          <nav className="relative flex flex-1 flex-col justify-center px-5 sm:px-6">
+            {menuItems.map(({ label, to, end }, index) => (
+              <motion.div
+                key={to}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12 }}
+                transition={{
+                  delay: 0.08 + index * 0.06,
+                  duration: 0.4,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <NavLink
+                  to={to}
+                  end={end}
+                  onClick={onClose}
+                  className="group flex items-center gap-4 border-b border-[rgba(201,191,255,0.1)] py-5"
+                >
+                  {({ isActive }) => (
+                    <>
+                      <span
+                        className={`font-heading text-xs font-semibold tabular-nums transition-colors ${
+                          isActive ? 'text-accent-violet' : 'text-accent-lavender/40'
+                        }`}
+                      >
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <span
+                        className={`font-heading text-4xl font-black uppercase tracking-tight transition-all duration-300 group-hover:translate-x-2 sm:text-5xl ${
+                          isActive
+                            ? 'text-accent-lavender'
+                            : 'text-text-primary group-hover:text-accent-lavender'
+                        }`}
+                      >
+                        {label}
+                      </span>
+                      <TbArrowUpRight
+                        size={26}
+                        className={`ml-auto shrink-0 transition-all duration-300 ${
+                          isActive
+                            ? 'text-accent-violet opacity-100'
+                            : 'text-accent-lavender opacity-0 group-hover:opacity-100'
+                        }`}
+                      />
+                    </>
+                  )}
+                </NavLink>
+              </motion.div>
+            ))}
+          </nav>
+
+          {/* Footer contact */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.4 }}
+            className="relative flex flex-wrap items-center gap-x-5 gap-y-2 px-5 pb-8 text-[11px] uppercase tracking-[0.16em] text-text-muted sm:px-6"
+          >
+            <a
+              href="mailto:dzakyrazi@gmail.com"
+              className="inline-flex items-center gap-1 transition-colors hover:text-accent-lavender"
+            >
+              <TbArrowUpRight size={13} />
+              Email
+            </a>
+            <span className="text-text-muted/70">South Jakarta, Indonesia</span>
+          </motion.div>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
   )
 }
 

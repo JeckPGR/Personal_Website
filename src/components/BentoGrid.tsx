@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import type { IconType } from 'react-icons'
 import {
-  TbArrowRight,
   TbBriefcase,
   TbCertificate,
   TbFolder,
@@ -31,7 +30,6 @@ type BentoTimelinePanelProps = {
   title: string
   Icon: IconType
   items: BentoTimelineItem[]
-  viewLabel: string
   compactWide?: boolean
 }
 
@@ -104,7 +102,6 @@ function BentoTimelinePanel({
   title,
   Icon,
   items,
-  viewLabel,
   compactWide = false,
 }: BentoTimelinePanelProps) {
   return (
@@ -124,11 +121,6 @@ function BentoTimelinePanel({
       </div>
 
       <BentoTimelineList items={items} compactWide={compactWide} />
-
-      <div className="mt-auto flex items-center justify-between border-t border-[rgba(201,191,255,0.1)] pt-4 text-[11px] font-medium text-accent-lavender lg:pt-3">
-        <span>{viewLabel}</span>
-        <TbArrowRight size={16} />
-      </div>
     </div>
   )
 }
@@ -225,8 +217,7 @@ function BentoGrid() {
               About me
             </h2>
             <p className="mt-1 text-xs text-text-secondary lg:text-[12px]">
-              I'm a product-minded software builder focused on creating practical digital systems, internal tools, and workflow automation.
-My work combines product thinking, web development, and operational understanding to solve real business problems.
+              I'm a product-minded software builder focused on creating practical digital systems, internal tools, and workflow automation. My work combines product thinking, web development, and operational understanding to solve real business problems.
             </p>
           </div>
           <div className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
@@ -356,7 +347,6 @@ My work combines product thinking, web development, and operational understandin
           title="Work Experience"
           Icon={TbBriefcase}
           items={experiencePreviewItems}
-          viewLabel="View all work"
         />
       </BentoCard>
 
@@ -370,7 +360,6 @@ My work combines product thinking, web development, and operational understandin
           title="Projects"
           Icon={TbFolder}
           items={projectPreviewItems}
-          viewLabel="View all projects"
           compactWide
         />
       </BentoCard>
@@ -385,7 +374,6 @@ My work combines product thinking, web development, and operational understandin
           title="Certification"
           Icon={TbCertificate}
           items={certificationPreviewItems}
-          viewLabel="View all certification"
         />
       </BentoCard>
     </section>

@@ -7,7 +7,7 @@
 @config "../tailwind.config.js";
 
 @theme {
-  --color-base: #0a0a12;
+  --color-base: #0a0a0a;
   --color-surface: rgba(255, 255, 255, 0.03);
   --color-surface-hover: rgba(255, 255, 255, 0.06);
   --color-border: rgba(255, 255, 255, 0.08);
@@ -30,7 +30,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   color: #f0ecff;
-  background: #0a0a12;
+  background: #09090a;
   font-family: "Inter", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;

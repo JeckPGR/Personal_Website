@@ -23,8 +23,6 @@ function PageShell({
   tag,
   title,
   description,
-  gradient,
-  Icon,
   chips,
   highlights,
   children,
@@ -47,13 +45,6 @@ function PageShell({
         </div>
         <div className="pointer-events-none absolute bottom-8 left-7.5 top-8 z-0 md:left-[18%]">
           <div className="h-full w-px bg-[linear-gradient(180deg,transparent,rgba(124,80,224,0.62)_10%,rgba(201,191,255,0.18)_88%,transparent)]" />
-        </div>
-        <div
-          className="pointer-events-none absolute right-8 top-8 hidden h-28 w-28 items-center justify-center rounded-[28px] border border-[rgba(201,191,255,0.12)] opacity-70 md:flex"
-          style={{ background: gradient }}
-        >
-          <div className="absolute inset-0 opacity-30 bg-[radial-gradient(rgba(255,255,255,0.42)_1.1px,transparent_1.1px)] bg-size-[16px_16px]" />
-          <Icon className="relative z-10 text-[42px] text-accent-lavender opacity-70" />
         </div>
 
         <div className="relative z-10 ml-10 max-w-3xl md:ml-[21%]">

@@ -5,14 +5,15 @@ import Layout from './components/Layout'
 import SplashScreen from './components/SplashScreen'
 import About from './pages/About'
 import Certification from './pages/Certification'
-import Education from './pages/Education'
 import Home from './pages/Home'
 import Project from './pages/Project'
 import TechStack from './pages/TechStack'
 import Work from './pages/Work'
 import WorkDetail from './pages/WorkDetail'
 import ChatWidget from './components/ui/ChatWidget'
+import CustomCursor from './components/CustomCursor'
 import NotFound from './pages/NotFound'
+import ProjectDetail from './pages/ProjectDetail'
 
 function PortfolioRoutes() {
   return (
@@ -23,9 +24,9 @@ function PortfolioRoutes() {
         <Route path="about" element={<About />} />  
         <Route path="work" element={<Work />} />
         <Route path="project" element={<Project />} />
+        <Route path="/project/:slug" element={<ProjectDetail />} />
         <Route path="work/:slug" element={<WorkDetail />} />
         <Route path="tech-stack" element={<TechStack />} />
-        <Route path="education" element={<Education />} />
         <Route path="certification" element={<Certification />} />
         <Route path="*" element={<NotFound />} />
       </Route>
@@ -56,6 +57,7 @@ function App() {
       </AnimatePresence>
 
       <ChatWidget/>
+      <CustomCursor />
     </BrowserRouter>
   )
 }

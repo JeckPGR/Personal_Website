@@ -106,6 +106,24 @@ export type CertificationItem = {
   period: string
   description: string
   Icon: IconType
+  image?: string
+}
+
+export type ProjectDetailItem = {
+  slug: string
+  title: string
+  eyebrow: string
+  subtitle: string
+  period?: string
+  organization?: string
+  role?: string
+  route: string
+  images: string[]
+  keyPoints: string[]
+  tools: string[]
+  finalOutput: string
+  resultHighlights?: string[]
+  Icon: IconType
 }
 
 export const aboutItem: BentoItem = {
@@ -295,48 +313,119 @@ export const aboutTools: ToolItem[] = [
   { name: 'Azure', category: 'Cloud', Icon: TbBrandAzure },
 ]
 
-export const educationHighlights = [
-  {
-    title: 'Telkom University',
-    text: 'S1 Information Technology, GPA 3.61, 2021–2025',
-    Icon: TbSchool,
-  },
-  {
-    title: 'UXCam',
-    text: 'Mobile Product Management, Sep–Oct 2025',
-    Icon: TbDeviceMobile,
-  },
-  {
-    title: 'MySkill',
-    text: 'Product & Project Development Bootcamp, May–Jul 2025',
-    Icon: TbCertificate,
-  },
-]
-
 export const certificationItems: CertificationItem[] = [
+  {
+    title: 'AI for Product Managers',
+    issuer: 'Alison',
+    period: 'June 2026 - Now',
+    description:
+      'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+    Icon: TbSparkles,
+  },
   {
     title: 'Mobile Product Management',
     issuer: 'UXCam',
     period: 'September - October 2025',
     description:
-      'Strengthened mobile product thinking across discovery, product analytics, experimentation, and user behavior evaluation.',
+      'Learned mobile product frameworks (North Star Metric, Opportunity Tree, Shape Up), user research methods, release planning, and data-driven improvement through mobile product analytics.',
     Icon: TbDeviceMobile,
+    image: '/Certification/UXCam.jfif',
   },
   {
-    title: 'Product & Project Development Bootcamp',
+    title: 'Intensive Product & Project Development Bootcamp',
     issuer: 'MySkill',
     period: 'May - July 2025',
     description:
-      'Built product and project fundamentals across discovery, planning, prioritization, delivery, and team coordination.',
+      'Built product and project fundamentals — product vision, discovery, user research, PRD development, and Waterfall & Agile (Scrum) delivery — through weekly product case studies.',
     Icon: TbCertificate,
+    image: '/Certification/PPM.jfif',
   },
   {
-    title: 'S1 Information Technology',
-    issuer: 'Telkom University',
-    period: '2021 - 2025',
+    title: 'Junior Web Developer',
+    issuer: 'Digitalent / BNSP',
+    period: 'September 2023 - November 2023',
     description:
-      'Formal information technology education with a GPA of 3.61, covering software, data, systems, and applied problem solving.',
-    Icon: TbSchool,
+      'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+    Icon: TbCode,
+  },
+  {
+    title: 'Website Development',
+    issuer: 'MySkill',
+    period: 'August 2023 - April 2024',
+    description:
+      'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+    Icon: TbCode,
+  },
+]
+
+export const projectDetails: ProjectDetailItem[] = [
+  {
+    slug: 'procurement-ecosystem-mapping',
+    title: 'Procurement Ecosystem Mapping',
+    eyebrow: 'PT Bank Mandiri / Enterprise Workflow',
+    subtitle:
+      'Mapped procurement applications, integration flow, user pain points, and improvement options for strategic procurement systems.',
+    period: '2025 - 2026',
+    organization: 'PT Bank Mandiri',
+    role: 'Research And Development',
+    route: '/project/procurement-ecosystem-mapping',
+    images: [
+      '/projects/mandiri-1.png',
+      '/projects/mandiri-2.png',
+      '/projects/mandiri-3.png',
+    ],
+    keyPoints: [
+      'Mapped procurement application ecosystem and related workflow.',
+      'Identified user pain points and process inefficiencies.',
+      'Created visual references for procurement system flow.',
+      'Prepared improvement insights based on system and user context.',
+    ],
+    tools: [
+      'System Mapping',
+      'TELOS',
+      'User Feedback',
+      'Documentation',
+      'Workflow Analysis',
+    ],
+    resultHighlights: [
+      'Procurement ecosystem map',
+      'Pain point summary',
+      'Improvement opportunity notes',
+    ],
+    finalOutput:
+      'Through this project, I learned how to connect product thinking with enterprise system analysis. A good system improvement starts from understanding how users work, where the process breaks, and what business value the improvement should create.',
+    Icon: TbMap,
+  },
+  {
+    slug: 'internal-staff-management-platform',
+    title: 'Internal Staff Management Platform',
+    eyebrow: 'CAATIS F&B Group / Internal Platform',
+    subtitle:
+      'Designed and developed scheduling and payroll workflow support for multiple F&B outlets with centralized staff data.',
+    period: '2024 - 2025',
+    organization: 'CAATIS F&B Group',
+    role: 'Fullstack Developer',
+    route: '/project/internal-staff-management-platform',
+    images: [
+      '/projects/caatis-1.png',
+      '/projects/caatis-2.png',
+      '/projects/caatis-3.png',
+    ],
+    keyPoints: [
+      'Designed staff data structure and operational workflow.',
+      'Built scheduling and payroll-related features.',
+      'Created internal dashboard for easier staff monitoring.',
+      'Converted manual operational workflow into a more organized system.',
+    ],
+    tools: ['Laravel', 'MySQL', 'API', 'Database', 'Bootstrap', 'GitHub'],
+    resultHighlights: [
+      'Centralized staff data',
+      'Reduced manual coordination',
+      'More structured scheduling workflow',
+    ],
+    finalOutput:
+      'This project taught me that internal tools should be simple, useful, and aligned with how the team actually works every day. A system should reduce friction, not add complexity.',
+    Icon: TbDatabase,
   },
 ]
 
