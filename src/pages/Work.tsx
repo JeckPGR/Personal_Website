@@ -12,7 +12,7 @@ const workListItems: RevealItem[] = workExperiences.map((item) => ({
   to: item.route,
   accent: item.accent,
   Icon: item.Icon,
-  image: item.image,
+  image: item.thumbnail,
 }))
 
 function Work() {

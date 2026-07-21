@@ -25,8 +25,8 @@ function ProjectDetail() {
       description={project.description}
       accent={project.accent}
       Icon={project.Icon}
-      image={project.images[0]}
-      showcase={project.proof}
+      image={project.thumbnail}
+      showcase={project.showcase}
       showcaseSlots={3}
       showcaseHeading="Project Showcase"
       proofLabel="Showcase"

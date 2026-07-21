@@ -26,9 +26,13 @@ export type WorkExperience = {
   highlights: string[]
   /** Closing reflection quote shown at the bottom of the detail page */
   reflection: string
-  image?: string
-  /** 1–3 proof/showcase images; when empty a branded visual panel is shown instead */
-  proof?: string[]
+  /** Cover/thumbnail — the list-row preview and the detail hero banner. One image. */
+  thumbnail?: string
+  /**
+   * Up to 3 journey/proof images for the detail page — these are *different*
+   * pictures from the thumbnail. Empty slots render a "no image" placeholder.
+   */
+  showcase?: string[]
   /** External website URL; the visit link only appears when this is set */
   website?: string
 }
@@ -44,7 +48,7 @@ export const workExperiences: WorkExperience[] = [
     period: 'October 2025 - April 2026',
     accent: '#70aaff',
     Icon: TbBuildingBank,
-    image: '/Works/BankMandiri.jpg',
+    thumbnail: '/Works/BankMandiri.jpg',
     summary:
       'Research and development work inside strategic procurement, mapping the application ecosystem and shaping improvement recommendations grounded in real user workflows.',
     tags: ['Research & Development', 'Procurement Systems', 'Enterprise'],
@@ -75,7 +79,7 @@ export const workExperiences: WorkExperience[] = [
     period: 'October 2024 - February 2025',
     accent: '#e090c8',
     Icon: TbBuildingSkyscraper,
-    image: '/Works/Telkom-Prop.webp',
+    thumbnail: '/Works/Telkom-Prop.webp',
     summary:
       'Coordinated an IT delivery team end to end, aligning scope, backlog, and testing to keep a technology-based product on track toward release.',
     tags: ['IT Project Management', 'Project Manager', 'Delivery'],
@@ -105,7 +109,7 @@ export const workExperiences: WorkExperience[] = [
     period: 'September 2024 - January 2025',
     accent: '#c9bfff',
     Icon: TbSchool,
-    image: '/Works/Lab.jpg',
+    thumbnail: '/Works/Lab.jpg',
     summary:
       'Mentored students across web development lab classes, strengthening their grasp of core web concepts and hands-on troubleshooting.',
     tags: ['Web Development', 'Mentoring', 'Lab Assistant'],
@@ -133,7 +137,7 @@ export const workExperiences: WorkExperience[] = [
     period: 'September 2024 - December 2024',
     accent: '#60d9aa',
     Icon: TbToolsKitchen2,
-    image: '/Works/CAATIS.png',
+    thumbnail: '/Works/CAATIS.png',
     summary:
       'Designed and built an internal staff management platform that centralized scheduling and payroll across multiple F&B outlets.',
     tags: ['Fullstack Developer', 'Internal Platform', 'F&B Operations'],
@@ -161,7 +165,7 @@ export const workExperiences: WorkExperience[] = [
     period: 'January 2023 - January 2025',
     accent: '#c060f0',
     Icon: TbTable,
-    image: '/Works/Jokiwithsora.png',
+    thumbnail: '/Works/Jokiwithsora.png',
     summary:
       'Built spreadsheet-based operational systems and automations that streamlined order management and saved the team hours of manual work each week.',
     tags: ['Business Process', 'Automation', 'IT Support'],

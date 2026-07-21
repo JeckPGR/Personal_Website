@@ -17,8 +17,8 @@ function WorkDetail() {
       description={item.summary}
       accent={item.accent}
       Icon={item.Icon}
-      image={item.image}
-      showcase={item.proof}
+      image={item.thumbnail}
+      showcase={item.showcase}
       showcaseSlots={3}
       showcaseHeading="Journey & Proof"
       proofLabel="Journey"

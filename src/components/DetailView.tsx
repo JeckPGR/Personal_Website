@@ -123,6 +123,145 @@ function RevealText({ text, className, delay = 0 }: { text: string; className?: 
   )
 }
 
+/* ─── Showcase / proof image grid ─── */
+type ShowcaseGridProps = {
+  showcase?: string[]
+  showcaseSlots?: number
+  title: string
+  proofLabel: string
+  accent: string
+  Icon: IconType
+  onOpen: (image: LightboxImage) => void
+}
+
+function ShowcaseGrid({
+  showcase,
+  showcaseSlots,
+  title,
+  proofLabel,
+  accent,
+  Icon,
+  onOpen,
+}: ShowcaseGridProps) {
+  // With showcaseSlots, always render that many slots (missing → "no image").
+  // Otherwise use provided images, or fall back to the branded panel.
+  const slots = showcaseSlots
+    ? Array.from({ length: showcaseSlots }, (_, i) => showcase?.[i] ?? '')
+    : showcase?.slice(0, 3) ?? []
+
+  if (!slots.length) {
+    return (
+      <div
+        className="relative flex h-full min-h-[300px] items-center justify-center overflow-hidden rounded-3xl border border-[rgba(201,191,255,0.1)]"
+        style={{
+          background: `linear-gradient(135deg, ${hexToRgba(accent, 0.1)} 0%, rgba(255,255,255,0.015) 55%, rgba(10,9,20,0.6) 100%)`,
+        }}
+      >
+        {/* Grid pattern */}
+        <div className="pointer-events-none absolute inset-0 opacity-[0.05] bg-[linear-gradient(rgba(201,191,255,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,.6)_1px,transparent_1px)] [background-size:32px_32px]" />
+        {/* Floating orbs */}
+        <motion.div
+          animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.45, 0.25] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+          className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full blur-[70px]"
+          style={{ background: `radial-gradient(circle, ${accent}, transparent 70%)` }}
+        />
+        <motion.div
+          animate={{ scale: [1.15, 1, 1.15], opacity: [0.15, 0.35, 0.15] }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 rounded-full blur-[60px]"
+          style={{ background: `radial-gradient(circle, ${accent}, transparent 70%)` }}
+        />
+        {/* Icon watermark */}
+        <motion.div
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[rgba(201,191,255,0.16)] bg-[rgba(10,9,20,0.5)] backdrop-blur-md"
+          style={{ boxShadow: `0 0 60px ${hexToRgba(accent, 0.2)}, inset 0 1px 0 rgba(255,255,255,0.08)` }}
+        >
+          <Icon size={44} style={{ color: accent }} />
+        </motion.div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      {slots.map((src, idx) => {
+        // 1 slot → full width. 3 slots → first is a full-width lead.
+        const isFull = slots.length === 1 || (slots.length === 3 && idx === 0)
+        const caption = `${String(idx + 1).padStart(2, '0')} / ${proofLabel}`
+
+        return (
+          <motion.figure
+            key={`${idx}-${src}`}
+            initial={{ opacity: 0, y: 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
+            className={`group relative m-0 overflow-hidden rounded-3xl border bg-[rgba(255,255,255,0.02)] ${
+              src
+                ? 'border-[rgba(201,191,255,0.1)]'
+                : 'border-dashed border-[rgba(201,191,255,0.14)]'
+            } ${
+              isFull
+                ? 'min-h-[280px] sm:col-span-2 md:min-h-[420px]'
+                : 'min-h-[220px] md:min-h-[300px]'
+            }`}
+          >
+            {src ? (
+              <>
+                <button
+                  type="button"
+                  aria-label={`View ${proofLabel} ${idx + 1} full size`}
+                  onClick={() =>
+                    onOpen({
+                      src,
+                      alt: `${title} — ${proofLabel} ${idx + 1}`,
+                      caption: title,
+                      label: caption,
+                      accent,
+                    })
+                  }
+                  className="absolute inset-0 h-full w-full cursor-pointer"
+                >
+                  <img
+                    src={src}
+                    alt={`${title} — ${proofLabel} ${idx + 1}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,9,20,0.5)] to-transparent" />
+                  <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(10,9,20,0.6)] text-accent-lavender opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100 max-md:opacity-80">
+                    <TbMaximize size={16} />
+                  </span>
+                </button>
+                <figcaption
+                  className="pointer-events-none absolute bottom-3 left-3 rounded-full border border-[rgba(201,191,255,0.15)] bg-[rgba(10,9,20,0.6)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
+                  style={{ color: accent }}
+                >
+                  {caption}
+                </figcaption>
+              </>
+            ) : (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5">
+                <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(201,191,255,1)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,1)_1px,transparent_1px)] [background-size:26px_26px]" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-dashed border-[rgba(201,191,255,0.2)] bg-[rgba(255,255,255,0.02)]">
+                  <TbPhotoOff size={18} className="text-accent-lavender/40" />
+                </div>
+                <span className="font-heading text-[9px] font-bold uppercase tracking-[0.2em] text-accent-lavender/30">
+                  No image
+                </span>
+              </div>
+            )}
+          </motion.figure>
+        )
+      })}
+    </div>
+  )
+}
+
 function DetailView({
   backTo,
   backLabel,
@@ -439,132 +578,6 @@ function DetailView({
               className="mt-8 h-px w-24 origin-left bg-gradient-to-r"
               style={{ backgroundImage: `linear-gradient(to right, ${accent}, transparent)` }}
             />
-
-            {/* Showcase — fills the space beside the meta sidebar */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.15 }}
-              className="mt-10 flex-1"
-            >
-              {showcaseHeading ? (
-                <h3
-                  className="mb-4 font-heading text-[10px] font-bold uppercase tracking-[0.2em]"
-                  style={{ color: accent }}
-                >
-                  {showcaseHeading}
-                </h3>
-              ) : null}
-              {(() => {
-                // With showcaseSlots, always render that many slots (missing → "no image").
-                // Otherwise use provided images, or fall back to the branded panel.
-                const slots = showcaseSlots
-                  ? Array.from({ length: showcaseSlots }, (_, i) => showcase?.[i] ?? '')
-                  : showcase?.slice(0, 3) ?? []
-
-                if (!slots.length) return null
-
-                return (
-                  <div className="grid h-full gap-4 sm:grid-cols-2">
-                    {slots.map((src, idx) => {
-                      // 1 slot → full width. 3 slots → first is a full-width lead.
-                      const isFull =
-                        slots.length === 1 || (slots.length === 3 && idx === 0)
-                      return (
-                        <figure
-                          key={`${idx}-${src}`}
-                          className={`group relative m-0 overflow-hidden rounded-3xl border bg-[rgba(255,255,255,0.02)] ${
-                            src
-                              ? 'border-[rgba(201,191,255,0.1)]'
-                              : 'border-dashed border-[rgba(201,191,255,0.14)]'
-                          } ${isFull ? 'min-h-[260px] sm:col-span-2' : 'min-h-[200px]'}`}
-                        >
-                          {src ? (
-                            <>
-                              <button
-                                type="button"
-                                aria-label={`View ${proofLabel} ${idx + 1} full size`}
-                                onClick={() =>
-                                  setLightbox({
-                                    src,
-                                    alt: `${title} — ${proofLabel} ${idx + 1}`,
-                                    caption: title,
-                                    label: `${String(idx + 1).padStart(2, '0')} / ${proofLabel}`,
-                                    accent,
-                                  })
-                                }
-                                className="absolute inset-0 h-full w-full cursor-pointer"
-                              >
-                                <img
-                                  src={src}
-                                  alt={`${title} — proof ${idx + 1}`}
-                                  loading="lazy"
-                                  decoding="async"
-                                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,9,20,0.5)] to-transparent" />
-                                <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(10,9,20,0.6)] text-accent-lavender opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100 max-md:opacity-80">
-                                  <TbMaximize size={16} />
-                                </span>
-                              </button>
-                              <figcaption
-                                className="pointer-events-none absolute bottom-3 left-3 rounded-full border border-[rgba(201,191,255,0.15)] bg-[rgba(10,9,20,0.6)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
-                                style={{ color: accent }}
-                              >
-                                {String(idx + 1).padStart(2, '0')} / {proofLabel}
-                              </figcaption>
-                            </>
-                          ) : (
-                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5">
-                              <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(201,191,255,1)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,1)_1px,transparent_1px)] [background-size:26px_26px]" />
-                              <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-dashed border-[rgba(201,191,255,0.2)] bg-[rgba(255,255,255,0.02)]">
-                                <TbPhotoOff size={18} className="text-accent-lavender/40" />
-                              </div>
-                              <span className="font-heading text-[9px] font-bold uppercase tracking-[0.2em] text-accent-lavender/30">
-                                No image
-                              </span>
-                            </div>
-                          )}
-                        </figure>
-                      )
-                    })}
-                  </div>
-                )
-              })() || (
-                <div
-                  className="relative flex h-full min-h-[300px] items-center justify-center overflow-hidden rounded-3xl border border-[rgba(201,191,255,0.1)]"
-                  style={{
-                    background: `linear-gradient(135deg, ${accentRgba10} 0%, rgba(255,255,255,0.015) 55%, rgba(10,9,20,0.6) 100%)`,
-                  }}
-                >
-                  {/* Grid pattern */}
-                  <div className="pointer-events-none absolute inset-0 opacity-[0.05] bg-[linear-gradient(rgba(201,191,255,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,.6)_1px,transparent_1px)] [background-size:32px_32px]" />
-                  {/* Floating orbs */}
-                  <motion.div
-                    animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.45, 0.25] }}
-                    transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-                    className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full blur-[70px]"
-                    style={{ background: `radial-gradient(circle, ${accent}, transparent 70%)` }}
-                  />
-                  <motion.div
-                    animate={{ scale: [1.15, 1, 1.15], opacity: [0.15, 0.35, 0.15] }}
-                    transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-                    className="pointer-events-none absolute -bottom-16 -left-16 h-48 w-48 rounded-full blur-[60px]"
-                    style={{ background: `radial-gradient(circle, ${accent}, transparent 70%)` }}
-                  />
-                  {/* Icon watermark */}
-                  <motion.div
-                    animate={{ y: [0, -10, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                    className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[rgba(201,191,255,0.16)] bg-[rgba(10,9,20,0.5)] backdrop-blur-md"
-                    style={{ boxShadow: `0 0 60px ${accentRgba20}, inset 0 1px 0 rgba(255,255,255,0.08)` }}
-                  >
-                    <Icon size={44} style={{ color: accent }} />
-                  </motion.div>
-                </div>
-              )}
-            </motion.div>
           </motion.div>
         </div>
 
@@ -660,6 +673,36 @@ function DetailView({
                   </p>
                 </motion.div>
               ))}
+            </div>
+          </section>
+        ) : null}
+
+        {/* ─── Showcase Section — sits under "Key Points" ─── */}
+        {showcaseSlots || showcase?.length ? (
+          <section className="mt-20">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-10 flex items-center gap-4"
+            >
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[rgba(201,191,255,0.1)]" />
+              <h2 className="text-center font-heading text-sm font-bold uppercase tracking-[0.25em] text-text-primary">
+                {showcaseHeading ?? 'Showcase'}
+              </h2>
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[rgba(201,191,255,0.1)]" />
+            </motion.div>
+
+            <div className="mx-auto max-w-5xl">
+              <ShowcaseGrid
+                showcase={showcase}
+                showcaseSlots={showcaseSlots}
+                title={title}
+                proofLabel={proofLabel}
+                accent={accent}
+                Icon={Icon}
+                onOpen={setLightbox}
+              />
             </div>
           </section>
         ) : null}

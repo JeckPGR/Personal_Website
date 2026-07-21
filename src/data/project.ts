@@ -19,12 +19,16 @@ export type ProjectItem = {
   stack: string[]
   accent: string
   Icon: IconType
-  images: string[]
+  /** Cover/thumbnail — the list-row preview and the detail hero banner. One image. */
+  thumbnail?: string
+  /**
+   * Up to 3 showcase images for the detail page — these are *different*
+   * pictures from the thumbnail. Empty slots render a "no image" placeholder.
+   */
+  showcase?: string[]
   keyPoints: string[]
   finalOutput: string
   resultHighlights?: string[]
-  /** 1–3 proof/showcase images; when empty a branded visual panel is shown instead */
-  proof?: string[]
   /** External website URL; the visit link only appears when this is set */
   website?: string
 }
@@ -46,8 +50,7 @@ export const projects: ProjectItem[] = [
     stack: ['AI', 'Product', 'Content Strategy'],
     accent: '#63d848',
     Icon: TbSparkles,
-    images: ['/Projects/Inotrive.png'],
-    proof: ['/Projects/Inotrive.png'],
+    thumbnail: '/Projects/Inotrive.png',
     website: 'https://inotrive.com',
     keyPoints: [
       'Turns early content ideas into structured, ready-to-execute concepts for creators, personal brands, and MSMEs.',
@@ -74,8 +77,7 @@ export const projects: ProjectItem[] = [
     stack: ['NextJS', 'Vercel', 'Supabase'],
     accent: '#f0a860',
     Icon: TbWorld,
-    images: ['/Projects/Yayzi.png'],
-    proof: ['/Projects/Yayzi.png'],
+    thumbnail: '/Projects/Yayzi.png',
     website: 'https://yayzi.vercel.app',
     keyPoints: [
       'Built a no-login validation flow: creators upload an idea, get a shareable link, and voters respond in seconds.',
@@ -103,8 +105,7 @@ export const projects: ProjectItem[] = [
     stack: ['NextJS', 'Vercel', 'TMDB API'],
     accent: '#c060f0',
     Icon: TbWorld,
-    images: ['/Projects/WatchSite.webp'],
-    proof: ['/Projects/WatchSite.webp'],
+    thumbnail: '/Projects/WatchSite.webp',
     website: 'https://watch-site.vercel.app',
     keyPoints: [
       'Integrated the TMDB API to fetch and display movie data, trailers, and synopses in real time.',
@@ -131,8 +132,7 @@ export const projects: ProjectItem[] = [
   stack: ['NextJS', 'React', 'Express', 'TailwindCSS', 'Vercel'],
   accent: '#f0a860',
   Icon: TbWorld,
-  images: ['/Projects/PajaBarbershop.png'],
-  proof: ['/Projects/PajaBarbershop.png'],
+  thumbnail: '/Projects/PajaBarbershop.png',
   website: 'https://pajabarbershop.com',
   keyPoints: [
     'Led project planning and team coordination across a 4-person team, from feature scoping to delivery.',
@@ -161,8 +161,7 @@ export const projects: ProjectItem[] = [
     stack: ['NextJS', 'Vercel', 'TMDB API'],
     accent: '#c060f0',
     Icon: TbWorld,
-    images: ['/Projects/WatchSite.webp'],
-    proof: ['/Projects/WatchSite.webp'],
+    thumbnail: '/Projects/WatchSite.webp',
     website: 'https://watch-site.vercel.app',
     keyPoints: [
       'Integrated the TMDB API to fetch and display movie data, trailers, and synopses in real time.',
@@ -189,15 +188,10 @@ export const projects: ProjectItem[] = [
     stack: ['System Mapping', 'TELOS', 'User Feedback'],
     accent: '#70aaff',
     Icon: TbLayoutDashboard,
-    images: [
-      '/projects/mandiri-1.png',
-      '/projects/mandiri-2.png',
-      '/projects/mandiri-3.png',
-    ],
-    proof: [
-      '/projects/mandiri-1.png',
-      '/projects/mandiri-2.png',
-      '/projects/mandiri-3.png',
+    thumbnail: '/Projects/mandiri-1.png',
+    showcase: [
+      '/Projects/mandiri-2.png',
+      '/Projects/mandiri-3.png',
     ],
     keyPoints: [
       'Mapped procurement application ecosystem and related workflow.',
@@ -224,7 +218,6 @@ export const projects: ProjectItem[] = [
     stack: ['Mobile', 'Location-based', 'UX'],
     accent: '#70aaff',
     Icon: TbDeviceMobile,
-    images: [],
     keyPoints: [
       'Helps users discover English and Mathematics courses around Bandung.',
       'Presents detailed course information: pricing, class options, syllabus, and categories.',

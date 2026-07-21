@@ -22,7 +22,7 @@ function Project() {
           to: project.route,
           accent: project.accent,
           Icon: project.Icon,
-          image: project.images[0],
+          image: project.thumbnail,
         })),
     [activeTab],
   )
