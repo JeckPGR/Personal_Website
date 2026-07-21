@@ -314,6 +314,33 @@ export const aboutTools: ToolItem[] = [
 ]
 
 export const certificationItems: CertificationItem[] = [
+   {
+    title: 'Build an AI Agent',
+    issuer: 'IBM SkillsBuild',
+    period: 'July - July 2026',
+    description:
+      'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+    Icon: TbSparkles,
+    image: '/Certification/IBM-3.png',
+  },
+   {
+    title: 'Lab: Troubleshoot Your Code using Bob IDE',
+    issuer: 'IBM SkillsBuild',
+    period: 'July - July 2026',
+    description:
+      'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+    Icon: TbSparkles,
+    image: '/Certification/IBM-2.png',
+  },
+   {
+    title: 'Introduction to Large Language Models',
+    issuer: 'IBM SkillsBuild',
+    period: 'July - July 2026',
+    description:
+      'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+    Icon: TbSparkles,
+    image: '/Certification/IBM-1.png',
+  },
   {
     title: 'AI for Product Managers',
     issuer: 'Alison',
@@ -321,6 +348,15 @@ export const certificationItems: CertificationItem[] = [
     description:
       'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
     Icon: TbSparkles,
+  },
+  {
+    title: 'PROJECT MANAGEMENT & SCRUM FRAMEWORK',
+    issuer: 'MySkill',
+    period: 'October - November 2025',
+    description:
+      'Built product and project fundamentals — product vision, discovery, user research, PRD development, and Waterfall & Agile (Scrum) delivery — through weekly product case studies.',
+    Icon: TbCertificate,
+    image: '/Certification/Scrum.png',
   },
   {
     title: 'Mobile Product Management',
@@ -341,20 +377,67 @@ export const certificationItems: CertificationItem[] = [
     image: '/Certification/PPM.jfif',
   },
   {
-    title: 'Junior Web Developer',
-    issuer: 'Digitalent / BNSP',
-    period: 'September 2023 - November 2023',
+    title: 'Frontend Intermediate',
+    issuer: 'Dicoding',
+    period: 'January 2024 - October 2027',
     description:
       'Build an web app using PHP.',
     Icon: TbCode,
+    image: '/Certification/FrontEnd.jpg',
   },
   {
-    title: 'Website Development',
+    title: 'Junior Web Developer',
+    issuer: 'Digitalent / BNSP',
+    period: 'November 2023 - November 2026',
+    description:
+      'Build an web app using PHP.',
+    Icon: TbCode,
+    image: '/Certification/Kominfo.png',
+  },
+  {
+    title: 'Frontend - JavaScript Mastery',
     issuer: 'MySkill',
-    period: 'August 2023 - April 2024',
+    period: 'October - December 2023',
+    description:
+      'Build an web app using PHP.',
+    Icon: TbCode,
+    image: '/Certification/Java.jpg',
+  },
+  {
+    title: 'Java Programming',
+    issuer: 'Dicoding',
+    period: 'October 2023 - October 2026',
+    description:
+      'Build an web app using PHP.',
+    Icon: TbCode,
+    image: '/Certification/Java.jpg',
+  },
+  {
+    title: 'Github Basic',
+    issuer: 'Dicoding',
+    period: 'September 2023 - September 2026',
     description:
       'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
     Icon: TbCode,
+    image: '/Certification/BasicWeb.jpg',
+  },
+  {
+    title: 'Basic Web Programming',
+    issuer: 'Dicoding',
+    period: 'September 2023 - September 2026',
+    description:
+      'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+    Icon: TbCode,
+    image: '/Certification/BasicWeb.jpg',
+  },
+   {
+    title: 'Basic SQL',
+    issuer: 'Dicoding',
+    period: 'September 2023 - September 2026',
+    description:
+      'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+    Icon: TbCode,
+    image: '/Certification/SQL.jpg',
   },
 ]
 

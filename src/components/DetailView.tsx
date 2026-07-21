@@ -135,7 +135,7 @@ function DetailView({
   points,
   pointsHeading = 'What I Did',
   highlights,
-  highlightsHeading = 'Final Output',
+  highlightsHeading = '3 Key Points',
   quote,
   quoteHeading = 'Reflection',
   image,

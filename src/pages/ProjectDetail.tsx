@@ -28,8 +28,8 @@ function ProjectDetail() {
       image={project.images[0]}
       showcase={project.proof}
       showcaseSlots={3}
-      showcaseHeading="Showcase"
-      proofLabel="Key Point"
+      showcaseHeading="Project Showcase"
+      proofLabel="Showcase"
       externalUrl={project.website}
       meta={meta}
       tags={project.stack}

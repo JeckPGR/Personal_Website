@@ -21,7 +21,7 @@ function WorkDetail() {
       showcase={item.proof}
       showcaseSlots={3}
       showcaseHeading="Journey & Proof"
-      proofLabel="Key Results"
+      proofLabel="Journey"
       externalUrl={item.website}
       meta={[
         { label: 'Role', value: item.role },
@@ -33,7 +33,7 @@ function WorkDetail() {
       points={item.bullets}
       pointsHeading="Responsibilities & Impact"
       highlights={item.highlights}
-      highlightsHeading="Key Results"
+      highlightsHeading="3 Key Results"
       quote={item.reflection}
       quoteHeading="Reflection"
     />
