@@ -43,19 +43,19 @@ const experiencePreviewItems: BentoTimelineItem[] = workItems
 
 const projectPreviewItems: BentoTimelineItem[] = [
   {
-    title: 'Procurement Ecosystem Mapping',
-    meta: 'Enterprise workflow | PT Bank Mandiri',
-    detail: 'Procurement applications and integration map',
+    title: 'Inotrive',
+    meta: 'AI TikTok Script Intelligence | Personal Product',
+    detail: 'AI-powered platform that turns raw ideas into structured TikTok scripts, hooks, and production cues.',
   },
   {
-    title: 'Internal Staff Management Platform',
-    meta: 'Full stack platform | CAATIS F&B Group',
-    detail: 'Scheduling and payroll workflow system',
+    title: 'Yayzi',
+    meta: 'Temporary Room for Idea Validation | Personal Product',
+    detail: 'A no-login, auto-expiring room where creators drop an idea and collect quick Yay/Nay feedback.',
   },
   {
-    title: 'IT Project Delivery Backlog',
-    meta: 'Project management | Telkom Property',
-    detail: 'Backlog, testing, and delivery coordination',
+    title: 'PajaBarbershop',
+    meta: 'Booking & Backoffice System | Client Project',
+    detail: 'End-to-end booking platform and staff backoffice for a barbershop chain, built with a 4-person team.',
   },
 ]
 
@@ -197,8 +197,7 @@ function BentoGrid() {
             Product-minded   builder for digital systems.
           </p>
           <p className="mt-3 text-xs leading-5 text-text-secondary lg:mt-2 lg:line-clamp-2">
-            PM, developer, and analyst working across discovery, delivery, and
-            automation.
+            Developer, project manager, and aspiring Product Manager — working across discovery, delivery, and development.
           </p>
         </div>
       </BentoCard>
@@ -217,7 +216,7 @@ function BentoGrid() {
               About me
             </h2>
             <p className="mt-1 text-xs text-text-secondary lg:text-[12px]">
-              I'm a product-minded software builder focused on creating practical digital systems, internal tools, and workflow automation. My work combines product thinking, web development, and operational understanding to solve real business problems.
+              With 2 years of experience in full-stack development, along with hands-on experience in project management, I'm now focused on growing as a Product Manager. I build products like Inotrive and Yayzi to practice creating real value, while keeping my technical understanding sharp so I stay aware of what's technologically possible. My goa to be a Product Manager with strong product sense and flexible technical depth.
             </p>
           </div>
           <div className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
