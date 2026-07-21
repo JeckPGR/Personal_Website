@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
 import type { MotionProps } from 'framer-motion'
 import type { IconType } from 'react-icons'
@@ -18,6 +18,8 @@ import {
   certificationItems,
 } from '../data/portfolio'
 import type { ToolItem } from '../data/portfolio'
+import { useCopy } from '../hooks/useCopy'
+import { useLocalize } from '../hooks/useLocalize'
 import { projects } from '../data/project'
 import { workExperiences } from '../data/work'
 
@@ -48,17 +50,6 @@ type RowItem = {
 
 /* ─── Data: only ever the first three of each list, the rest lives on its own page ─── */
 
-const workRows: RowItem[] = workExperiences.slice(0, 3).map((item) => ({
-  id: item.slug,
-  title: item.company,
-  meta: item.tag,
-  sub: item.period,
-  to: item.route,
-  accent: item.accent,
-  Icon: item.Icon,
-  image: item.thumbnail,
-}))
-
 const projectRows: RowItem[] = projects.slice(0, 3).map((project) => ({
   id: project.slug,
   title: project.title,
@@ -71,23 +62,11 @@ const projectRows: RowItem[] = projects.slice(0, 3).map((project) => ({
   fit: 'contain' as const,
 }))
 
-const certificationRows: RowItem[] = certificationItems
-  .slice(0, 3)
-  .map((item, index) => ({
-    id: `${item.issuer}-${item.title}`,
-    title: item.title,
-    meta: item.issuer,
-    sub: item.period,
-    to: '/certification',
-    accent: CERT_ACCENTS[index % CERT_ACCENTS.length],
-    // No tile — certifications read better as plain text rows.
-  }))
-
 const stats = [
-  { value: workExperiences.length, label: 'Roles' },
-  { value: projects.length, label: 'Projects' },
-  { value: certificationItems.length, label: 'Certifications' },
-]
+  { value: workExperiences.length, key: 'about.stats.roles' },
+  { value: projects.length, key: 'about.stats.projects' },
+  { value: certificationItems.length, key: 'about.stats.certifications' },
+] as const
 
 /* ─── Word-by-word headline reveal ─── */
 function RevealWords({
@@ -231,6 +210,7 @@ function ToolRow({
 }
 
 function ToolClusters({ title, items }: { title: string; items: ToolItem[] }) {
+  const t = useCopy()
   const [expanded, setExpanded] = useState(false)
 
   const groups = groupByCategory(items)
@@ -244,7 +224,7 @@ function ToolClusters({ title, items }: { title: string; items: ToolItem[] }) {
           {title}
         </h3>
         <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted">
-          {String(items.length).padStart(2, '0')} entries
+          {String(items.length).padStart(2, '0')} {t('about.entries')}
         </span>
       </div>
 
@@ -295,7 +275,9 @@ function ToolClusters({ title, items }: { title: string; items: ToolItem[] }) {
             aria-expanded={expanded}
             className="group inline-flex items-center gap-2 rounded-md border border-[rgba(var(--rgb-line),0.1)] bg-[rgba(var(--rgb-hover),0.04)] px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 transition-all duration-300 hover:border-[rgba(var(--rgb-line),0.24)] hover:bg-[rgba(var(--rgb-hover),0.1)] hover:text-accent-lavender"
           >
-            {expanded ? 'See less' : `See more (${rest.length})`}
+            {expanded
+              ? t('about.seeLess')
+              : `${t('about.seeMore')} (${rest.length})`}
             <motion.span
               animate={{ rotate: expanded ? 180 : 0 }}
               transition={{ duration: 0.4, ease: EASE }}
@@ -430,7 +412,38 @@ function IndexRows({
 }
 
 function About() {
+  const t = useCopy()
+  const L = useLocalize()
   const heroRef = useRef<HTMLElement>(null)
+
+  const workRows = useMemo<RowItem[]>(
+    () =>
+      workExperiences.slice(0, 3).map((item) => ({
+        id: item.slug,
+        title: item.company,
+        meta: item.tag,
+        sub: L(item.period),
+        to: item.route,
+        accent: item.accent,
+        Icon: item.Icon,
+        image: item.thumbnail,
+      })),
+    [L],
+  )
+
+  const certificationRows = useMemo<RowItem[]>(
+    () =>
+      certificationItems.slice(0, 3).map((item, index) => ({
+        id: `${item.issuer}-${item.title}`,
+        title: item.title,
+        meta: item.issuer,
+        sub: L(item.period),
+        to: '/certification',
+        accent: CERT_ACCENTS[index % CERT_ACCENTS.length],
+        // No tile — certifications read better as plain text rows.
+      })),
+    [L],
+  )
 
   // Hero drifts and dims as it leaves, so the sections below feel like they
   // slide over it instead of merely following it.
@@ -471,29 +484,26 @@ function About() {
           >
             <span className="h-px w-8 bg-accent-lavender/40" />
             <span className="font-heading text-[10px] font-bold uppercase tracking-[0.3em] text-accent-lavender/70">
-              About /&gt;
+              {t('about.tag')} /&gt;
             </span>
           </motion.div>
 
           <h1 className="mt-6 max-w-3xl font-heading text-3xl font-bold leading-[1.15] text-text-primary md:text-4xl lg:text-[3.25rem]">
-            <RevealWords
-              text="Product-minded builder with a practical engineering core."
-              delay={0.15}
-            />
+            <RevealWords text={t('about.headline')} delay={0.15} />
           </h1>
 
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5, ease: EASE }}
-            className="mt-7 max-w-2xl text-[15px] font-light leading-[1.9] text-text-secondary"
+            className="mt-7 max-w-3xl text-[15px] font-light leading-[1.9] text-text-secondary"
           >
-            {aboutItem.description}
+            {aboutItem.description ? L(aboutItem.description) : null}
           </motion.p>
 
-          {aboutItem.chips?.length ? (
+          {aboutItem.chips ? (
             <div className="mt-8 flex flex-wrap gap-2">
-              {aboutItem.chips.map((chip, index) => (
+              {L(aboutItem.chips).map((chip, index) => (
                 <motion.span
                   key={chip}
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -516,13 +526,13 @@ function About() {
             className="mt-12 flex flex-wrap items-end justify-between gap-x-12 gap-y-7 border-t border-[rgba(var(--rgb-line),0.08)] pt-8"
           >
             <dl className="flex flex-wrap items-end gap-x-12 gap-y-6">
-              {stats.map(({ value, label }) => (
-                <div key={label}>
+              {stats.map(({ value, key }) => (
+                <div key={key}>
                   <dt className="font-heading text-2xl font-bold tabular-nums text-text-primary md:text-3xl">
                     {String(value).padStart(2, '0')}
                   </dt>
                   <dd className="mt-1 text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted">
-                    {label}
+                    {t(key)}
                   </dd>
                 </div>
               ))}
@@ -584,37 +594,37 @@ function About() {
 
       {/* ─── Toolkit ─── */}
       <section className="mt-24">
-        <SectionHeading label="Toolkit" />
+        <SectionHeading label={t('about.section.toolkit')} />
 
         <div className="space-y-14">
-          <ToolClusters title="Tech Stack" items={aboutTechStack} />
-          <ToolClusters title="Tools" items={aboutTools} />
+          <ToolClusters title={t('about.techStack')} items={aboutTechStack} />
+          <ToolClusters title={t('about.tools')} items={aboutTools} />
         </div>
       </section>
 
       {/* ─── Selected work ─── */}
       <section className="mt-24">
-        <SectionHeading label="Professional Experience" />
+        <SectionHeading label={t('about.section.experience')} />
         <IndexRows
           items={workRows}
           href="/work"
-          viewAllLabel="All experience"
+          viewAllLabel={t('about.allExperience')}
         />
       </section>
 
       {/* ─── Projects ─── */}
       <section className="mt-24">
-        <SectionHeading label="Projects" />
-        <IndexRows items={projectRows} href="/project" viewAllLabel="All projects" />
+        <SectionHeading label={t('about.section.projects')} />
+        <IndexRows items={projectRows} href="/project" viewAllLabel={t('about.allProjects')} />
       </section>
 
       {/* ─── Certifications ─── */}
       <section className="mt-24">
-        <SectionHeading label="Certifications" />
+        <SectionHeading label={t('about.section.certifications')} />
         <IndexRows
           items={certificationRows}
           href="/certification"
-          viewAllLabel="All certifications"
+          viewAllLabel={t('about.allCertifications')}
         />
       </section>
     </motion.div>

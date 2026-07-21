@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import type { IconType } from 'react-icons'
 import {
   TbBriefcase,
@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom'
 import meImage from '../assets/Me.png'
 import { certificationItems, workItems } from '../data/portfolio'
 import { workExperiences } from '../data/work'
+import { useCopy } from '../hooks/useCopy'
+import { useLocalize } from '../hooks/useLocalize'
+import type { CopyKey } from '../i18n/translations'
 import { AnimatedBeam } from './ui/animated-beam'
 
 type BentoCardProps = {
@@ -42,41 +45,29 @@ const summaryBySlug = new Map(
   workExperiences.map(({ slug, summary }) => [slug, summary]),
 )
 
-const experiencePreviewItems: BentoTimelineItem[] = workItems
-  .slice(0, 3)
-  .map(({ slug, title, subtitle, tag, period }) => ({
-    title,
-    meta: `${subtitle} | ${tag}`,
-    detail: period,
-    description: summaryBySlug.get(slug),
-  }))
-
-const projectPreviewItems: BentoTimelineItem[] = [
+/** Bespoke home blurbs — shorter than the project page copy, so they keep
+ *  their own keys rather than reusing `projects`. */
+const projectPreviewKeys: Array<{
+  title: string
+  metaKey: CopyKey
+  detailKey: CopyKey
+}> = [
   {
     title: 'Inotrive',
-    meta: 'AI TikTok Script Intelligence | Personal Product',
-    detail: 'AI-powered platform that turns raw ideas into structured TikTok scripts, hooks, and production cues.',
+    metaKey: 'home.preview.inotrive.meta',
+    detailKey: 'home.preview.inotrive.detail',
   },
   {
     title: 'Yayzi',
-    meta: 'Temporary Room for Idea Validation | Personal Product',
-    detail: 'A no-login, auto-expiring room where creators drop an idea and collect quick Yay/Nay feedback.',
+    metaKey: 'home.preview.yayzi.meta',
+    detailKey: 'home.preview.yayzi.detail',
   },
   {
     title: 'PajaBarbershop',
-    meta: 'Booking & Backoffice System | Client Project',
-    detail: 'End-to-end booking platform and staff backoffice for a barbershop chain, built with a 4-person team.',
+    metaKey: 'home.preview.paja.meta',
+    detailKey: 'home.preview.paja.detail',
   },
 ]
-
-const certificationPreviewItems: BentoTimelineItem[] = certificationItems
-  .slice(0, 3)
-  .map(({ title, issuer, period, description }) => ({
-    title,
-    meta: issuer,
-    detail: period,
-    description,
-  }))
 
 function BentoCard({
   children,
@@ -84,6 +75,7 @@ function BentoCard({
   to,
   showHoverHint = true,
 }: BentoCardProps) {
+  const t = useCopy()
   const sharedClassName = `group relative min-w-0 max-w-full overflow-hidden rounded-[18px] border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-film),0.025)] shadow-[inset_0_1px_0_rgba(var(--rgb-film),0.025)] transition duration-200 hover:border-[rgba(var(--rgb-hover),0.32)] ${className}`
 
   if (to) {
@@ -93,7 +85,7 @@ function BentoCard({
         {showHoverHint ? (
           <>
             <span className="pointer-events-none absolute bottom-4 right-4 z-20 inline-flex translate-y-2 items-center gap-2 rounded-md border border-[rgba(var(--rgb-line),0.12)] bg-[var(--app-panel)] px-3 py-1.5 text-[10px] font-medium text-accent-lavender opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.24),0_0_22px_rgba(var(--rgb-glow),0.12)] backdrop-blur-md transition duration-300 ease-out group-hover:translate-y-0 group-hover:border-[rgba(var(--rgb-line),0.24)] group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-              Find more
+              {t('home.findMore')}
               <span className="translate-x-0 transition-transform duration-300 group-hover:translate-x-1">
                 -&gt;
               </span>
@@ -198,7 +190,48 @@ function BentoTimelineList({
 }
 
 function BentoGrid() {
+  const t = useCopy()
+  const L = useLocalize()
   const heroContainerRef = useRef<HTMLDivElement>(null)
+
+  const experiencePreviewItems = useMemo<BentoTimelineItem[]>(
+    () =>
+      workItems.slice(0, 3).map(({ slug, title, subtitle, tag, period }) => {
+        const summary = summaryBySlug.get(slug)
+
+        return {
+          title,
+          meta: `${subtitle} | ${tag}`,
+          detail: L(period),
+          description: summary && L(summary),
+        }
+      }),
+    [L],
+  )
+
+  const projectPreviewItems = useMemo<BentoTimelineItem[]>(
+    () =>
+      projectPreviewKeys.map(({ title, metaKey, detailKey }) => ({
+        title,
+        meta: t(metaKey),
+        detail: t(detailKey),
+      })),
+    [t],
+  )
+
+  const certificationPreviewItems = useMemo<BentoTimelineItem[]>(
+    () =>
+      certificationItems
+        .slice(0, 3)
+        .map(({ title, issuer, period, description }) => ({
+          title,
+          meta: issuer,
+          detail: L(period),
+          description: L(description),
+        })),
+    [L],
+  )
+
   const techNodeRef = useRef<HTMLDivElement>(null)
   const productNodeRef = useRef<HTMLDivElement>(null)
 
@@ -212,10 +245,10 @@ function BentoGrid() {
         </div>
         <div className="relative z-10">
           <p className="mt-2 wrap-break-words font-heading text-2xl font-bold leading-tight text-text-primary lg:text-[clamp(1rem,1.7vw,1.5rem)]">
-            Product-minded builder for digital systems.
+            {t('home.tagline')}
           </p>
           <p className="mt-3 text-xs leading-5 text-text-secondary lg:mt-2 lg:line-clamp-2">
-            Developer, project manager, and aspiring Product Manager, working across discovery, delivery, and development.
+            {t('home.taglineSub')}
           </p>
         </div>
       </BentoCard>
@@ -228,13 +261,13 @@ function BentoGrid() {
           <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_18%_85%,var(--app-wash-a),transparent_32%),radial-gradient(circle_at_86%_15%,var(--app-wash-b),transparent_35%)]" />
           <div className="relative z-10 min-w-0">
             <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 lg:text-[9px]">
-              Profile
+              {t('home.profile')}
             </p>
             <h2 className="mt-2 font-heading text-3xl font-bold text-text-primary lg:text-[clamp(2rem,3.2vw,3rem)]">
-              About me
+              {t('home.aboutMe')}
             </h2>
             <p className="mt-1 line-clamp-4 text-xs leading-5 text-text-secondary lg:line-clamp-3 lg:text-[12px] xl:line-clamp-4">
-              With 2 years of experience in full-stack development, along with hands-on experience in project management, I&apos;m now focused on growing as a Product Manager. I build products like Inotrive and Yayzi to practice creating real value, while keeping my technical understanding sharp so I stay aware of what&apos;s technologically possible. My goal is to be a Product Manager with strong product sense and flexible technical depth.
+              {t('home.aboutBlurb')}
             </p>
           </div>
           <div className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(var(--rgb-line),0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
@@ -301,10 +334,10 @@ function BentoGrid() {
               </div>
               <div>
                 <p className="font-heading text-sm font-semibold text-text-primary">
-                  Tech Systems
+                  {t('home.techSystems')}
                 </p>
                 <p className="mt-1 text-[10px] text-text-secondary">
-                  Code / API / Automation
+                  {t('home.techSystemsSub')}
                 </p>
               </div>
             </div>
@@ -322,10 +355,10 @@ function BentoGrid() {
             </div>
             <div className="absolute left-4 top-4">
               <p className="font-heading text-sm font-semibold text-text-primary">
-                Product Thinking
+                {t('home.productThinking')}
               </p>
               <p className="mt-1 max-w-31.25 text-[10px] leading-4 text-text-secondary">
-                Discovery / Users / Data
+                {t('home.productThinkingSub')}
               </p>
             </div>
             <div className="absolute bottom-4 left-4 flex gap-1.5">
@@ -345,13 +378,13 @@ function BentoGrid() {
         <div className="absolute inset-0 z-2 bg-[var(--app-photo-veil)]" />
         <div className="relative z-10 flex h-full min-h-90 flex-col justify-end p-5 sm:min-h-107 md:min-h-125 lg:min-h-0 lg:p-4 xl:p-5">
           <span className="w-fit rounded-md border border-[rgba(80,200,120,0.3)] bg-green-bg px-3 py-1 text-[10px] font-medium text-[#6fd99a] lg:text-[9px]">
-            Open to Work
+            {t('home.openToWork')}
           </span>
           <h1 className="mt-3 max-w-full wrap-break-words font-heading text-2xl font-bold leading-tight text-text-primary sm:text-3xl lg:mt-2 lg:text-[clamp(1.35rem,2.2vw,1.875rem)]">
             Ahmad Dzaky Ar Razi
           </h1>
           <p className="mt-1 max-w-full wrap-break-words text-xs leading-5 text-text-secondary lg:text-[11px]">
-            Product-minded engineer focused on digitalization, workflow automation, and operational efficiency
+            {t('home.heroSub')}
           </p>
         </div>
       </BentoCard>
@@ -362,8 +395,8 @@ function BentoGrid() {
         className="order-4 p-5 lg:order-0 lg:min-h-115 lg:p-4 lg:[grid-area:work] xl:min-h-125 xl:p-5"
       >
         <BentoTimelinePanel
-          eyebrow="Experience"
-          title="Work Experience"
+          eyebrow={t('home.experience')}
+          title={t('home.workExperience')}
           Icon={TbBriefcase}
           items={experiencePreviewItems}
         />
@@ -375,8 +408,8 @@ function BentoGrid() {
         className="order-5 p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:projects] xl:p-5"
       >
         <BentoTimelinePanel
-          eyebrow="Projects"
-          title="Projects"
+          eyebrow={t('home.projects')}
+          title={t('home.projects')}
           Icon={TbFolder}
           items={projectPreviewItems}
           compactWide
@@ -389,8 +422,8 @@ function BentoGrid() {
         className="order-6 p-5 lg:order-0 lg:min-h-115 lg:p-4 lg:[grid-area:cert] xl:min-h-125 xl:p-5"
       >
         <BentoTimelinePanel
-          eyebrow="Learning"
-          title="Certification"
+          eyebrow={t('home.learning')}
+          title={t('home.certification')}
           Icon={TbCertificate}
           items={certificationPreviewItems}
         />

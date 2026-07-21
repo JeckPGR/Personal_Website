@@ -20,6 +20,8 @@
           var stored = localStorage.getItem('dzaky-theme')
           document.documentElement.dataset.theme =
             stored === 'light' ? 'light' : 'dark'
+          var lang = localStorage.getItem('dzaky-language')
+          document.documentElement.lang = lang === 'id' ? 'id' : 'en'
         } catch (e) {
           document.documentElement.dataset.theme = 'dark'
         }

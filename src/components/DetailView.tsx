@@ -44,6 +44,22 @@ export type DetailViewProps = {
   showcaseHeading?: string
   /** Caption suffix on each showcase slot (e.g. "Key Point" / "Key Results") */
   proofLabel?: string
+  /** Shown under the grid when a slot is still empty *and* `externalUrl` is set —
+   *  the live site stands in for the screenshots that aren't up yet. */
+  showcaseFallbackNote?: string
+  /** Shown under the grid when a slot is empty and there is no link to offer */
+  showcaseEmptyNote?: string
+}
+
+/** Slot list for the showcase grid — shared so the empty-state note and the
+ *  grid itself can never disagree about what counts as missing. */
+function buildShowcaseSlots(
+  showcase?: string[],
+  showcaseSlots?: number,
+): string[] {
+  return showcaseSlots
+    ? Array.from({ length: showcaseSlots }, (_, i) => showcase?.[i] ?? '')
+    : showcase?.slice(0, 3) ?? []
 }
 
 /* ─── Utility: hex → rgba string ─── */
@@ -145,9 +161,7 @@ function ShowcaseGrid({
 }: ShowcaseGridProps) {
   // With showcaseSlots, always render that many slots (missing → "no image").
   // Otherwise use provided images, or fall back to the branded panel.
-  const slots = showcaseSlots
-    ? Array.from({ length: showcaseSlots }, (_, i) => showcase?.[i] ?? '')
-    : showcase?.slice(0, 3) ?? []
+  const slots = buildShowcaseSlots(showcase, showcaseSlots)
 
   if (!slots.length) {
     return (
@@ -285,11 +299,17 @@ function DetailView({
   showcaseSlots,
   showcaseHeading,
   proofLabel = 'Proof',
+  showcaseFallbackNote,
+  showcaseEmptyNote,
 }: DetailViewProps) {
   const containerRef = useRef<HTMLElement>(null)
   const bannerRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const [lightbox, setLightbox] = useState<LightboxImage | null>(null)
+
+  const hasEmptyShowcaseSlot = buildShowcaseSlots(showcase, showcaseSlots).some(
+    (src) => !src,
+  )
 
   const accentRgba10 = hexToRgba(accent, 0.1)
   const accentRgba20 = hexToRgba(accent, 0.2)
@@ -703,6 +723,39 @@ function DetailView({
                 Icon={Icon}
                 onOpen={setLightbox}
               />
+
+              {/* Empty slots aren't a dead end: point at the live site instead. */}
+              {hasEmptyShowcaseSlot && (externalUrl ? showcaseFallbackNote : showcaseEmptyNote) ? (
+                <motion.p
+                  initial={{ opacity: 0, y: 12 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.15 }}
+                  className="mt-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-2xl border border-dashed border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-film),0.015)] px-5 py-4 text-center text-[12px] font-light leading-relaxed text-text-muted"
+                >
+                  <TbPhotoOff size={15} className="shrink-0 text-accent-lavender/40" />
+                  {externalUrl ? (
+                    <>
+                      {showcaseFallbackNote}
+                      <a
+                        href={externalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/note inline-flex items-center gap-1.5 font-medium underline decoration-dotted underline-offset-4 transition-colors"
+                        style={{ color: accent }}
+                      >
+                        {prettyUrl(externalUrl)}
+                        <TbExternalLink
+                          size={12}
+                          className="transition-transform duration-300 group-hover/note:-translate-y-0.5 group-hover/note:translate-x-0.5"
+                        />
+                      </a>
+                    </>
+                  ) : (
+                    showcaseEmptyNote
+                  )}
+                </motion.p>
+              ) : null}
             </div>
           </section>
         ) : null}

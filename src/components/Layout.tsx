@@ -15,6 +15,9 @@ import {
   TbX,
 } from 'react-icons/tb'
 import { CV_URL } from '../data/portfolio'
+import { useCopy } from '../hooks/useCopy'
+import type { CopyKey } from '../i18n/translations'
+import LanguageToggle from './LanguageToggle'
 import GridMenuButton from './GridMenuButton'
 import ThemeToggle from './ThemeToggle'
 
@@ -71,9 +74,15 @@ function ScrollProgress() {
   )
 }
 
-const contactLinks = [
+const contactLinks: Array<{
+  labelKey?: CopyKey
+  label?: string
+  href: string
+  Icon: typeof TbMail
+  external: boolean
+}> = [
   {
-    label: 'Email',
+    labelKey: 'contact.email',
     href: 'mailto:dzakyrazi@gmail.com',
     Icon: TbMail,
     external: false,
@@ -92,17 +101,24 @@ const contactLinks = [
   },
 ]
 
-const menuItems = [
-  { label: 'Home', to: '/', Icon: TbHome, end: true },
-  { label: 'About', to: '/about', Icon: TbUser, end: true },
-  { label: 'Work', to: '/work', Icon: TbBriefcase, end: true },
-  { label: 'Project', to: '/project', Icon: TbFolder, end: true },
-  { label: 'Certification', to: '/certification', Icon: TbCertificate, end: true },
+const menuItems: Array<{
+  labelKey: CopyKey
+  to: string
+  Icon: typeof TbHome
+  end: boolean
+}> = [
+  { labelKey: 'nav.home', to: '/', Icon: TbHome, end: true },
+  { labelKey: 'nav.about', to: '/about', Icon: TbUser, end: true },
+  { labelKey: 'nav.work', to: '/work', Icon: TbBriefcase, end: true },
+  { labelKey: 'nav.project', to: '/project', Icon: TbFolder, end: true },
+  { labelKey: 'nav.certification', to: '/certification', Icon: TbCertificate, end: true },
 ]
 
 function TopNavbar() {
+  const t = useCopy()
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
+  const isHome = location.pathname === '/' || location.pathname === '/home'
 
   // Close the mobile menu whenever the route changes.
   useEffect(() => {
@@ -128,7 +144,13 @@ function TopNavbar() {
 
   return (
     <>
-      <header className="pointer-events-none fixed inset-x-0 bottom-0 z-999 flex justify-center px-3 pb-4 sm:px-4 md:pb-6">
+      {/* Bottom-centred everywhere, except the home page from `lg` up, where the
+          bento fills the viewport and the bar moves to the top — still centred. */}
+      <header
+        className={`pointer-events-none fixed inset-x-0 bottom-0 z-999 flex justify-center px-3 pb-4 sm:px-4 md:pb-6 ${
+          isHome ? 'lg:bottom-auto lg:top-0 lg:pb-0 lg:pt-4' : ''
+        }`}
+      >
         {/* max-w-full + a truncating brand name: on a narrow phone the name
             gives up width instead of the bar overflowing the screen. */}
         <motion.nav
@@ -155,33 +177,37 @@ function TopNavbar() {
               href={CV_URL}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="See my CV"
-              title="See my CV"
+              aria-label={t('cv.label')}
+              title={t('cv.label')}
               className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-[rgba(var(--rgb-line),0.24)] bg-[rgba(var(--rgb-hover),0.14)] px-2 text-accent-lavender transition-colors duration-300 hover:border-[rgba(var(--rgb-line),0.44)] hover:bg-[rgba(var(--rgb-hover),0.24)] sm:h-8 sm:px-2.5"
             >
               <TbFileText size={15} />
               <span className="hidden font-heading text-[10px] font-semibold uppercase tracking-[0.16em] md:inline">
-                CV
+                {t('cv.short')}
               </span>
             </a>
 
             {/* All three contacts, every breakpoint. They shrink rather than
                 disappear on mobile; the overlay keeps the labelled versions. */}
-            {contactLinks.map(({ label, href, Icon, external }) => (
+            {contactLinks.map(({ labelKey, label, href, Icon, external }) => {
+              const name = labelKey ? t(labelKey) : (label as string)
+              return (
               <a
-                key={label}
+                key={name}
                 href={href}
                 {...(external
                   ? { target: '_blank', rel: 'noopener noreferrer' }
                   : {})}
-                aria-label={label}
-                title={label}
+                aria-label={name}
+                title={name}
                 className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.14)] bg-[rgba(var(--rgb-film),0.05)] text-text-secondary transition-colors duration-300 hover:border-[rgba(var(--rgb-line),0.32)] hover:bg-[rgba(var(--rgb-hover),0.14)] hover:text-accent-lavender sm:h-8 sm:w-8"
               >
                 <Icon size={15} />
               </a>
-            ))}
+              )
+            })}
 
+            <LanguageToggle />
             <ThemeToggle />
 
             <span className="h-5 w-px bg-[rgba(var(--rgb-line),0.16)]" />
@@ -189,7 +215,8 @@ function TopNavbar() {
             <GridMenuButton
               isOpen={isOpen}
               onClick={() => setIsOpen(true)}
-              text="Menu"
+              label={t('nav.openMenu')}
+              text={t('nav.menu')}
             />
           </div>
         </motion.nav>
@@ -206,6 +233,8 @@ type MobileMenuOverlayProps = {
 }
 
 function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
+  const t = useCopy()
+
   return (
     <AnimatePresence>
       {isOpen ? (
@@ -228,7 +257,7 @@ function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
             </span>
             <button
               type="button"
-              aria-label="Close navigation menu"
+              aria-label={t('nav.closeMenu')}
               onClick={onClose}
               className="flex h-11 w-11 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.18)] bg-[rgba(var(--rgb-film),0.04)] text-text-secondary transition hover:rotate-90 hover:border-[rgba(var(--rgb-line),0.36)] hover:text-accent-lavender"
             >
@@ -238,7 +267,7 @@ function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
 
           {/* Numbered menu list */}
           <nav className="relative flex flex-1 flex-col justify-center px-5 sm:px-6">
-            {menuItems.map(({ label, to, end }, index) => (
+            {menuItems.map(({ labelKey, to, end }, index) => (
               <motion.div
                 key={to}
                 initial={{ opacity: 0, y: 24 }}
@@ -272,7 +301,7 @@ function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
                             : 'text-text-primary group-hover:text-accent-lavender'
                         }`}
                       >
-                        {label}
+                        {t(labelKey)}
                       </span>
                       <TbArrowUpRight
                         size={26}
@@ -303,7 +332,7 @@ function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
               className="group inline-flex items-center gap-2.5 rounded-md border border-[rgba(var(--rgb-line),0.22)] bg-[rgba(var(--rgb-hover),0.12)] px-5 py-3 font-heading text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-lavender transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(var(--rgb-line),0.42)] hover:bg-[rgba(var(--rgb-hover),0.2)]"
             >
               <TbFileText size={16} />
-              See my Resume
+              {t('cv.label')}
               <TbArrowUpRight
                 size={15}
                 className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
@@ -318,9 +347,9 @@ function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
             transition={{ delay: 0.4, duration: 0.4 }}
             className="relative flex flex-wrap items-center gap-x-5 gap-y-2 px-5 pb-8 text-[11px] uppercase tracking-[0.16em] text-text-muted sm:px-6"
           >
-            {contactLinks.map(({ label, href, Icon, external }) => (
+            {contactLinks.map(({ labelKey, label, href, Icon, external }) => (
               <a
-                key={label}
+                key={labelKey ?? label}
                 href={href}
                 {...(external
                   ? { target: '_blank', rel: 'noopener noreferrer' }
@@ -328,10 +357,10 @@ function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
                 className="inline-flex items-center gap-1.5 transition-colors hover:text-accent-lavender"
               >
                 <Icon size={14} />
-                {label}
+                {labelKey ? t(labelKey) : label}
               </a>
             ))}
-            <span className="text-text-muted/70">South Jakarta, Indonesia</span>
+            <span className="text-text-muted/70">{t('contact.location')}</span>
           </motion.div>
         </motion.div>
       ) : null}

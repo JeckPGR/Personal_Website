@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { TbFolder } from 'react-icons/tb'
 import PageShell from '../components/PageShell'
+import { useCopy } from '../hooks/useCopy'
 import RevealList from '../components/RevealList'
 import type { RevealItem } from '../components/RevealList'
 import { projects, tabs } from '../data/project'
@@ -9,6 +10,7 @@ import { workItem } from '../data/portfolio'
 
 function Project() {
   const [activeTab, setActiveTab] = useState<ProjectCategory>('Web-App')
+  const t = useCopy()
 
   const visibleItems = useMemo<RevealItem[]>(
     () =>
@@ -29,9 +31,9 @@ function Project() {
 
   return (
     <PageShell
-      tag="Projects"
-      title="Project Showcase"
-      description="Selected project work grouped by platform. Hover a row for a quick preview, click to open the full case."
+      tag={t('project.tag')}
+      title={t('project.title')}
+      description={t('project.description')}
       gradient={workItem.gradient}
       Icon={TbFolder}
     >

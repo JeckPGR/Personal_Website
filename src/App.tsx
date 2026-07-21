@@ -14,6 +14,7 @@ import WorkDetail from './pages/WorkDetail'
 // Re-enable by restoring this import and the <ChatWidget /> below.
 // import ChatWidget from './components/ui/ChatWidget'
 import CustomCursor from './components/CustomCursor'
+import LanguageProvider from './components/LanguageProvider'
 import ThemeProvider from './components/ThemeProvider'
 import NotFound from './pages/NotFound'
 import ProjectDetail from './pages/ProjectDetail'
@@ -52,9 +53,11 @@ function App() {
 
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <AppShell splashDone={splashDone} onSplashDone={handleSplashDone} />
-      </BrowserRouter>
+      <LanguageProvider>
+        <BrowserRouter>
+          <AppShell splashDone={splashDone} onSplashDone={handleSplashDone} />
+        </BrowserRouter>
+      </LanguageProvider>
     </ThemeProvider>
   )
 }

@@ -59,32 +59,33 @@ import {
   TbUser,
   TbVideo,
 } from 'react-icons/tb'
+import type { Localized } from '../i18n/localized'
 
 export type BentoItem = {
   title: string
   subtitle: string
-  route?: string 
+  route?: string
   tag: string
   gradient: string
   coverHeight: number
   span: 1 | 2 | 3
   Icon: IconType
-  description?: string
-  chips?: string[]
+  description?: Localized
+  chips?: Localized<string[]>
 }
 
 export type WorkItem = {
   slug: string
   title: string
   subtitle: string
-  period: string
+  period: Localized
   route: string
   tag: string
   tagClassName: string
   gradient: string
   iconClassName: string
   Icon: IconType
-  description: string
+  description: Localized
   chips: string[]
 }
 
@@ -103,8 +104,8 @@ export type ToolItem = {
 export type CertificationItem = {
   title: string
   issuer: string
-  period: string
-  description: string
+  period: Localized
+  description: Localized
   Icon: IconType
   image?: string
 }
@@ -139,16 +140,28 @@ export const aboutItem: BentoItem = {
   coverHeight: 90,
   span: 2,
   Icon: TbUser,
-  description:
-    'IT graduate working across product management, full stack development, and business analysis with a focus on practical systems, process clarity, and useful automation.',
-  chips: [
-    'Product Thinking',
-    'User Research',
-    'Process Optimization',
-    'AI & Automation',
-    'Agile / Scrum',
-    'Data-Driven',
-  ],
+  description: {
+    en: 'IT graduate with 2 years of experience in full-stack development, along with hands-on project management experience, now also deepening my knowledge in Product Management through building innovative web applications like Inotrive and Yayzi, along with certifications and continuous learning',
+    id: 'Lulusan Teknologi Informasi dengan 2 tahun pengalaman di pengembangan full-stack serta pengalaman langsung mejadi Project Manajer, kini juga memperdalam Product Management lewat pembuatan aplikasi web inovatif seperti Inotrive dan Yayzi, ditopang sertifikasi dan pembelajaran yang terus berjalan',
+  },
+  chips: {
+    en: [
+      'Product Thinking',
+      'User Research',
+      'Process Optimization',
+      'AI & Automation',
+      'Agile / Scrum',
+      'Data-Driven',
+    ],
+    id: [
+      'Pola Pikir Produk',
+      'Riset Pengguna',
+      'Optimasi Proses',
+      'AI & Otomasi',
+      'Agile / Scrum',
+      'Berbasis Data',
+    ],
+  },
 }
 
 export const whatIDoItem: BentoItem = {
@@ -171,8 +184,10 @@ export const workItem: BentoItem = {
   coverHeight: 80,
   span: 3,
   Icon: TbBriefcase,
-  description:
-    'A compact view of product, business, and engineering work across enterprise teams and internal platform development.',
+  description: {
+    en: 'A compact view of product, business, and engineering work across enterprise teams and internal platform development.',
+    id: 'Ringkasan padat pekerjaan produk, bisnis, dan rekayasa di tim enterprise maupun pengembangan platform internal.',
+  },
 }
 
 export const techStackItem: BentoItem = {
@@ -228,44 +243,57 @@ export const workItems: WorkItem[] = [
     slug: 'bank-mandiri',
     title: 'PT Bank Mandiri (Persero) Tbk',
     subtitle: 'Procurement Information Systems',
-    period: 'October 2025 - April 2026',
+    period: { en: 'October 2025 - April 2026', id: 'Oktober 2025 - April 2026' },
     route: '/work/bank-mandiri',
     tag: 'Research And Development',
     tagClassName: 'bg-[rgba(60,140,255,0.13)] text-[#70aaff]',
     gradient: 'linear-gradient(135deg, #0a1535, #152050)',
     iconClassName: 'text-[#70aaff]',
     Icon: TbBuildingBank,
-    description:
-      'Research and Development role in Procurement Information Systems at PT Bank Mandiri (Persero) Tbk.',
+    description: {
+      en: 'Research and Development role in Procurement Information Systems at PT Bank Mandiri (Persero) Tbk.',
+      id: 'Peran Research and Development pada Sistem Informasi Procurement di PT Bank Mandiri (Persero) Tbk.',
+    },
     chips: ['Research And Development', 'Procurement Information Systems', 'Enterprise'],
   },
   {
     slug: 'telkom-property',
     title: 'Telkom Property',
     subtitle: 'IT Project Management',
-    period: 'October 2024 - February 2025',
+    period: {
+      en: 'October 2024 - February 2025',
+      id: 'Oktober 2024 - Februari 2025',
+    },
     route: '/work/telkom-property',
     tag: 'Project Manager',
     tagClassName: 'bg-[rgba(200,80,160,0.13)] text-[#e090c8]',
     gradient: 'linear-gradient(135deg, #2a0a25, #401535)',
     iconClassName: 'text-[#e090c8]',
     Icon: TbBuildingSkyscraper,
-    description: 'Project Manager role in IT Project Management at Telkom Property.',
+    description: {
+      en: 'Project Manager role in IT Project Management at Telkom Property.',
+      id: 'Peran Project Manager pada IT Project Management di Telkom Property.',
+    },
     chips: ['IT Project Management', 'Project Manager', 'Delivery'],
   },
   {
     slug: 'caatis',
     title: 'CAATIS F&B Group',
     subtitle: 'Implementation Laboratory',
-    period: 'September 2024 - January 2025',
+    period: {
+      en: 'September 2024 - January 2025',
+      id: 'September 2024 - Januari 2025',
+    },
     route: '/work/caatis',
     tag: 'Fullstack Developer',
     tagClassName: 'bg-[rgba(50,190,140,0.13)] text-[#60d9aa]',
     gradient: 'linear-gradient(135deg, #082a1a, #103d28)',
     iconClassName: 'text-[#60d9aa]',
     Icon: TbToolsKitchen2,
-    description:
-      'Fullstack Developer role in the Implementation Laboratory at CAATIS F&B Group.',
+    description: {
+      en: 'Fullstack Developer role in the Implementation Laboratory at CAATIS F&B Group.',
+      id: 'Peran Fullstack Developer di Implementation Laboratory CAATIS F&B Group.',
+    },
     chips: ['Fullstack Developer', 'Implementation Laboratory', 'Internal Platform'],
   },
 ]
@@ -321,125 +349,153 @@ export const certificationItems: CertificationItem[] = [
    {
     title: 'Build an AI Agent',
     issuer: 'IBM SkillsBuild',
-    period: 'July - July 2026',
-    description:
-      'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+    period: { en: 'July - July 2026', id: 'Juli - Juli 2026' },
+    description: {
+      en: 'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+      id: 'Mempelajari penerapan AI dalam manajemen produk — dasar AI, machine learning, dan NLP — untuk mengenali peluang AI, menggali insight produk, dan memadukan AI ke dalam strategi produk secara bertanggung jawab.',
+    },
     Icon: TbSparkles,
     image: '/Certification/IBM-3.png',
   },
    {
     title: 'Lab: Troubleshoot Your Code using Bob IDE',
     issuer: 'IBM SkillsBuild',
-    period: 'July - July 2026',
-    description:
-      'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+    period: { en: 'July - July 2026', id: 'Juli - Juli 2026' },
+    description: {
+      en: 'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+      id: 'Mempelajari penerapan AI dalam manajemen produk — dasar AI, machine learning, dan NLP — untuk mengenali peluang AI, menggali insight produk, dan memadukan AI ke dalam strategi produk secara bertanggung jawab.',
+    },
     Icon: TbSparkles,
     image: '/Certification/IBM-2.png',
   },
    {
     title: 'Introduction to Large Language Models',
     issuer: 'IBM SkillsBuild',
-    period: 'July - July 2026',
-    description:
-      'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+    period: { en: 'July - July 2026', id: 'Juli - Juli 2026' },
+    description: {
+      en: 'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+      id: 'Mempelajari penerapan AI dalam manajemen produk — dasar AI, machine learning, dan NLP — untuk mengenali peluang AI, menggali insight produk, dan memadukan AI ke dalam strategi produk secara bertanggung jawab.',
+    },
     Icon: TbSparkles,
     image: '/Certification/IBM-1.png',
   },
   {
     title: 'AI for Product Managers',
     issuer: 'Alison',
-    period: 'June 2026 - Now',
-    description:
-      'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+    period: { en: 'June 2026 - Now', id: 'Juni 2026 - Sekarang' },
+    description: {
+      en: 'Studying how AI applies to product management — AI fundamentals, machine learning, and NLP — to identify AI opportunities, generate product insights, and integrate AI into product strategy responsibly.',
+      id: 'Mempelajari penerapan AI dalam manajemen produk — dasar AI, machine learning, dan NLP — untuk mengenali peluang AI, menggali insight produk, dan memadukan AI ke dalam strategi produk secara bertanggung jawab.',
+    },
     Icon: TbSparkles,
   },
   {
     title: 'PROJECT MANAGEMENT & SCRUM FRAMEWORK',
     issuer: 'MySkill',
-    period: 'October - November 2025',
-    description:
-      'Built product and project fundamentals — product vision, discovery, user research, PRD development, and Waterfall & Agile (Scrum) delivery — through weekly product case studies.',
+    period: { en: 'October - November 2025', id: 'Oktober - November 2025' },
+    description: {
+      en: 'Built product and project fundamentals — product vision, discovery, user research, PRD development, and Waterfall & Agile (Scrum) delivery — through weekly product case studies.',
+      id: 'Membangun fondasi produk dan proyek — visi produk, discovery, riset pengguna, penyusunan PRD, serta delivery Waterfall & Agile (Scrum) — melalui studi kasus produk mingguan.',
+    },
     Icon: TbCertificate,
     image: '/Certification/Scrum.png',
   },
   {
     title: 'Mobile Product Management',
     issuer: 'UXCam',
-    period: 'September - October 2025',
-    description:
-      'Learned mobile product frameworks (North Star Metric, Opportunity Tree, Shape Up), user research methods, release planning, and data-driven improvement through mobile product analytics.',
+    period: { en: 'September - October 2025', id: 'September - Oktober 2025' },
+    description: {
+      en: 'Learned mobile product frameworks (North Star Metric, Opportunity Tree, Shape Up), user research methods, release planning, and data-driven improvement through mobile product analytics.',
+      id: 'Mempelajari kerangka kerja produk mobile (North Star Metric, Opportunity Tree, Shape Up), metode riset pengguna, perencanaan rilis, dan perbaikan berbasis data melalui analitik produk mobile.',
+    },
     Icon: TbDeviceMobile,
     image: '/Certification/UXCam.jfif',
   },
   {
     title: 'Intensive Product & Project Development Bootcamp',
     issuer: 'MySkill',
-    period: 'May - July 2025',
-    description:
-      'Built product and project fundamentals — product vision, discovery, user research, PRD development, and Waterfall & Agile (Scrum) delivery — through weekly product case studies.',
+    period: { en: 'May - July 2025', id: 'Mei - Juli 2025' },
+    description: {
+      en: 'Built product and project fundamentals — product vision, discovery, user research, PRD development, and Waterfall & Agile (Scrum) delivery — through weekly product case studies.',
+      id: 'Membangun fondasi produk dan proyek — visi produk, discovery, riset pengguna, penyusunan PRD, serta delivery Waterfall & Agile (Scrum) — melalui studi kasus produk mingguan.',
+    },
     Icon: TbCertificate,
     image: '/Certification/PPM.jfif',
   },
   {
     title: 'Frontend Intermediate',
     issuer: 'Dicoding',
-    period: 'January 2024 - October 2027',
-    description:
-      'Build an web app using PHP.',
+    period: { en: 'January 2024 - October 2027', id: 'Januari 2024 - Oktober 2027' },
+    description: {
+      en: 'Build an web app using PHP.',
+      id: 'Membangun aplikasi web menggunakan PHP.',
+    },
     Icon: TbCode,
     image: '/Certification/FrontEnd.jpg',
   },
   {
     title: 'Junior Web Developer',
     issuer: 'Digitalent / BNSP',
-    period: 'November 2023 - November 2026',
-    description:
-      'Build an web app using PHP.',
+    period: { en: 'November 2023 - November 2026', id: 'November 2023 - November 2026' },
+    description: {
+      en: 'Build an web app using PHP.',
+      id: 'Membangun aplikasi web menggunakan PHP.',
+    },
     Icon: TbCode,
     image: '/Certification/Kominfo.png',
   },
   {
     title: 'Frontend - JavaScript Mastery',
     issuer: 'MySkill',
-    period: 'October - December 2023',
-    description:
-      'Build an web app using PHP.',
+    period: { en: 'October - December 2023', id: 'Oktober - Desember 2023' },
+    description: {
+      en: 'Build an web app using PHP.',
+      id: 'Membangun aplikasi web menggunakan PHP.',
+    },
     Icon: TbCode,
     image: '/Certification/Java.jpg',
   },
   {
     title: 'Java Programming',
     issuer: 'Dicoding',
-    period: 'October 2023 - October 2026',
-    description:
-      'Build an web app using PHP.',
+    period: { en: 'October 2023 - October 2026', id: 'Oktober 2023 - Oktober 2026' },
+    description: {
+      en: 'Build an web app using PHP.',
+      id: 'Membangun aplikasi web menggunakan PHP.',
+    },
     Icon: TbCode,
     image: '/Certification/Java.jpg',
   },
   {
     title: 'Github Basic',
     issuer: 'Dicoding',
-    period: 'September 2023 - September 2026',
-    description:
-      'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+    period: { en: 'September 2023 - September 2026', id: 'September 2023 - September 2026' },
+    description: {
+      en: 'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+      id: 'Mempelajari dasar pengembangan web dengan HTML, CSS, JavaScript, ReactJS, NodeJS, Git, dan GitHub, sambil membangun proyek web yang mencakup frontend, integrasi backend, dan alur kerja version control.',
+    },
     Icon: TbCode,
     image: '/Certification/BasicWeb.jpg',
   },
   {
     title: 'Basic Web Programming',
     issuer: 'Dicoding',
-    period: 'September 2023 - September 2026',
-    description:
-      'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+    period: { en: 'September 2023 - September 2026', id: 'September 2023 - September 2026' },
+    description: {
+      en: 'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+      id: 'Mempelajari dasar pengembangan web dengan HTML, CSS, JavaScript, ReactJS, NodeJS, Git, dan GitHub, sambil membangun proyek web yang mencakup frontend, integrasi backend, dan alur kerja version control.',
+    },
     Icon: TbCode,
     image: '/Certification/BasicWeb.jpg',
   },
    {
     title: 'Basic SQL',
     issuer: 'Dicoding',
-    period: 'September 2023 - September 2026',
-    description:
-      'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+    period: { en: 'September 2023 - September 2026', id: 'September 2023 - September 2026' },
+    description: {
+      en: 'Learned core web development with HTML, CSS, JavaScript, ReactJS, NodeJS, Git, and GitHub, building web projects across frontend, backend integration, and version control workflows.',
+      id: 'Mempelajari dasar pengembangan web dengan HTML, CSS, JavaScript, ReactJS, NodeJS, Git, dan GitHub, sambil membangun proyek web yang mencakup frontend, integrasi backend, dan alur kerja version control.',
+    },
     Icon: TbCode,
     image: '/Certification/SQL.jpg',
   },
@@ -447,42 +503,42 @@ export const certificationItems: CertificationItem[] = [
 
 export const projectDetails: ProjectDetailItem[] = [
   {
-    slug: 'procurement-ecosystem-mapping',
-    title: 'Procurement Ecosystem Mapping',
-    eyebrow: 'PT Bank Mandiri / Enterprise Workflow',
-    subtitle:
-      'Mapped procurement applications, integration flow, user pain points, and improvement options for strategic procurement systems.',
-    period: '2025 - 2026',
-    organization: 'PT Bank Mandiri',
-    role: 'Research And Development',
-    route: '/project/procurement-ecosystem-mapping',
-    images: [
-      '/projects/mandiri-1.png',
-      '/projects/mandiri-2.png',
-      '/projects/mandiri-3.png',
-    ],
-    keyPoints: [
-      'Mapped procurement application ecosystem and related workflow.',
-      'Identified user pain points and process inefficiencies.',
-      'Created visual references for procurement system flow.',
-      'Prepared improvement insights based on system and user context.',
-    ],
-    tools: [
-      'System Mapping',
-      'TELOS',
-      'User Feedback',
-      'Documentation',
-      'Workflow Analysis',
-    ],
-    resultHighlights: [
-      'Procurement ecosystem map',
-      'Pain point summary',
-      'Improvement opportunity notes',
-    ],
-    finalOutput:
-      'Through this project, I learned how to connect product thinking with enterprise system analysis. A good system improvement starts from understanding how users work, where the process breaks, and what business value the improvement should create.',
-    Icon: TbMap,
-  },
+  slug: 'procurement-ecosystem-mapping',
+  title: 'Procurement OCR & AI Compliance Checker (PoC)',
+  eyebrow: 'PT Bank Mandiri / Enterprise Workflow',
+  subtitle:
+    'Built out of a recurring problem in daily procurement work — missing written clauses and mismatched data between documents. Developed an MVP using Azure Document Intelligence (OCR) and Generative AI (Vertex AI) as an early guard to catch these errors before they slip through.',
+  period: '2025 - 2026',
+  organization: 'PT Bank Mandiri',
+  role: 'Research And Development',
+  route: '/project/procurement-ecosystem-mapping',
+  images: [
+    '/projects/mandiri-1.png',
+    '/projects/mandiri-2.png',
+    '/projects/mandiri-3.png',
+  ],
+  keyPoints: [
+    'Noticed a recurring problem in daily procurement work: missing written information and data mismatches between related documents.',
+    'Mapped the procurement application ecosystem and document flow to understand where these inconsistencies originated.',
+    'Built an MVP in Google Apps Script integrating Azure Document Intelligence (OCR) and Generative AI (Vertex AI) as an early guard to automatically flag missing or conflicting information against SOP requirements.',
+    'Validated the Proof of Concept using anonymized past documents, with sensitive figures and data removed or altered, to demonstrate feasibility without exposing confidential information.',
+  ],
+  tools: [
+    'Google Apps Script',
+    'Azure Document Intelligence (OCR)',
+    'Vertex AI (Generative AI)',
+    'System Mapping',
+    'Workflow Analysis',
+  ],
+  resultHighlights: [
+    'Working MVP built on Google Apps Script',
+    'Early-guard checkpoint against document errors',
+    'Validated PoC using anonymized historical documents',
+  ],
+  finalOutput:
+    'This project started from a problem I lived with daily, not one assigned to me — repeatedly catching missing clauses or mismatched data between documents. Turning that frustration into a working MVP taught me how everyday friction, if paid attention to, can become the seed of a real product solution.',
+  Icon: TbMap,
+},
   {
     slug: 'internal-staff-management-platform',
     title: 'Internal Staff Management Platform',

@@ -1,18 +1,20 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { TbMoon, TbSun } from 'react-icons/tb'
+import { useCopy } from '../hooks/useCopy'
 import { useTheme } from '../hooks/useTheme'
 
 /** Inline control — it lives inside the navbar, which is on every route. */
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme()
+  const t = useCopy()
   const isDark = theme === 'dark'
 
   return (
     <motion.button
       type="button"
       onClick={toggleTheme}
-      aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
-      title={isDark ? 'Light mode' : 'Dark mode'}
+      aria-label={isDark ? t('theme.toLight') : t('theme.toDark')}
+      title={isDark ? t('theme.light') : t('theme.dark')}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.92 }}
       className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.14)] sm:h-8 sm:w-8 bg-[rgba(var(--rgb-film),0.05)] text-accent-lavender transition-colors duration-300 hover:border-[rgba(var(--rgb-line),0.32)] hover:bg-[rgba(var(--rgb-hover),0.14)]"

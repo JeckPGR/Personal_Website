@@ -3,6 +3,7 @@ import type { IconType } from 'react-icons'
 import { TbArrowUpRight, TbMaximize } from 'react-icons/tb'
 import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { useCopy } from '../hooks/useCopy'
 import ImageLightbox from './ImageLightbox'
 import type { LightboxImage } from './ImageLightbox'
 
@@ -111,6 +112,7 @@ function PreviewCard({ item, size }: { item: RevealItem; size: PreviewSize }) {
 }
 
 function RevealList({ items, countLabel }: RevealListProps) {
+  const t = useCopy()
   const [active, setActive] = useState<number | null>(null)
   const [lightbox, setLightbox] = useState<LightboxImage | null>(null)
   const hasHover = useHasHover()
@@ -144,7 +146,7 @@ function RevealList({ items, countLabel }: RevealListProps) {
     <div onPointerMove={handleMove}>
       <div className="flex items-end justify-between border-b border-[rgba(var(--rgb-line),0.16)] pb-4">
         <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-accent-lavender/60">
-          {countLabel ?? 'Index'}
+          {countLabel ?? t('list.index')}
         </span>
         <span className="font-heading text-sm font-semibold text-accent-lavender">
           {String(items.length).padStart(2, '0')}
