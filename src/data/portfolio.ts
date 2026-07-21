@@ -126,6 +126,10 @@ export type ProjectDetailItem = {
   Icon: IconType
 }
 
+/** Single source for the CV link — used by the About hero and the menu. */
+export const CV_URL =
+  'https://drive.google.com/file/d/1MZE7HlnjizFB-o-rr0R3qXFTuR1brh1F/view?usp=sharing'
+
 export const aboutItem: BentoItem = {
   title: 'About Me',
   subtitle: 'IT graduate · Digital Product Enthusiast · builder',

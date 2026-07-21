@@ -50,7 +50,7 @@ function BentoBox({ item, children }: BentoBoxProps) {
           } as CSSProperties
         }
       >
-        <div className="absolute inset-0 opacity-35 bg-[radial-gradient(rgba(160,130,255,0.45)_1.4px,transparent_1.4px)] bg-size-[17px_17px]" />
+        <div className="absolute inset-0 opacity-35 bg-[radial-gradient(rgba(var(--rgb-hover),0.45)_1.4px,transparent_1.4px)] bg-size-[17px_17px]" />
         <Icon className="relative z-10 text-[26px] text-accent-lavender opacity-35 transition duration-200 group-hover:opacity-55 sm:text-[30px]" />
       </div>
       <div className="min-w-0 p-3 sm:p-3.5">
@@ -61,7 +61,7 @@ function BentoBox({ item, children }: BentoBoxProps) {
           {item.subtitle}
         </p>
          {isClickable && (
-          <p className="mt-2 text-[9px] font-medium text-[rgba(160,130,255,0.45)] sm:mt-3">
+          <p className="mt-2 text-[9px] font-medium text-[rgba(var(--rgb-hover),0.45)] sm:mt-3">
             Click to explore &rarr;
           </p>
         )}

@@ -99,6 +99,34 @@ export const workExperiences: WorkExperience[] = [
     reflection:
       'Coordinating a full delivery team showed me that clarity is the real deliverable, aligning scope, people, and testing is what keeps a product moving steadily toward release.',
   },
+    {
+    slug: 'caatis',
+    route: '/work/caatis',
+    company: 'CAATIS FnB Group',
+    location: 'Bandung, Indonesia',
+    role: 'Full Stack Developer',
+    tag: 'Full Stack Dev',
+    period: 'September 2024 - December 2024',
+    accent: '#60d9aa',
+    Icon: TbToolsKitchen2,
+    thumbnail: '/Works/CAATIS.png',
+    summary:
+      'Designed and built an internal staff management platform that centralized scheduling and payroll across multiple F&B outlets.',
+    tags: ['Fullstack Developer', 'Internal Platform', 'F&B Operations'],
+    bullets: [
+      'Designed and developed an internal staff management web application for scheduling and payroll across 4 F&B outlets with 30+ employees.',
+      'Built a centralized platform that simplified payroll processing and reduced administrative workload across four outlets.',
+      'Integrated external APIs to automate payroll calculations and reduce manual errors.',
+      'Contributed to deploying the application on a VPS server for production use.',
+    ],
+    highlights: [
+      '4 outlets centralized',
+      '30+ employees managed',
+      'Automated payroll flow',
+    ],
+    reflection:
+      'Building an internal tool from scratch reminded me that good software should quietly remove friction from everyday operations, not add one more thing to manage.',
+  },
   {
     slug: 'informatics-lab',
     route: '/work/informatics-lab',
@@ -126,34 +154,6 @@ export const workExperiences: WorkExperience[] = [
     ],
     reflection:
       'Mentoring dozens of students sharpened how I explain technical concepts, teaching something well turned out to be the fastest way to truly understand it myself.',
-  },
-  {
-    slug: 'caatis',
-    route: '/work/caatis',
-    company: 'CAATIS FnB Group',
-    location: 'Bandung, Indonesia',
-    role: 'Full Stack Developer',
-    tag: 'Full Stack Dev',
-    period: 'September 2024 - December 2024',
-    accent: '#60d9aa',
-    Icon: TbToolsKitchen2,
-    thumbnail: '/Works/CAATIS.png',
-    summary:
-      'Designed and built an internal staff management platform that centralized scheduling and payroll across multiple F&B outlets.',
-    tags: ['Fullstack Developer', 'Internal Platform', 'F&B Operations'],
-    bullets: [
-      'Designed and developed an internal staff management web application for scheduling and payroll across 4 F&B outlets with 30+ employees.',
-      'Built a centralized platform that simplified payroll processing and reduced administrative workload across four outlets.',
-      'Integrated external APIs to automate payroll calculations and reduce manual errors.',
-      'Contributed to deploying the application on a VPS server for production use.',
-    ],
-    highlights: [
-      '4 outlets centralized',
-      '30+ employees managed',
-      'Automated payroll flow',
-    ],
-    reflection:
-      'Building an internal tool from scratch reminded me that good software should quietly remove friction from everyday operations, not add one more thing to manage.',
   },
   {
     slug: 'jokiwithsora',

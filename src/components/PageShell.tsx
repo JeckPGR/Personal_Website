@@ -1,6 +1,7 @@
+import { useRef } from 'react'
 import type { ReactNode } from 'react'
 import type { IconType } from 'react-icons'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 
 export type HighlightRow = {
   title: string
@@ -29,6 +30,17 @@ function PageShell({
 }: PageShellProps) {
   const watermark = title.split(' ')[0]?.toUpperCase() || tag.toUpperCase()
 
+  // Same scroll treatment as the About hero: the heading drifts and dims on
+  // its way out while the watermark slides faster behind it.
+  const headerRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: headerRef,
+    offset: ['start start', 'end start'],
+  })
+  const headerY = useTransform(scrollYProgress, [0, 1], [0, 70])
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0.15])
+  const watermarkX = useTransform(scrollYProgress, [0, 1], [0, -90])
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -38,17 +50,29 @@ function PageShell({
       className="min-w-0"
     >
 
-      <section className="relative mt-5 overflow-hidden rounded-[20px] border border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.018)] px-5 py-7 md:px-8 md:py-10 lg:px-10">
-        <div className="pointer-events-none absolute inset-0 opacity-25 bg-[radial-gradient(rgba(160,130,255,0.38)_1.2px,transparent_1.2px)] bg-size-[20px_20px]" />
-        <div className="pointer-events-none absolute -right-12 top-8 font-heading text-[6rem] font-bold leading-none text-accent-lavender/[0.035] md:text-[10rem] lg:text-[15rem]">
+      {/* Open section — no frame, no dot pattern — matching the About page.
+          No bottom padding: the page's own pb clears the floating navbar. */}
+      <section className="relative mt-5 overflow-hidden px-2 pt-10 sm:px-4 md:px-6 md:pt-14 lg:px-10">
+        <motion.div
+          style={{ x: watermarkX }}
+          className="pointer-events-none absolute -right-8 top-0 font-heading text-[6rem] font-bold leading-none text-accent-lavender/[0.035] md:text-[10rem] lg:text-[13rem]"
+        >
           {watermark}
-        </div>
+        </motion.div>
 
-        <div className="relative z-10 max-w-3xl">
-          <span className="inline-flex rounded-full border border-border-accent bg-[rgba(120,80,220,0.12)] px-3 py-1 text-[10px] font-medium text-accent-lavender">
-            {tag} /&gt;
-          </span>
-          <h1 className="mt-4 max-w-3xl wrap-break-word font-heading text-3xl font-bold leading-tight text-text-primary md:text-4xl lg:text-5xl">
+        <motion.div
+          ref={headerRef}
+          style={{ y: headerY, opacity: headerOpacity }}
+          className="relative z-10 max-w-3xl"
+        >
+          {/* Same eyebrow as the About page: rule + label, not a pill. */}
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-accent-lavender/40" />
+            <span className="font-heading text-[10px] font-bold uppercase tracking-[0.3em] text-accent-lavender/70">
+              {tag} /&gt;
+            </span>
+          </div>
+          <h1 className="mt-6 max-w-3xl wrap-break-word font-heading text-3xl font-bold leading-tight text-text-primary md:text-4xl lg:text-5xl">
             {title}
           </h1>
           {description ? (
@@ -61,19 +85,19 @@ function PageShell({
               {chips.map((chip) => (
                 <span
                   key={chip}
-                  className="rounded-full border border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.026)] px-3 py-1 text-[11px] text-text-secondary"
+                  className="rounded-md border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-film),0.026)] px-3 py-1 text-[11px] text-text-secondary"
                 >
                   {chip}
                 </span>
               ))}
             </div>
           ) : null}
-        </div>
+        </motion.div>
 
         {children ? <div className="relative z-10 mt-10 lg:mt-8">{children}</div> : null}
 
         {highlights?.length ? (
-          <section className="relative z-10 mt-10 min-w-0 rounded-[18px] border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.022)] p-4 shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-sm md:p-5 lg:mt-8">
+          <section className="relative z-10 mt-10 min-w-0 rounded-[18px] border border-[rgba(var(--rgb-line),0.1)] bg-[rgba(var(--rgb-film),0.022)] p-4 shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-sm md:p-5 lg:mt-8">
             <h2 className="font-heading text-lg font-semibold text-[#e8e0ff]">
               Highlights
             </h2>
@@ -81,9 +105,9 @@ function PageShell({
               {highlights.map(({ title: rowTitle, text, Icon: RowIcon }) => (
                 <div
                   key={rowTitle}
-                  className="flex min-w-0 gap-3 rounded-[16px] border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.026)] p-3"
+                  className="flex min-w-0 gap-3 rounded-[16px] border border-[rgba(var(--rgb-line),0.1)] bg-[rgba(var(--rgb-film),0.026)] p-3"
                 >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(120,80,220,0.14)] text-accent-lavender">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(var(--rgb-glow),0.14)] text-accent-lavender">
                     <RowIcon size={17} />
                   </div>
                   <div className="min-w-0">

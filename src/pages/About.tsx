@@ -1,298 +1,623 @@
-import { motion } from 'framer-motion'
+import { useRef, useState } from 'react'
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
+import type { MotionProps } from 'framer-motion'
 import type { IconType } from 'react-icons'
 import {
   TbArrowRight,
-  TbBriefcase,
-  TbCertificate,
-  TbFolder,
+  TbArrowUpRight,
+  TbChevronDown,
+  TbFileText,
 } from 'react-icons/tb'
 import { Link } from 'react-router-dom'
 import {
-  aboutHighlights,
+  // aboutHighlights,
+  CV_URL,
   aboutItem,
   aboutTechStack,
   aboutTools,
   certificationItems,
-  workItems,
 } from '../data/portfolio'
+import type { ToolItem } from '../data/portfolio'
+import { projects } from '../data/project'
+import { workExperiences } from '../data/work'
 
-type ShowcaseItem = {
+const EASE = [0.22, 1, 0.36, 1] as const
+const VIEWPORT = { once: true, margin: '-60px' } as const
+
+/** Rotating brand accents for data that carries no accent of its own. */
+const CERT_ACCENTS = ['#c9bfff', '#c060f0', '#7c50e0']
+
+type RowItem = {
+  id: string
   title: string
   meta: string
-  description: string
-  route: string
+  sub?: string
+  to: string
   accent: string
-  Icon: IconType
+  /** Icon tile shown when there is no image. Omit for a text-only row. */
+  Icon?: IconType
+  /** Logo / cover thumbnail. */
+  image?: string
+  /**
+   * `cover` fills a wide tile — right for screenshots.
+   * `contain` letterboxes inside a square — right for logos, which arrive at
+   * wildly different aspect ratios and built-in padding.
+   */
+  fit?: 'cover' | 'contain'
 }
 
-type ShowcaseSectionProps = {
-  eyebrow: string
-  title: string
-  href: string
-  Icon: IconType
-  items: ShowcaseItem[]
-}
+/* ─── Data: only ever the first three of each list, the rest lives on its own page ─── */
 
-type SkillSectionProps = {
-  title: string
-  items: Array<{
-    name: string
-    category: string
-    Icon: IconType
-  }>
-}
-
-const topWorks: ShowcaseItem[] = workItems.slice(0, 3).map((item) => ({
-  title: item.title,
-  meta: `${item.tag} / ${item.period}`,
-  description: item.description,
-  route: item.route,
-  accent:
-    item.slug === 'bank-mandiri'
-      ? '#70aaff'
-      : item.slug === 'telkom-property'
-        ? '#e090c8'
-        : '#60d9aa',
+const workRows: RowItem[] = workExperiences.slice(0, 3).map((item) => ({
+  id: item.slug,
+  title: item.company,
+  meta: item.tag,
+  sub: item.period,
+  to: item.route,
+  accent: item.accent,
   Icon: item.Icon,
+  image: item.thumbnail,
 }))
 
-const topProjects: ShowcaseItem[] = [
-  {
-    title: 'Procurement Ecosystem Mapping',
-    meta: 'Enterprise workflow / PT Bank Mandiri',
-    description:
-      'Mapped procurement-related applications, integrations, and improvement opportunities for a strategic procurement ecosystem.',
-    route: '/work/bank-mandiri',
-    accent: '#70aaff',
-    Icon: TbFolder,
-  },
-  {
-    title: 'Internal Staff Management Platform',
-    meta: 'Full stack platform / CAATIS F&B Group',
-    description:
-      'Built a centralized staff scheduling and payroll platform for multiple F&B outlets to reduce manual administration.',
-    route: '/work/caatis',
-    accent: '#60d9aa',
-    Icon: TbFolder,
-  },
-  {
-    title: 'IT Project Delivery Backlog',
-    meta: 'Project management / Telkom Property',
-    description:
-      'Managed product documentation, backlog tracking, testing coordination, and delivery readiness across a technology team.',
-    route: '/work/telkom-property',
-    accent: '#e090c8',
-    Icon: TbFolder,
-  },
-]
+const projectRows: RowItem[] = projects.slice(0, 3).map((project) => ({
+  id: project.slug,
+  title: project.title,
+  meta: project.category,
+  sub: project.context.split(' / ')[0],
+  to: project.route,
+  accent: project.accent,
+  Icon: project.Icon,
+  image: project.thumbnail,
+  fit: 'contain' as const,
+}))
 
-const topCertifications: ShowcaseItem[] = certificationItems
+const certificationRows: RowItem[] = certificationItems
   .slice(0, 3)
   .map((item, index) => ({
+    id: `${item.issuer}-${item.title}`,
     title: item.title,
-    meta: `${item.issuer} / ${item.period}`,
-    description: item.description,
-    route: '/certification',
-    accent: index === 0 ? '#c9bfff' : index === 1 ? '#70aaff' : '#c060f0',
-    Icon: item.Icon,
+    meta: item.issuer,
+    sub: item.period,
+    to: '/certification',
+    accent: CERT_ACCENTS[index % CERT_ACCENTS.length],
+    // No tile — certifications read better as plain text rows.
   }))
 
-function About() {
+const stats = [
+  { value: workExperiences.length, label: 'Roles' },
+  { value: projects.length, label: 'Projects' },
+  { value: certificationItems.length, label: 'Certifications' },
+]
+
+/* ─── Word-by-word headline reveal ─── */
+function RevealWords({
+  text,
+  className,
+  delay = 0,
+}: {
+  text: string
+  className?: string
+  delay?: number
+}) {
+  return (
+    <span className={className}>
+      {text.split(' ').map((word, index) => (
+        <span
+          key={`${word}-${index}`}
+          className="inline-block overflow-hidden align-bottom"
+        >
+          <motion.span
+            className="inline-block"
+            initial={{ y: '110%', opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: delay + index * 0.045, ease: EASE }}
+          >
+            {word}
+            {' '}
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  )
+}
+
+/* ─── Centered rule + label that separates every section ─── */
+function SectionHeading({ label }: { label: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      transition={{ duration: 0.3 }}
-      className="min-w-0"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={VIEWPORT}
+      transition={{ duration: 0.6, ease: EASE }}
+      className="mb-10 flex items-center gap-4"
     >
-      <section className="relative mt-5 overflow-hidden rounded-[20px] border border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.018)] px-5 py-7 md:px-8 md:py-10 lg:px-10">
-        <div className="pointer-events-none absolute inset-0 opacity-25 bg-[radial-gradient(rgba(160,130,255,0.38)_1.2px,transparent_1.2px)] bg-size-[20px_20px]" />
-        <div className="pointer-events-none absolute -right-10 top-8 font-heading text-[6rem] font-bold leading-none text-accent-lavender/[0.035] md:text-[10rem] lg:text-[15rem]">
-          ABOUT
-        </div>
-        <div className="pointer-events-none absolute bottom-8 left-7.5 top-8 z-0 md:left-[18%]">
-          <div className="h-full w-px bg-[linear-gradient(180deg,transparent,rgba(124,80,224,0.62)_10%,rgba(201,191,255,0.18)_88%,transparent)]" />
-        </div>
-
-        <div className="relative z-10 ml-10 max-w-3xl md:ml-[21%]">
-          <span className="inline-flex rounded-full border border-border-accent bg-[rgba(120,80,220,0.12)] px-3 py-1 text-[10px] font-medium text-accent-lavender">
-            About /&gt;
-          </span>
-          <h1 className="mt-4 max-w-3xl font-heading text-3xl font-bold leading-tight text-text-primary md:text-4xl lg:text-5xl">
-            Product-minded builder with a practical engineering core.
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-text-secondary">
-            {aboutItem.description}
-          </p>
-          {aboutItem.chips?.length ? (
-            <div className="mt-5 flex flex-wrap gap-2">
-              {aboutItem.chips.map((chip) => (
-                <span
-                  key={chip}
-                  className="rounded-full border border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.026)] px-3 py-1 text-[11px] text-text-secondary"
-                >
-                  {chip}
-                </span>
-              ))}
-            </div>
-          ) : null}
-        </div>
-
-        <div className="relative z-10 ml-10 mt-10 grid gap-5 md:ml-[21%] md:grid-cols-3 lg:gap-3">
-          {aboutHighlights.map(({ title, text, Icon }) => (
-            <article
-              key={title}
-              className="rounded-[18px] border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.026)] p-4 backdrop-blur-sm"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[rgba(120,80,220,0.14)] text-accent-lavender">
-                <Icon size={18} />
-              </div>
-              <h2 className="mt-4 font-heading text-sm font-semibold text-text-primary">
-                {title}
-              </h2>
-              <p className="mt-2 text-xs leading-5 text-text-muted">{text}</p>
-            </article>
-          ))}
-        </div>
-
-        <div className="relative z-10 mt-10 grid gap-5 lg:grid-cols-2 lg:gap-4">
-          <SkillSection title="Tech Stack" items={aboutTechStack} />
-          <SkillSection title="Tools" items={aboutTools} />
-        </div>
-
-        <div className="relative z-10 mt-10 grid gap-5 lg:grid-cols-3 lg:gap-4">
-          <ShowcaseSection
-            eyebrow="Experience"
-            title="Work Experience"
-            href="/work"
-            Icon={TbBriefcase}
-            items={topWorks}
-          />
-          <ShowcaseSection
-            eyebrow="Projects"
-            title="My Projects"
-            href="/project"
-            Icon={TbFolder}
-            items={topProjects}
-          />
-          <ShowcaseSection
-            eyebrow="Learning"
-            title="My Certification"
-            href="/certification"
-            Icon={TbCertificate}
-            items={topCertifications}
-          />
-        </div>
-      </section>
+      {/* Both rules draw outward from the label as the section scrolls in. */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={VIEWPORT}
+        transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+        className="h-px flex-1 origin-right bg-gradient-to-r from-transparent to-[rgba(var(--rgb-line),0.14)]"
+      />
+      <h2 className="text-center font-heading text-sm font-bold uppercase tracking-[0.25em] text-text-primary">
+        {label}
+      </h2>
+      <motion.div
+        initial={{ scaleX: 0 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={VIEWPORT}
+        transition={{ duration: 0.9, delay: 0.1, ease: EASE }}
+        className="h-px flex-1 origin-left bg-gradient-to-l from-transparent to-[rgba(var(--rgb-line),0.14)]"
+      />
     </motion.div>
   )
 }
 
-function SkillSection({ title, items }: SkillSectionProps) {
+/* ─── Toolkit ─── */
+
+/** Categories shown before the reader asks for the rest. */
+const COLLAPSED_ROWS = 5
+
+type ToolGroup = [category: string, entries: ToolItem[]]
+
+function groupByCategory(items: ToolItem[]): ToolGroup[] {
+  return [
+    ...items
+      .reduce((map, item) => {
+        const entries = map.get(item.category)
+        if (entries) entries.push(item)
+        else map.set(item.category, [item])
+        return map
+      }, new Map<string, ToolItem[]>())
+      .entries(),
+    // Densest categories first, so the lone entries settle at the tail
+    // instead of punching holes between the full ones — and so the collapsed
+    // view leads with the richest rows.
+  ].sort((a, b) => b[1].length - a[1].length)
+}
+
+/** One `label | entries` line — a category of one costs a line, not a grid cell. */
+function ToolRow({
+  category,
+  entries,
+  index,
+  reveal,
+}: {
+  category: string
+  entries: ToolItem[]
+  index: number
+  /** Rows past the fold are already on screen when they mount, so they cascade
+   *  on mount instead of waiting for a scroll trigger that will never fire. */
+  reveal: 'scroll' | 'mount'
+}) {
+  const revealProps: MotionProps =
+    reveal === 'scroll'
+      ? {
+          initial: { opacity: 0, y: 12 },
+          whileInView: { opacity: 1, y: 0 },
+          viewport: VIEWPORT,
+        }
+      : { initial: { opacity: 0, y: 8 }, animate: { opacity: 1, y: 0 } }
+
   return (
-    <section className="min-w-0 rounded-[18px] border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.022)] p-4 shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-sm">
-      <h2 className="font-heading text-xl font-bold text-text-primary">
-        {title}
-      </h2>
-      <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
-        {items.map(({ name, category, Icon }) => (
-          <div
+    <motion.div
+      {...revealProps}
+      transition={{
+        duration: 0.45,
+        delay: Math.min(index, 8) * 0.04,
+        ease: EASE,
+      }}
+      className="grid grid-cols-1 gap-x-8 gap-y-2 border-t border-[rgba(var(--rgb-line),0.06)] py-3.5 sm:grid-cols-[152px_1fr] sm:items-baseline"
+    >
+      <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent-lavender/45">
+        {category}
+      </p>
+      <ul className="flex flex-wrap gap-x-6 gap-y-2.5">
+        {entries.map(({ name, Icon }) => (
+          <li
             key={name}
-            className="flex min-w-0 items-center gap-2 rounded-[14px] border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.026)] p-2.5"
+            className="group flex items-center gap-2 text-[13px] text-text-secondary transition-colors duration-300 hover:text-text-primary"
           >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[rgba(120,80,220,0.14)] text-accent-lavender">
-              <Icon size={18} />
-            </div>
-            <div className="min-w-0">
-              <p className="truncate font-heading text-xs font-semibold text-text-primary">
-                {name}
-              </p>
-              <p className="mt-0.5 truncate text-[10px] text-text-muted">
-                {category}
-              </p>
-            </div>
-          </div>
+            <Icon
+              size={15}
+              className="shrink-0 text-accent-lavender/55 transition-all duration-300 group-hover:scale-110 group-hover:text-accent-lavender"
+            />
+            {name}
+          </li>
         ))}
-      </div>
-    </section>
+      </ul>
+    </motion.div>
   )
 }
 
-function ShowcaseSection({
-  eyebrow,
-  title,
-  href,
-  Icon,
-  items,
-}: ShowcaseSectionProps) {
+function ToolClusters({ title, items }: { title: string; items: ToolItem[] }) {
+  const [expanded, setExpanded] = useState(false)
+
+  const groups = groupByCategory(items)
+  const visible = groups.slice(0, COLLAPSED_ROWS)
+  const rest = groups.slice(COLLAPSED_ROWS)
+
   return (
-    <section className="min-w-0 rounded-[18px] border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.022)] p-4 shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-sm">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60">
-            {eyebrow}
-          </p>
-          <h2 className="mt-2 font-heading text-xl font-bold text-text-primary">
-            {title}
-          </h2>
-        </div>
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender">
-          <Icon size={18} />
-        </div>
+    <div>
+      <div className="flex items-baseline gap-3">
+        <h3 className="font-heading text-base font-semibold text-text-primary">
+          {title}
+        </h3>
+        <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted">
+          {String(items.length).padStart(2, '0')} entries
+        </span>
       </div>
 
-      <div className="mt-5 grid gap-5 lg:gap-3">
+      <div className="mt-5 border-b border-[rgba(var(--rgb-line),0.06)]">
+        {visible.map(([category, entries], index) => (
+          <ToolRow
+            key={category}
+            category={category}
+            entries={entries}
+            index={index}
+            reveal="scroll"
+          />
+        ))}
+
+        <AnimatePresence initial={false}>
+          {expanded ? (
+            <motion.div
+              key="rest"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{
+                height: { duration: 0.5, ease: EASE },
+                opacity: { duration: 0.3, ease: 'easeOut' },
+              }}
+              className="overflow-hidden"
+            >
+              {rest.map(([category, entries], index) => (
+                <ToolRow
+                  key={category}
+                  category={category}
+                  entries={entries}
+                  index={index}
+                  reveal="mount"
+                />
+              ))}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
+
+      {rest.length ? (
+        // Centred and padded to a real tap target rather than a bare text line.
+        <div className="mt-5 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setExpanded((value) => !value)}
+            aria-expanded={expanded}
+            className="group inline-flex items-center gap-2 rounded-md border border-[rgba(var(--rgb-line),0.1)] bg-[rgba(var(--rgb-hover),0.04)] px-5 py-2.5 text-[11px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 transition-all duration-300 hover:border-[rgba(var(--rgb-line),0.24)] hover:bg-[rgba(var(--rgb-hover),0.1)] hover:text-accent-lavender"
+          >
+            {expanded ? 'See less' : `See more (${rest.length})`}
+            <motion.span
+              animate={{ rotate: expanded ? 180 : 0 }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="flex"
+            >
+              <TbChevronDown size={14} />
+            </motion.span>
+          </button>
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+/* ─── Flat index rows, borrowed from the work / project listings ─── */
+function IndexRows({
+  items,
+  href,
+  viewAllLabel,
+}: {
+  items: RowItem[]
+  href: string
+  viewAllLabel: string
+}) {
+  return (
+    <>
+      <ul className="border-t border-[rgba(var(--rgb-line),0.08)]">
         {items.map((item, index) => {
           const ItemIcon = item.Icon
+          const isContained = item.fit === 'contain'
 
           return (
-            <Link
-              key={`${item.title}-${index}`}
-              to={item.route}
-              className="group relative overflow-hidden rounded-[16px] border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.026)] p-3 transition duration-300 hover:-translate-y-1 hover:border-[rgba(201,191,255,0.28)] hover:bg-[rgba(255,255,255,0.045)]"
+            <motion.li
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VIEWPORT}
+              transition={{ duration: 0.5, delay: index * 0.07, ease: EASE }}
             >
-              <span
-                className="absolute inset-x-0 top-0 h-px"
-                style={{
-                  background: `linear-gradient(90deg, ${item.accent}, rgba(201,191,255,0.14), transparent)`,
-                }}
-              />
-              <div className="flex min-w-0 gap-3">
-                <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.035)]"
-                  style={{ color: item.accent }}
-                >
-                  <ItemIcon size={17} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] uppercase tracking-[0.12em] text-text-muted">
-                    {String(index + 1).padStart(2, '0')}
-                  </p>
-                  <h3 className="mt-1 wrap-break-word font-heading text-sm font-semibold leading-tight text-text-primary transition group-hover:text-accent-lavender">
+              <Link
+                to={item.to}
+                className="group relative flex items-center gap-4 border-b border-[rgba(var(--rgb-line),0.08)] py-5 pl-3 transition-colors duration-300 md:gap-6 md:py-6"
+              >
+                <span
+                  className="absolute inset-y-2 left-0 w-px origin-center scale-y-0 transition-transform duration-500 group-hover:scale-y-100"
+                  style={{ background: item.accent }}
+                />
+                <span className="w-5 shrink-0 font-heading text-[11px] font-bold tabular-nums text-text-muted transition-colors duration-300 group-hover:text-accent-lavender">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                {item.image || ItemIcon ? (
+                  <span
+                    className={`relative flex shrink-0 items-center justify-center overflow-hidden border transition-transform duration-300 group-hover:scale-105 ${
+                      item.image && !isContained
+                        ? 'h-12 w-19 rounded-lg'
+                        : 'h-13 w-13 rounded-xl'
+                    }`}
+                    style={{
+                      borderColor: `${item.accent}2e`,
+                      background: `${item.accent}14`,
+                      color: item.accent,
+                    }}
+                  >
+                    {item.image ? (
+                      <>
+                        <img
+                          src={item.image}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          className={`h-full w-full transition-transform duration-500 ${
+                            isContained
+                              ? 'object-contain p-2 group-hover:scale-105'
+                              : 'object-cover group-hover:scale-110'
+                          }`}
+                        />
+                        {isContained ? null : (
+                          <span
+                            className="pointer-events-none absolute inset-0 opacity-40 transition-opacity duration-300 group-hover:opacity-0"
+                            style={{ background: `${item.accent}1f` }}
+                          />
+                        )}
+                      </>
+                    ) : ItemIcon ? (
+                      <ItemIcon size={18} />
+                    ) : null}
+                  </span>
+                ) : null}
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-heading text-base font-semibold leading-tight text-text-primary transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-lavender md:text-lg">
                     {item.title}
-                  </h3>
-                  <p className="mt-1 text-[11px] leading-4 text-text-muted">
-                    {item.meta}
-                  </p>
-                </div>
-              </div>
-              <p className="mt-3 line-clamp-3 text-xs leading-5 text-text-secondary">
-                {item.description}
-              </p>
-            </Link>
+                  </span>
+                  {item.sub ? (
+                    <span className="mt-1 block truncate text-[11px] text-text-muted">
+                      {item.sub}
+                    </span>
+                  ) : null}
+                </span>
+                <span className="hidden shrink-0 text-[10px] font-medium uppercase tracking-[0.16em] text-text-muted transition-colors duration-300 group-hover:text-text-secondary sm:block">
+                  {item.meta}
+                </span>
+                <TbArrowUpRight
+                  size={18}
+                  className="shrink-0 text-accent-lavender opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
+                />
+              </Link>
+            </motion.li>
           )
         })}
-      </div>
+      </ul>
 
-      <Link
-        to={href}
-        className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[rgba(201,191,255,0.12)] bg-[rgba(124,80,224,0.16)] px-4 py-2.5 text-xs font-semibold text-accent-lavender transition duration-200 hover:border-[rgba(201,191,255,0.26)] hover:bg-[rgba(124,80,224,0.24)]"
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={VIEWPORT}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="mt-7 flex justify-center"
       >
-        Lihat semua
-        <TbArrowRight size={15} />
-      </Link>
-    </section>
+        <Link
+          to={href}
+          className="group inline-flex items-center gap-2.5 rounded-md border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-hover),0.05)] px-6 py-2.5 font-heading text-[11px] font-semibold uppercase tracking-[0.1em] text-accent-lavender transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(var(--rgb-line),0.3)] hover:bg-[rgba(var(--rgb-hover),0.12)] hover:shadow-[0_10px_34px_rgba(var(--rgb-hover),0.14)]"
+        >
+          {viewAllLabel}
+          <TbArrowRight
+            size={15}
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          />
+        </Link>
+      </motion.div>
+    </>
+  )
+}
+
+function About() {
+  const heroRef = useRef<HTMLElement>(null)
+
+  // Hero drifts and dims as it leaves, so the sections below feel like they
+  // slide over it instead of merely following it.
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  })
+  const heroY = useTransform(heroProgress, [0, 1], [0, 70])
+  const heroOpacity = useTransform(heroProgress, [0, 0.9], [1, 0.15])
+  const watermarkX = useTransform(heroProgress, [0, 1], [0, -90])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4, ease: EASE }}
+      className="mx-auto min-w-0 max-w-6xl"
+    >
+      {/* ─── Intro ─── */}
+      <header ref={heroRef} className="relative mt-5 overflow-hidden px-1 py-10 md:py-14">
+        <motion.div
+          style={{ x: watermarkX }}
+          className="pointer-events-none absolute -right-8 top-0 font-heading text-[6rem] font-bold leading-none text-accent-lavender/[0.03] md:text-[11rem]"
+        >
+          ABOUT
+        </motion.div>
+
+        <motion.div
+          style={{ y: heroY, opacity: heroOpacity }}
+          className="relative z-10"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: EASE }}
+            className="flex items-center gap-3"
+          >
+            <span className="h-px w-8 bg-accent-lavender/40" />
+            <span className="font-heading text-[10px] font-bold uppercase tracking-[0.3em] text-accent-lavender/70">
+              About /&gt;
+            </span>
+          </motion.div>
+
+          <h1 className="mt-6 max-w-3xl font-heading text-3xl font-bold leading-[1.15] text-text-primary md:text-4xl lg:text-[3.25rem]">
+            <RevealWords
+              text="Product-minded builder with a practical engineering core."
+              delay={0.15}
+            />
+          </h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5, ease: EASE }}
+            className="mt-7 max-w-2xl text-[15px] font-light leading-[1.9] text-text-secondary"
+          >
+            {aboutItem.description}
+          </motion.p>
+
+          {aboutItem.chips?.length ? (
+            <div className="mt-8 flex flex-wrap gap-2">
+              {aboutItem.chips.map((chip, index) => (
+                <motion.span
+                  key={chip}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: 0.6 + index * 0.05 }}
+                  className="cursor-default rounded-lg border border-[rgba(var(--rgb-line),0.1)] bg-[rgba(var(--rgb-hover),0.05)] px-3 py-1.5 text-[11px] font-medium text-accent-lavender/75 transition-colors duration-300 hover:border-[rgba(var(--rgb-line),0.24)] hover:bg-[rgba(var(--rgb-hover),0.12)] hover:text-accent-lavender"
+                >
+                  {chip}
+                </motion.span>
+              ))}
+            </div>
+          ) : null}
+
+          {/* Counts first, so the sections below are a choice rather than a toll.
+              The CV sits on the same rule, opposite the numbers. */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.85, ease: EASE }}
+            className="mt-12 flex flex-wrap items-end justify-between gap-x-12 gap-y-7 border-t border-[rgba(var(--rgb-line),0.08)] pt-8"
+          >
+            <dl className="flex flex-wrap items-end gap-x-12 gap-y-6">
+              {stats.map(({ value, label }) => (
+                <div key={label}>
+                  <dt className="font-heading text-2xl font-bold tabular-nums text-text-primary md:text-3xl">
+                    {String(value).padStart(2, '0')}
+                  </dt>
+                  <dd className="mt-1 text-[10px] font-medium uppercase tracking-[0.2em] text-text-muted">
+                    {label}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <a
+              href={CV_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2.5 rounded-md border border-[rgba(var(--rgb-line),0.22)] bg-[rgba(var(--rgb-hover),0.12)] px-5 py-3 font-heading text-[11px] font-semibold uppercase tracking-[0.16em] text-accent-lavender transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(var(--rgb-line),0.42)] hover:bg-[rgba(var(--rgb-hover),0.2)] hover:shadow-[0_10px_34px_rgba(var(--rgb-hover),0.18)]"
+            >
+              <TbFileText size={16} />
+              See my Resume
+              <TbArrowUpRight
+                size={15}
+                className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </a>
+          </motion.div>
+        </motion.div>
+      </header>
+
+      {/* ─── How I work ─── */}
+      {/* <section className="mt-24">
+        <SectionHeading label="How I Work" />
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {aboutHighlights.map(({ title, text, Icon }, index) => (
+            <motion.article
+              key={title}
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={VIEWPORT}
+              transition={{ duration: 0.55, delay: index * 0.09, ease: EASE }}
+              whileHover={{ y: -4, transition: { duration: 0.3 } }}
+              className="group relative overflow-hidden rounded-2xl border border-[rgba(var(--rgb-line),0.07)] bg-[rgba(var(--rgb-film),0.015)] p-7 transition-colors duration-500 hover:border-[rgba(var(--rgb-line),0.18)]"
+            >
+              <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(420px_circle_at_50%_0%,rgba(var(--rgb-glow),0.16),transparent_65%)]" />
+
+              <div className="relative flex items-center justify-between">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[rgba(var(--rgb-glow),0.12)] text-accent-lavender shadow-[0_0_22px_rgba(var(--rgb-glow),0.16)] transition-transform duration-300 group-hover:scale-110">
+                  <Icon size={19} />
+                </div>
+                <span className="font-heading text-[11px] font-bold tabular-nums text-accent-lavender/25">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+              </div>
+
+              <h3 className="relative mt-6 font-heading text-base font-semibold text-text-primary">
+                {title}
+              </h3>
+              <p className="relative mt-2.5 text-[13px] font-light leading-[1.8] text-text-secondary transition-colors duration-300 group-hover:text-text-primary">
+                {text}
+              </p>
+            </motion.article>
+          ))}
+        </div>
+      </section> */}
+
+      {/* ─── Toolkit ─── */}
+      <section className="mt-24">
+        <SectionHeading label="Toolkit" />
+
+        <div className="space-y-14">
+          <ToolClusters title="Tech Stack" items={aboutTechStack} />
+          <ToolClusters title="Tools" items={aboutTools} />
+        </div>
+      </section>
+
+      {/* ─── Selected work ─── */}
+      <section className="mt-24">
+        <SectionHeading label="Professional Experience" />
+        <IndexRows
+          items={workRows}
+          href="/work"
+          viewAllLabel="All experience"
+        />
+      </section>
+
+      {/* ─── Projects ─── */}
+      <section className="mt-24">
+        <SectionHeading label="Projects" />
+        <IndexRows items={projectRows} href="/project" viewAllLabel="All projects" />
+      </section>
+
+      {/* ─── Certifications ─── */}
+      <section className="mt-24">
+        <SectionHeading label="Certifications" />
+        <IndexRows
+          items={certificationRows}
+          href="/certification"
+          viewAllLabel="All certifications"
+        />
+      </section>
+    </motion.div>
   )
 }
 

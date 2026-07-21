@@ -67,7 +67,7 @@ function PreviewCard({ item, size }: { item: RevealItem; size: PreviewSize }) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border border-[rgba(201,191,255,0.2)] shadow-[0_34px_90px_rgba(0,0,0,0.6)]"
+      className="relative overflow-hidden rounded-2xl border border-[rgba(var(--rgb-line),0.2)] shadow-[0_34px_90px_rgba(0,0,0,0.6)]"
       style={{
         width: size.w,
         height: size.h,
@@ -85,10 +85,10 @@ function PreviewCard({ item, size }: { item: RevealItem; size: PreviewSize }) {
       ) : (
         <>
           <span
-            className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-full opacity-40 blur-2xl"
+            className="pointer-events-none absolute -right-10 -top-12 h-44 w-44 rounded-md opacity-40 blur-2xl"
             style={{ background: `radial-gradient(circle, ${accent}, transparent 70%)` }}
           />
-          <div className="pointer-events-none absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(201,191,255,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,.6)_1px,transparent_1px)] [background-size:28px_28px]" />
+          <div className="pointer-events-none absolute inset-0 opacity-[0.08] bg-[linear-gradient(rgba(var(--rgb-line),.6)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--rgb-line),.6)_1px,transparent_1px)] [background-size:28px_28px]" />
           {Icon ? (
             <Icon
               size={size.w >= LARGE_PREVIEW.w ? 120 : 92}
@@ -99,7 +99,7 @@ function PreviewCard({ item, size }: { item: RevealItem; size: PreviewSize }) {
         </>
       )}
       <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgba(8,6,16,0.88))] p-4 pt-12">
-        <p className="font-heading text-sm font-semibold leading-tight text-text-primary">
+        <p className="font-heading text-sm font-semibold leading-tight text-white">
           {item.title}
         </p>
         <p className="mt-1 text-[10px] uppercase tracking-[0.16em]" style={{ color: accent }}>
@@ -142,7 +142,7 @@ function RevealList({ items, countLabel }: RevealListProps) {
 
   return (
     <div onPointerMove={handleMove}>
-      <div className="flex items-end justify-between border-b border-[rgba(201,191,255,0.16)] pb-3">
+      <div className="flex items-end justify-between border-b border-[rgba(var(--rgb-line),0.16)] pb-4">
         <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-accent-lavender/60">
           {countLabel ?? 'Index'}
         </span>
@@ -193,12 +193,23 @@ function RevealList({ items, countLabel }: RevealListProps) {
             </>
           )
 
-          const rowClass = `group flex items-center justify-between gap-3 border-b border-[rgba(201,191,255,0.1)] py-5 transition-opacity duration-300 md:py-6 ${
+          const rowClass = `group flex items-center justify-between gap-3 border-b border-[rgba(var(--rgb-line),0.1)] px-1 py-10 transition-opacity duration-300 sm:px-2 md:py-13 ${
             isDimmed ? 'opacity-40' : 'opacity-100'
           } ${hasHover ? 'cursor-none' : ''}`
 
           return (
-            <li key={item.id}>
+            <motion.li
+              key={item.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{
+                duration: 0.5,
+                // Capped so a long list doesn't leave the last rows waiting.
+                delay: Math.min(index, 6) * 0.07,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
               {item.to ? (
                 <Link
                   to={item.to}
@@ -240,7 +251,7 @@ function RevealList({ items, countLabel }: RevealListProps) {
                   {body}
                 </div>
               )}
-            </li>
+            </motion.li>
           )
         })}
       </ul>

@@ -10,6 +10,7 @@ import {
 import { Link } from 'react-router-dom'
 import meImage from '../assets/Me.png'
 import { certificationItems, workItems } from '../data/portfolio'
+import { workExperiences } from '../data/work'
 import { AnimatedBeam } from './ui/animated-beam'
 
 type BentoCardProps = {
@@ -23,6 +24,8 @@ type BentoTimelineItem = {
   title: string
   meta: string
   detail?: string
+  /** Longer blurb — fills the tall side panels on wide screens. */
+  description?: string
 }
 
 type BentoTimelinePanelProps = {
@@ -33,12 +36,19 @@ type BentoTimelinePanelProps = {
   compactWide?: boolean
 }
 
+// Blurbs live on the richer work records; matched by slug rather than by
+// position so reordering either list can't mismatch them.
+const summaryBySlug = new Map(
+  workExperiences.map(({ slug, summary }) => [slug, summary]),
+)
+
 const experiencePreviewItems: BentoTimelineItem[] = workItems
   .slice(0, 3)
-  .map(({ title, subtitle, tag, period }) => ({
+  .map(({ slug, title, subtitle, tag, period }) => ({
     title,
     meta: `${subtitle} | ${tag}`,
     detail: period,
+    description: summaryBySlug.get(slug),
   }))
 
 const projectPreviewItems: BentoTimelineItem[] = [
@@ -61,10 +71,11 @@ const projectPreviewItems: BentoTimelineItem[] = [
 
 const certificationPreviewItems: BentoTimelineItem[] = certificationItems
   .slice(0, 3)
-  .map(({ title, issuer, period }) => ({
+  .map(({ title, issuer, period, description }) => ({
     title,
     meta: issuer,
     detail: period,
+    description,
   }))
 
 function BentoCard({
@@ -73,7 +84,7 @@ function BentoCard({
   to,
   showHoverHint = true,
 }: BentoCardProps) {
-  const sharedClassName = `group relative min-w-0 max-w-full overflow-hidden rounded-[18px] border border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.025)] shadow-[inset_0_1px_0_rgba(255,255,255,0.025)] transition duration-200 hover:border-[rgba(160,130,255,0.32)] ${className}`
+  const sharedClassName = `group relative min-w-0 max-w-full overflow-hidden rounded-[18px] border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-film),0.025)] shadow-[inset_0_1px_0_rgba(var(--rgb-film),0.025)] transition duration-200 hover:border-[rgba(var(--rgb-hover),0.32)] ${className}`
 
   if (to) {
     return (
@@ -81,13 +92,13 @@ function BentoCard({
         {children}
         {showHoverHint ? (
           <>
-            <span className="pointer-events-none absolute bottom-4 right-4 z-20 inline-flex translate-y-2 items-center gap-2 rounded-full border border-[rgba(201,191,255,0.12)] bg-[rgba(12,10,24,0.72)] px-3 py-1.5 text-[10px] font-medium text-accent-lavender opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.24),0_0_22px_rgba(124,80,224,0.12)] backdrop-blur-md transition duration-300 ease-out group-hover:translate-y-0 group-hover:border-[rgba(201,191,255,0.24)] group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+            <span className="pointer-events-none absolute bottom-4 right-4 z-20 inline-flex translate-y-2 items-center gap-2 rounded-md border border-[rgba(var(--rgb-line),0.12)] bg-[var(--app-panel)] px-3 py-1.5 text-[10px] font-medium text-accent-lavender opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.24),0_0_22px_rgba(var(--rgb-glow),0.12)] backdrop-blur-md transition duration-300 ease-out group-hover:translate-y-0 group-hover:border-[rgba(var(--rgb-line),0.24)] group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
               Find more
               <span className="translate-x-0 transition-transform duration-300 group-hover:translate-x-1">
                 -&gt;
               </span>
             </span>
-            <span className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 translate-y-8 bg-[linear-gradient(180deg,transparent,rgba(124,80,224,0.1))] opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 translate-y-8 bg-[linear-gradient(180deg,transparent,rgba(var(--rgb-glow),0.1))] opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
           </>
         ) : null}
       </Link>
@@ -115,7 +126,7 @@ function BentoTimelinePanel({
             {title}
           </h2>
         </div>
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(var(--rgb-line),0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
           <Icon size={20} />
         </div>
       </div>
@@ -135,10 +146,10 @@ function BentoTimelineList({
   if (compactWide) {
     return (
       <div className="relative mt-6 grid gap-5 pl-6 lg:mt-4 lg:grid-cols-3 lg:gap-3 lg:pl-0">
-        <span className="absolute bottom-2 left-0 top-2 w-px bg-[linear-gradient(180deg,transparent,rgba(201,191,255,0.32),transparent)] lg:hidden" />
+        <span className="absolute bottom-2 left-0 top-2 w-px bg-[linear-gradient(180deg,transparent,rgba(var(--rgb-line),0.32),transparent)] lg:hidden" />
         {items.map(({ title, meta, detail }, index) => (
           <div key={`${title}-${index}`} className="relative min-w-0 lg:pl-5">
-            <span className="absolute -left-7 top-2 h-2.5 w-2.5 rounded-full border border-[rgba(201,191,255,0.55)] bg-base shadow-[0_0_14px_rgba(201,191,255,0.35)] lg:left-0 lg:top-1.5" />
+            <span className="absolute -left-7 top-2 h-2.5 w-2.5 rounded-full border border-[rgba(var(--rgb-line),0.55)] bg-base shadow-[0_0_14px_rgba(var(--rgb-line),0.35)] lg:left-0 lg:top-1.5" />
             <p className="font-heading text-sm font-semibold leading-tight text-text-primary lg:truncate lg:text-[12px] xl:text-[13px]">
               {title}
             </p>
@@ -158,10 +169,10 @@ function BentoTimelineList({
 
   return (
     <div className="relative mt-7 flex min-h-0 flex-1 flex-col justify-between gap-6 pl-6 pb-6 lg:mt-5 lg:gap-4 lg:pb-7">
-  <span className="absolute bottom-8 left-0 top-2 w-px bg-[linear-gradient(180deg,transparent,rgba(201,191,255,0.32),transparent)]" />
-      {items.map(({ title, meta, detail }, index) => (
+      <span className="absolute bottom-8 left-0 top-2 w-px bg-[linear-gradient(180deg,transparent,rgba(var(--rgb-line),0.32),transparent)]" />
+      {items.map(({ title, meta, detail, description }, index) => (
         <div key={`${title}-${index}`} className="relative min-w-0">
-          <span className="absolute -left-7 top-2 h-2.5 w-2.5 rounded-full border border-[rgba(201,191,255,0.55)] bg-base shadow-[0_0_14px_rgba(201,191,255,0.35)]" />
+          <span className="absolute -left-7 top-2 h-2.5 w-2.5 rounded-full border border-[rgba(var(--rgb-line),0.55)] bg-base shadow-[0_0_14px_rgba(var(--rgb-line),0.35)]" />
           <p className="font-heading text-sm font-semibold leading-tight text-text-primary lg:text-[13px]">
             {title}
           </p>
@@ -171,6 +182,13 @@ function BentoTimelineList({
           {detail ? (
             <p className="mt-1 text-[10px] leading-4 text-text-muted lg:text-[9.5px]">
               {detail}
+            </p>
+          ) : null}
+          {description ? (
+            // Two lines everywhere: enough to fill the gap, short enough that
+            // three stacked entries never outgrow the fixed panel height.
+            <p className="mt-2 line-clamp-2 text-[11px] leading-[1.55] text-text-muted/85 lg:mt-1.5 lg:text-[9.5px] lg:leading-[1.5] xl:text-[10px]">
+              {description}
             </p>
           ) : null}
         </div>
@@ -189,15 +207,15 @@ function BentoGrid() {
       <BentoCard
         className="order-1 flex min-h-37.5 flex-col justify-between p-5 lg:order-0 lg:min-h-0 lg:p-4 lg:[grid-area:tagline] xl:p-5"
       >
-        <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-9 lg:w-9">
+        <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgba(var(--rgb-line),0.12)] bg-surface-hover text-accent-lavender lg:h-9 lg:w-9">
           <TbSparkles size={18} />
         </div>
         <div className="relative z-10">
           <p className="mt-2 wrap-break-words font-heading text-2xl font-bold leading-tight text-text-primary lg:text-[clamp(1rem,1.7vw,1.5rem)]">
-            Product-minded   builder for digital systems.
+            Product-minded builder for digital systems.
           </p>
           <p className="mt-3 text-xs leading-5 text-text-secondary lg:mt-2 lg:line-clamp-2">
-            Developer, project manager, and aspiring Product Manager — working across discovery, delivery, and development.
+            Developer, project manager, and aspiring Product Manager, working across discovery, delivery, and development.
           </p>
         </div>
       </BentoCard>
@@ -207,7 +225,7 @@ function BentoGrid() {
         className="order-2 lg:order-0 lg:min-h-0 lg:[grid-area:about]"
       >
         <div className="relative z-10 flex h-full min-h-29 items-center justify-between gap-4 p-5 lg:min-h-0 lg:p-5 xl:p-6">
-          <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_18%_85%,rgba(124,80,224,0.14),transparent_32%),radial-gradient(circle_at_86%_15%,rgba(192,96,240,0.1),transparent_35%)]" />
+          <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_18%_85%,var(--app-wash-a),transparent_32%),radial-gradient(circle_at_86%_15%,var(--app-wash-b),transparent_35%)]" />
           <div className="relative z-10 min-w-0">
             <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-accent-lavender/60 lg:text-[9px]">
               Profile
@@ -215,11 +233,11 @@ function BentoGrid() {
             <h2 className="mt-2 font-heading text-3xl font-bold text-text-primary lg:text-[clamp(2rem,3.2vw,3rem)]">
               About me
             </h2>
-            <p className="mt-1 text-xs text-text-secondary lg:text-[12px]">
-              With 2 years of experience in full-stack development, along with hands-on experience in project management, I'm now focused on growing as a Product Manager. I build products like Inotrive and Yayzi to practice creating real value, while keeping my technical understanding sharp so I stay aware of what's technologically possible. My goa to be a Product Manager with strong product sense and flexible technical depth.
+            <p className="mt-1 line-clamp-4 text-xs leading-5 text-text-secondary lg:line-clamp-3 lg:text-[12px] xl:line-clamp-4">
+              With 2 years of experience in full-stack development, along with hands-on experience in project management, I&apos;m now focused on growing as a Product Manager. I build products like Inotrive and Yayzi to practice creating real value, while keeping my technical understanding sharp so I stay aware of what&apos;s technologically possible. My goal is to be a Product Manager with strong product sense and flexible technical depth.
             </p>
           </div>
-          <div className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(201,191,255,0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
+          <div className="relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[rgba(var(--rgb-line),0.12)] bg-surface-hover text-accent-lavender lg:h-10 lg:w-10">
             <TbUser size={20} />
           </div>
         </div>
@@ -243,7 +261,7 @@ function BentoGrid() {
               startXOffset={56}
               endXOffset={-108}
               endYOffset={-10}
-              pathColor="rgba(201,191,255,0.18)"
+              pathColor="rgba(var(--rgb-line),0.18)"
               pathWidth={1.35}
               pathOpacity={0.3}
               gradientStartColor="#7c50e0"
@@ -260,7 +278,7 @@ function BentoGrid() {
               startXOffset={56}
               endXOffset={-108}
               endYOffset={10}
-              pathColor="rgba(201,191,255,0.12)"
+              pathColor="rgba(var(--rgb-line),0.12)"
               pathWidth={1.35}
               pathOpacity={0.22}
               gradientStartColor="#c060f0"
@@ -269,16 +287,16 @@ function BentoGrid() {
           </div>
           <div
             ref={techNodeRef}
-            className="about-float absolute left-6 top-6 z-10 hidden h-24 w-57 overflow-hidden rounded-[20px] border border-[rgba(201,191,255,0.14)] bg-[linear-gradient(135deg,rgba(124,80,224,0.2),rgba(255,255,255,0.035)_48%,rgba(10,10,18,0.16))] p-4 shadow-[0_18px_50px_rgba(0,0,0,0.28),0_0_42px_rgba(124,80,224,0.18),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md md:block lg:left-5 lg:top-5 xl:left-7 xl:top-7"
+            className="about-float absolute left-6 top-6 z-10 hidden h-24 w-57 overflow-hidden rounded-[20px] border border-[var(--app-float-border)] bg-[var(--app-float-a)] p-4 shadow-[0_18px_50px_rgba(0,0,0,0.28),0_0_42px_rgba(var(--rgb-glow),0.18),inset_0_1px_0_rgba(var(--rgb-film),0.08)] backdrop-blur-md md:block lg:left-5 lg:top-5 xl:left-7 xl:top-7"
           >
-            <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full border border-[rgba(201,191,255,0.08)]" />
+            <div className="absolute -right-8 -top-8 h-24 w-24 rounded-md border border-[rgba(var(--rgb-line),0.08)]" />
             <div className="absolute bottom-3 right-4 flex items-end gap-1">
-              <span className="h-4 w-1.5 rounded-full bg-accent-lavender/25" />
-              <span className="h-7 w-1.5 rounded-full bg-accent-lavender/45" />
-              <span className="h-5 w-1.5 rounded-full bg-accent-purple/45" />
+              <span className="h-4 w-1.5 rounded-md bg-accent-lavender/25" />
+              <span className="h-7 w-1.5 rounded-md bg-accent-lavender/45" />
+              <span className="h-5 w-1.5 rounded-md bg-accent-purple/45" />
             </div>
             <div className="relative z-10 flex items-center gap-3">
-              <div className="grid h-10 w-10 place-items-center rounded-2xl border border-[rgba(201,191,255,0.16)] bg-[rgba(10,10,18,0.54)] text-[13px] font-semibold text-accent-lavender shadow-[0_0_24px_rgba(124,80,224,0.24)]">
+              <div className="grid h-10 w-10 place-items-center rounded-2xl border border-[var(--app-float-border)] bg-[var(--app-float-chip)] text-[13px] font-semibold text-accent-lavender shadow-[0_0_24px_rgba(var(--rgb-glow),0.24)]">
                 {'</>'}
               </div>
               <div>
@@ -294,13 +312,13 @@ function BentoGrid() {
 
           <div
             ref={productNodeRef}
-            className="about-float-delayed absolute bottom-6 right-6 z-10 hidden h-34 w-68 overflow-hidden rounded-[26px] border border-[rgba(201,191,255,0.14)] bg-[linear-gradient(135deg,rgba(192,96,240,0.14),rgba(255,255,255,0.04)_46%,rgba(10,10,18,0.14))] shadow-[0_18px_54px_rgba(0,0,0,0.28),0_0_46px_rgba(192,96,240,0.16),inset_0_1px_0_rgba(255,255,255,0.08)] backdrop-blur-md md:block lg:bottom-5 lg:right-5 xl:bottom-7 xl:right-7"
+            className="about-float-delayed absolute bottom-6 right-6 z-10 hidden h-34 w-68 overflow-hidden rounded-[26px] border border-[var(--app-float-border)] bg-[var(--app-float-b)] shadow-[0_18px_54px_rgba(0,0,0,0.28),0_0_46px_rgba(var(--rgb-violet),0.16),inset_0_1px_0_rgba(var(--rgb-film),0.08)] backdrop-blur-md md:block lg:bottom-5 lg:right-5 xl:bottom-7 xl:right-7"
           >
-            <div className="about-orbit absolute right-5 top-4 h-20.5 w-20.5 rounded-full border border-[rgba(201,191,255,0.16)]">
-              <span className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,#c9bfff,rgba(124,80,224,0.42)_58%,transparent_70%)] shadow-[0_0_28px_rgba(201,191,255,0.34)]" />
-              <span className="absolute -left-1 top-8 h-3 w-3 rounded-full bg-accent-purple/70 shadow-[0_0_14px_rgba(124,80,224,0.55)]" />
-              <span className="absolute right-3 -top-1 h-2.5 w-2.5 rounded-full bg-accent-violet/70 shadow-[0_0_14px_rgba(192,96,240,0.5)]" />
-              <span className="absolute bottom-2 right-1 h-2.5 w-2.5 rounded-full bg-accent-lavender/70 shadow-[0_0_14px_rgba(201,191,255,0.45)]" />
+            <div className="about-orbit absolute right-5 top-4 h-20.5 w-20.5 rounded-full border border-[rgba(var(--rgb-line),0.16)]">
+              <span className="absolute left-1/2 top-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-md bg-[radial-gradient(circle,#c9bfff,rgba(var(--rgb-glow),0.42)_58%,transparent_70%)] shadow-[0_0_28px_rgba(var(--rgb-line),0.34)]" />
+              <span className="absolute -left-1 top-8 h-3 w-3 rounded-full bg-accent-purple/70 shadow-[0_0_14px_rgba(var(--rgb-glow),0.55)]" />
+              <span className="absolute right-3 -top-1 h-2.5 w-2.5 rounded-full bg-accent-violet/70 shadow-[0_0_14px_rgba(var(--rgb-violet),0.5)]" />
+              <span className="absolute bottom-2 right-1 h-2.5 w-2.5 rounded-full bg-accent-lavender/70 shadow-[0_0_14px_rgba(var(--rgb-line),0.45)]" />
             </div>
             <div className="absolute left-4 top-4">
               <p className="font-heading text-sm font-semibold text-text-primary">
@@ -324,9 +342,9 @@ function BentoGrid() {
           decoding="async"
           className="absolute inset-0 z-1 h-full w-full object-cover object-[center_22%] lg:object-[center_23%]"
         />
-        <div className="absolute inset-0 z-2 bg-[linear-gradient(180deg,rgba(10,10,18,0)_35%,rgba(10,10,18,0.86)_100%)]" />
+        <div className="absolute inset-0 z-2 bg-[var(--app-photo-veil)]" />
         <div className="relative z-10 flex h-full min-h-90 flex-col justify-end p-5 sm:min-h-107 md:min-h-125 lg:min-h-0 lg:p-4 xl:p-5">
-          <span className="w-fit rounded-full border border-[rgba(80,200,120,0.3)] bg-green-bg px-3 py-1 text-[10px] font-medium text-[#6fd99a] lg:text-[9px]">
+          <span className="w-fit rounded-md border border-[rgba(80,200,120,0.3)] bg-green-bg px-3 py-1 text-[10px] font-medium text-[#6fd99a] lg:text-[9px]">
             Open to Work
           </span>
           <h1 className="mt-3 max-w-full wrap-break-words font-heading text-2xl font-bold leading-tight text-text-primary sm:text-3xl lg:mt-2 lg:text-[clamp(1.35rem,2.2vw,1.875rem)]">

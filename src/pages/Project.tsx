@@ -46,8 +46,8 @@ function Project() {
               onClick={() => setActiveTab(label)}
               className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-xs font-semibold transition duration-200 ${
                 isActive
-                  ? 'border-[rgba(201,191,255,0.24)] bg-[rgba(124,80,224,0.24)] text-accent-lavender shadow-[0_0_22px_rgba(124,80,224,0.14)]'
-                  : 'border-[rgba(201,191,255,0.12)] bg-[rgba(255,255,255,0.026)] text-text-muted hover:border-[rgba(201,191,255,0.22)] hover:text-text-secondary'
+                  ? 'border-[rgba(var(--rgb-line),0.24)] bg-[rgba(var(--rgb-glow),0.24)] text-accent-lavender shadow-[0_0_22px_rgba(var(--rgb-glow),0.14)]'
+                  : 'border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-film),0.026)] text-text-muted hover:border-[rgba(var(--rgb-line),0.22)] hover:text-text-secondary'
               }`}
             >
               <Icon size={16} />

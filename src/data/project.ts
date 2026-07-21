@@ -95,33 +95,6 @@ export const projects: ProjectItem[] = [
       'Yayzi was built to answer one question fast — do people actually want this? — and shipping it live turned that question into a real, usable tool instead of another idea stuck in planning.',
   },
   {
-    slug: 'watch-site',
-    route: '/project/watch-site',
-    title: 'WatchSite',
-    category: 'Web-App',
-    context: 'Personal Learning Project / Movie Discovery App',
-    description:
-      'A self-driven learning project for exploring movies — browsing titles, watching trailers, and reading synopses, powered by The Movie Database (TMDB) API.',
-    stack: ['NextJS', 'Vercel', 'TMDB API'],
-    accent: '#c060f0',
-    Icon: TbWorld,
-    thumbnail: '/Projects/WatchSite.webp',
-    website: 'https://watch-site.vercel.app',
-    keyPoints: [
-      'Integrated the TMDB API to fetch and display movie data, trailers, and synopses in real time.',
-      'Built a browsing experience for discovering both classic and latest movie releases.',
-      'Used this project as a hands-on way to learn API integration and data fetching patterns.',
-      'Deployed on Vercel for quick iteration and easy sharing.',
-    ],
-    resultHighlights: [
-      'Live on Vercel',
-      'TMDB API integration',
-      'Movie browsing & trailers',
-    ],
-    finalOutput:
-      'WatchSite was built purely as a learning exercise — working with a real-world API like TMDB taught more about handling external data than any tutorial could, and turned theory into a working, browsable app.',
-  },
-  {
   slug: 'paja-barbershop',
   route: '/project/paja-barbershop',
   title: 'Paja Barbershop',
@@ -130,7 +103,7 @@ export const projects: ProjectItem[] = [
   description:
     'A full booking and management ecosystem for Paja Barbershop, covering a public-facing website for customers and a dedicated backoffice application for staff — built with a 4-person team where I served as Project Manager.',
   stack: ['NextJS', 'React', 'Express', 'TailwindCSS', 'Vercel'],
-  accent: '#f0a860',
+  accent: '#D3D3D3',
   Icon: TbWorld,
   thumbnail: '/Projects/PajaBarbershop.png',
   website: 'https://pajabarbershop.com',

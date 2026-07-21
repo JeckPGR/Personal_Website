@@ -10,8 +10,11 @@ import Project from './pages/Project'
 import TechStack from './pages/TechStack'
 import Work from './pages/Work'
 import WorkDetail from './pages/WorkDetail'
-import ChatWidget from './components/ui/ChatWidget'
+// Hidden for now — /api/chat is a Vercel function and 404s under `vite dev`.
+// Re-enable by restoring this import and the <ChatWidget /> below.
+// import ChatWidget from './components/ui/ChatWidget'
 import CustomCursor from './components/CustomCursor'
+import ThemeProvider from './components/ThemeProvider'
 import NotFound from './pages/NotFound'
 import ProjectDetail from './pages/ProjectDetail'
 import PageTransitionOverlay from './components/PageTransition'
@@ -48,9 +51,11 @@ function App() {
   }, [])
 
   return (
-    <BrowserRouter>
-      <AppShell splashDone={splashDone} onSplashDone={handleSplashDone} />
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <AppShell splashDone={splashDone} onSplashDone={handleSplashDone} />
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }
 
@@ -61,7 +66,7 @@ type AppShellProps = {
 
 /** Lives inside the router so it can drive the page-transition curtain. */
 function AppShell({ splashDone, onSplashDone }: AppShellProps) {
-  const { displayLocation, isTransitioning, target } = usePageTransition()
+  const { displayLocation, isTransitioning, target, swapMs } = usePageTransition()
 
   return (
     <>
@@ -76,8 +81,8 @@ function AppShell({ splashDone, onSplashDone }: AppShellProps) {
         {!splashDone ? <SplashScreen onDone={onSplashDone} /> : null}
       </AnimatePresence>
 
-      <PageTransitionOverlay active={isTransitioning} target={target} />
-      <ChatWidget/>
+      <PageTransitionOverlay active={isTransitioning} target={target} durationMs={swapMs} />
+      {/* <ChatWidget /> */}
       <CustomCursor />
     </>
   )

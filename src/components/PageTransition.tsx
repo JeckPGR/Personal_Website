@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'framer-motion'
-import { SWAP_MS } from '../hooks/usePageTransition'
 
 const WIPE_EASE = [0.76, 0, 0.24, 1] as const
 
@@ -17,9 +16,11 @@ type OverlayProps = {
   active: boolean
   /** Destination pathname — drives the HUD label */
   target: string
+  /** How long the curtain stays up — the HUD paces itself against it */
+  durationMs: number
 }
 
-function PageTransitionOverlay({ active, target }: OverlayProps) {
+function PageTransitionOverlay({ active, target, durationMs }: OverlayProps) {
   const reduceMotion = useReducedMotion()
 
   return createPortal(
@@ -34,8 +35,7 @@ function PageTransitionOverlay({ active, target }: OverlayProps) {
           <motion.div
             className="absolute inset-0"
             style={{
-              background:
-                'linear-gradient(180deg, #c060f0 0%, #7c50e0 45%, #2a1358 100%)',
+              background: 'var(--app-curtain-sheet)',
             }}
             initial={reduceMotion ? { opacity: 0 } : { clipPath: 'inset(100% 0% 0% 0%)' }}
             animate={reduceMotion ? { opacity: 1 } : { clipPath: 'inset(0% 0% 0% 0%)' }}
@@ -45,13 +45,17 @@ function PageTransitionOverlay({ active, target }: OverlayProps) {
 
           {/* Layer 2 — the dark stage the HUD lives on, trails by a beat */}
           <motion.div
-            className="absolute inset-0 bg-[#07060f]"
+            className="absolute inset-0 bg-[var(--app-curtain)]"
             initial={reduceMotion ? { opacity: 0 } : { clipPath: 'inset(100% 0% 0% 0%)' }}
             animate={reduceMotion ? { opacity: 1 } : { clipPath: 'inset(0% 0% 0% 0%)' }}
             exit={reduceMotion ? { opacity: 0 } : { clipPath: 'inset(0% 0% 100% 0%)' }}
             transition={{ duration: reduceMotion ? 0.2 : 0.46, ease: WIPE_EASE, delay: reduceMotion ? 0 : 0.16 }}
           >
-            <HudScene target={target} reduceMotion={Boolean(reduceMotion)} />
+            <HudScene
+              target={target}
+              durationMs={durationMs}
+              reduceMotion={Boolean(reduceMotion)}
+            />
           </motion.div>
         </motion.div>
       ) : null}
@@ -60,7 +64,15 @@ function PageTransitionOverlay({ active, target }: OverlayProps) {
   )
 }
 
-function HudScene({ target, reduceMotion }: { target: string; reduceMotion: boolean }) {
+function HudScene({
+  target,
+  durationMs,
+  reduceMotion,
+}: {
+  target: string
+  durationMs: number
+  reduceMotion: boolean
+}) {
   const label = routeLabel(target)
 
   // Motion-value counter: animates without triggering React re-renders.
@@ -69,11 +81,11 @@ function HudScene({ target, reduceMotion }: { target: string; reduceMotion: bool
 
   useEffect(() => {
     const controls = animate(progress, 100, {
-      duration: SWAP_MS / 1000,
+      duration: durationMs / 1000,
       ease: [0.22, 1, 0.36, 1],
     })
     return () => controls.stop()
-  }, [progress])
+  }, [progress, durationMs])
 
   return (
     <motion.div
@@ -84,7 +96,7 @@ function HudScene({ target, reduceMotion }: { target: string; reduceMotion: bool
       transition={{ duration: 0.22, delay: reduceMotion ? 0 : 0.28 }}
     >
       {/* Blueprint grid */}
-      <div className="absolute inset-0 opacity-[0.07] bg-[linear-gradient(rgba(201,191,255,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,.6)_1px,transparent_1px)] [background-size:48px_48px]" />
+      <div className="absolute inset-0 opacity-[0.07] bg-[linear-gradient(rgba(var(--rgb-line),.6)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--rgb-line),.6)_1px,transparent_1px)] [background-size:48px_48px]" />
 
       {/* Ambient glow */}
       <div className="absolute left-1/2 top-1/2 h-[560px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-[120px] bg-[radial-gradient(circle,#7c50e0,transparent_70%)]" />
@@ -92,7 +104,7 @@ function HudScene({ target, reduceMotion }: { target: string; reduceMotion: bool
       {/* Scanline sweep */}
       {!reduceMotion ? (
         <motion.div
-          className="absolute inset-x-0 h-px bg-[linear-gradient(90deg,transparent,rgba(201,191,255,0.75),transparent)] shadow-[0_0_18px_rgba(201,191,255,0.5)]"
+          className="absolute inset-x-0 h-px bg-[linear-gradient(90deg,transparent,rgba(var(--rgb-line),0.75),transparent)] shadow-[0_0_18px_rgba(var(--rgb-line),0.5)]"
           initial={{ top: '-5%' }}
           animate={{ top: '105%' }}
           transition={{ duration: 1.15, ease: 'linear', repeat: Infinity }}
@@ -100,15 +112,21 @@ function HudScene({ target, reduceMotion }: { target: string; reduceMotion: bool
       ) : null}
 
       {/* HUD corner brackets */}
-      <span className="absolute left-5 top-5 h-8 w-8 border-l border-t border-[rgba(201,191,255,0.35)] sm:left-8 sm:top-8" />
-      <span className="absolute right-5 top-5 h-8 w-8 border-r border-t border-[rgba(201,191,255,0.35)] sm:right-8 sm:top-8" />
-      <span className="absolute bottom-5 left-5 h-8 w-8 border-b border-l border-[rgba(201,191,255,0.35)] sm:bottom-8 sm:left-8" />
-      <span className="absolute bottom-5 right-5 h-8 w-8 border-b border-r border-[rgba(201,191,255,0.35)] sm:bottom-8 sm:right-8" />
+      <span className="absolute left-5 top-5 h-8 w-8 border-l border-t border-[rgba(var(--rgb-line),0.35)] sm:left-8 sm:top-8" />
+      <span className="absolute right-5 top-5 h-8 w-8 border-r border-t border-[rgba(var(--rgb-line),0.35)] sm:right-8 sm:top-8" />
+      <span className="absolute bottom-5 left-5 h-8 w-8 border-b border-l border-[rgba(var(--rgb-line),0.35)] sm:bottom-8 sm:left-8" />
+      <span className="absolute bottom-5 right-5 h-8 w-8 border-b border-r border-[rgba(var(--rgb-line),0.35)] sm:bottom-8 sm:right-8" />
 
-      {/* Top status rail */}
-      <div className="absolute inset-x-5 top-6 flex items-center justify-between font-heading text-[9px] font-bold uppercase tracking-[0.32em] text-accent-lavender/45 sm:inset-x-10 sm:top-9">
-        <span>SYS // Navigate</span>
-        <span className="hidden sm:inline">Dzaky Razi</span>
+      {/* Title — the fixed identity on the curtain, sized to read as one */}
+      <div className="absolute inset-x-0 top-6 flex justify-center px-6 sm:top-9">
+        <span className="font-heading text-[clamp(1rem,1.6vw,1.25rem)] font-bold uppercase tracking-[0.3em] text-text-primary">
+          Dzaky Razi
+        </span>
+      </div>
+
+      {/* Signature — matches the splash screen */}
+      <div className="absolute inset-x-0 bottom-7 flex justify-center px-6 font-heading text-[11px] font-medium uppercase tracking-[0.28em] text-accent-lavender/40 sm:bottom-10">
+        &copy; 2026 Dzaky Razi
       </div>
 
       {/* Center */}
@@ -138,12 +156,12 @@ function HudScene({ target, reduceMotion }: { target: string; reduceMotion: bool
 
         {/* Progress rail */}
         <div className="mt-9 w-full max-w-sm">
-          <div className="h-px w-full overflow-hidden bg-[rgba(201,191,255,0.14)]">
+          <div className="h-px w-full overflow-hidden bg-[rgba(var(--rgb-line),0.14)]">
             <motion.div
-              className="h-px w-full origin-left bg-[linear-gradient(90deg,#7c50e0,#c9bfff)] shadow-[0_0_12px_rgba(201,191,255,0.6)]"
+              className="h-px w-full origin-left bg-[linear-gradient(90deg,var(--app-accent-purple),var(--app-accent-violet))] shadow-[0_0_12px_rgba(var(--rgb-line),0.6)]"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: SWAP_MS / 1000, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: durationMs / 1000, ease: [0.22, 1, 0.36, 1] }}
             />
           </div>
           <div className="mt-3 flex items-center justify-between font-heading text-[10px] font-bold uppercase tracking-[0.24em] text-accent-lavender/50">

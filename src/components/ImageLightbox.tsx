@@ -130,7 +130,7 @@ function ImageLightbox({ image, onClose }: ImageLightboxProps) {
             type="button"
             aria-label="Close image"
             onClick={onClose}
-            className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(255,255,255,0.05)] text-text-secondary backdrop-blur-md transition duration-300 hover:rotate-90 hover:border-[rgba(201,191,255,0.4)] hover:text-accent-lavender sm:right-6 sm:top-6"
+            className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-md border border-[rgba(201,191,255,0.18)] bg-[rgba(255,255,255,0.05)] text-white/70 backdrop-blur-md transition duration-300 hover:rotate-90 hover:border-[rgba(201,191,255,0.4)] hover:text-[#c9bfff] sm:right-6 sm:top-6"
           >
             <TbX size={20} />
           </button>
@@ -174,7 +174,7 @@ function ImageLightbox({ image, onClose }: ImageLightboxProps) {
                       {image.label}
                     </span>
                   ) : null}
-                  <span className="mt-1.5 block font-heading text-sm font-semibold text-text-primary sm:text-base">
+                  <span className="mt-1.5 block font-heading text-sm font-semibold text-white sm:text-base">
                     {image.caption}
                   </span>
                 </figcaption>

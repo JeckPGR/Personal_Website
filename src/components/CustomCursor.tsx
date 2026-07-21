@@ -99,11 +99,11 @@ function CustomCursor() {
             width: isSpot ? 64 : 30,
             height: isSpot ? 64 : 30,
             borderWidth: isSpot ? 1 : 1.5,
-            borderColor: isSpot ? 'rgba(201,191,255,0.5)' : 'rgba(201,191,255,0.55)',
-            backgroundColor: isSpot ? 'rgba(201,191,255,0.22)' : 'rgba(201,191,255,0)',
+            borderColor: isSpot ? 'rgba(var(--rgb-line),0.5)' : 'rgba(var(--rgb-line),0.55)',
+            backgroundColor: isSpot ? 'rgba(var(--rgb-line),0.22)' : 'rgba(var(--rgb-line),0)',
             boxShadow: isSpot
-              ? '0 0 34px rgba(124,80,224,0.4)'
-              : '0 0 0 rgba(124,80,224,0)',
+              ? '0 0 34px rgba(var(--rgb-glow),0.4)'
+              : '0 0 0 rgba(var(--rgb-glow),0)',
           }}
           transition={{ type: 'spring', stiffness: 300, damping: 26 }}
         >

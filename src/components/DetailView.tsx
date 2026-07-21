@@ -152,13 +152,13 @@ function ShowcaseGrid({
   if (!slots.length) {
     return (
       <div
-        className="relative flex h-full min-h-[300px] items-center justify-center overflow-hidden rounded-3xl border border-[rgba(201,191,255,0.1)]"
+        className="relative flex h-full min-h-[300px] items-center justify-center overflow-hidden rounded-3xl border border-[rgba(var(--rgb-line),0.1)]"
         style={{
-          background: `linear-gradient(135deg, ${hexToRgba(accent, 0.1)} 0%, rgba(255,255,255,0.015) 55%, rgba(10,9,20,0.6) 100%)`,
+          background: `linear-gradient(135deg, ${hexToRgba(accent, 0.1)} 0%, rgba(var(--rgb-film),0.015) 55%, rgba(10,9,20,0.6) 100%)`,
         }}
       >
         {/* Grid pattern */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.05] bg-[linear-gradient(rgba(201,191,255,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,.6)_1px,transparent_1px)] [background-size:32px_32px]" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.05] bg-[linear-gradient(rgba(var(--rgb-line),.6)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--rgb-line),.6)_1px,transparent_1px)] [background-size:32px_32px]" />
         {/* Floating orbs */}
         <motion.div
           animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.45, 0.25] }}
@@ -176,8 +176,8 @@ function ShowcaseGrid({
         <motion.div
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[rgba(201,191,255,0.16)] bg-[rgba(10,9,20,0.5)] backdrop-blur-md"
-          style={{ boxShadow: `0 0 60px ${hexToRgba(accent, 0.2)}, inset 0 1px 0 rgba(255,255,255,0.08)` }}
+          className="relative flex h-24 w-24 items-center justify-center rounded-3xl border border-[rgba(var(--rgb-line),0.16)] bg-[var(--app-panel)] backdrop-blur-md"
+          style={{ boxShadow: `0 0 60px ${hexToRgba(accent, 0.2)}, inset 0 1px 0 rgba(var(--rgb-film),0.08)` }}
         >
           <Icon size={44} style={{ color: accent }} />
         </motion.div>
@@ -199,10 +199,10 @@ function ShowcaseGrid({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.55, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
-            className={`group relative m-0 overflow-hidden rounded-3xl border bg-[rgba(255,255,255,0.02)] ${
+            className={`group relative m-0 overflow-hidden rounded-3xl border bg-[rgba(var(--rgb-film),0.02)] ${
               src
-                ? 'border-[rgba(201,191,255,0.1)]'
-                : 'border-dashed border-[rgba(201,191,255,0.14)]'
+                ? 'border-[rgba(var(--rgb-line),0.1)]'
+                : 'border-dashed border-[rgba(var(--rgb-line),0.14)]'
             } ${
               isFull
                 ? 'min-h-[280px] sm:col-span-2 md:min-h-[420px]'
@@ -233,12 +233,12 @@ function ShowcaseGrid({
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,9,20,0.5)] to-transparent" />
-                  <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(10,9,20,0.6)] text-accent-lavender opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100 max-md:opacity-80">
+                  <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.18)] bg-[rgba(10,9,20,0.6)] text-accent-lavender opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100 max-md:opacity-80">
                     <TbMaximize size={16} />
                   </span>
                 </button>
                 <figcaption
-                  className="pointer-events-none absolute bottom-3 left-3 rounded-full border border-[rgba(201,191,255,0.15)] bg-[rgba(10,9,20,0.6)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
+                  className="pointer-events-none absolute bottom-3 left-3 rounded-md border border-[rgba(var(--rgb-line),0.15)] bg-[rgba(10,9,20,0.6)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
                   style={{ color: accent }}
                 >
                   {caption}
@@ -246,8 +246,8 @@ function ShowcaseGrid({
               </>
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-2.5">
-                <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(201,191,255,1)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,1)_1px,transparent_1px)] [background-size:26px_26px]" />
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-dashed border-[rgba(201,191,255,0.2)] bg-[rgba(255,255,255,0.02)]">
+                <div className="pointer-events-none absolute inset-0 opacity-[0.03] bg-[linear-gradient(rgba(var(--rgb-line),1)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--rgb-line),1)_1px,transparent_1px)] [background-size:26px_26px]" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-dashed border-[rgba(var(--rgb-line),0.2)] bg-[rgba(var(--rgb-film),0.02)]">
                   <TbPhotoOff size={18} className="text-accent-lavender/40" />
                 </div>
                 <span className="font-heading text-[9px] font-bold uppercase tracking-[0.2em] text-accent-lavender/30">
@@ -336,10 +336,10 @@ function DetailView({
         className="fixed left-6 top-6 z-50"
       >
         <MagneticButton
-          className="group inline-flex items-center gap-2.5 rounded-full border border-[rgba(201,191,255,0.15)] bg-[rgba(10,9,20,0.8)] px-5 py-2.5 font-heading text-[11px] font-bold uppercase tracking-[0.08em] text-accent-lavender backdrop-blur-xl transition-all duration-300 hover:border-[rgba(201,191,255,0.4)] hover:bg-[rgba(155,125,255,0.12)] hover:shadow-[0_0_30px_rgba(155,125,255,0.15)]"
+          className="group inline-flex items-center gap-2.5 rounded-md border border-[rgba(var(--rgb-line),0.15)] bg-[var(--app-panel-strong)] px-5 py-2.5 font-heading text-[11px] font-bold uppercase tracking-[0.08em] text-accent-lavender backdrop-blur-xl transition-all duration-300 hover:border-[rgba(var(--rgb-line),0.4)] hover:bg-[rgba(var(--rgb-hover),0.12)] hover:shadow-[0_0_30px_rgba(var(--rgb-hover),0.15)]"
           onClick={() => window.history.back()}
         >
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[rgba(155,125,255,0.1)] transition-transform duration-300 group-hover:-translate-x-1">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[rgba(var(--rgb-hover),0.1)] transition-transform duration-300 group-hover:-translate-x-1">
             <TbArrowLeft size={14} />
           </span>
           {backLabel}
@@ -405,7 +405,7 @@ function DetailView({
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[rgba(10,9,20,0.3)] to-[#0a0914]" />
 
         {/* Grid Pattern */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.04] bg-[linear-gradient(rgba(201,191,255,.5)_1px,transparent_1px),linear-gradient(90deg,rgba(201,191,255,.5)_1px,transparent_1px)] [background-size:60px_60px]" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04] bg-[linear-gradient(rgba(var(--rgb-line),.5)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--rgb-line),.5)_1px,transparent_1px)] [background-size:60px_60px]" />
 
         {/* Content */}
         <div className="absolute inset-0 flex flex-col justify-end p-8 sm:p-12 lg:p-16">
@@ -416,8 +416,8 @@ function DetailView({
             transition={{ delay: 0.3, duration: 0.6 }}
             className="mb-4 flex items-center gap-3"
           >
-            <span className="h-px w-8 bg-accent-lavender/50" />
-            <span className="font-heading text-[11px] font-bold uppercase tracking-[0.3em] text-accent-lavender/80">
+            <span className="h-px w-8 bg-white/50" />
+            <span className="font-heading text-[11px] font-bold uppercase tracking-[0.3em] text-white/80">
               {eyebrow}
             </span>
           </motion.div>
@@ -439,10 +439,10 @@ function DetailView({
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className="group/link mt-6 inline-flex w-fit items-center gap-2.5 rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(10,9,20,0.55)] py-2 pl-3 pr-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(201,191,255,0.4)] hover:bg-[rgba(155,125,255,0.14)] hover:shadow-[0_8px_28px_rgba(155,125,255,0.18)]"
+              className="group/link mt-6 inline-flex w-fit items-center gap-2.5 rounded-md border border-[rgba(var(--rgb-line),0.18)] bg-[var(--app-panel)] py-2 pl-3 pr-4 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(var(--rgb-line),0.4)] hover:bg-[rgba(var(--rgb-hover),0.14)] hover:shadow-[0_8px_28px_rgba(var(--rgb-hover),0.18)]"
             >
               <span
-                className="flex h-6 w-6 items-center justify-center rounded-full"
+                className="flex h-6 w-6 items-center justify-center rounded-md"
                 style={{ background: accentRgba20, color: accent }}
               >
                 <TbWorld size={13} />
@@ -467,7 +467,7 @@ function DetailView({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.4 }}
             onClick={() => setLightbox({ src: image, alt: title, caption: title, label: eyebrow, accent })}
-            className="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(10,9,20,0.6)] text-accent-lavender backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-[rgba(201,191,255,0.45)] hover:bg-[rgba(155,125,255,0.16)] sm:right-8 sm:top-8"
+            className="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.18)] bg-[var(--app-panel)] text-accent-lavender backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-[rgba(var(--rgb-line),0.45)] hover:bg-[rgba(var(--rgb-hover),0.16)] sm:right-8 sm:top-8"
           >
             <TbMaximize size={18} />
           </motion.button>
@@ -485,7 +485,7 @@ function DetailView({
               return (
                 <motion.div
                   key={label}
-                  className="meta-item group relative overflow-hidden rounded-2xl border border-[rgba(201,191,255,0.08)] bg-[rgba(255,255,255,0.02)] p-5 transition-all duration-300 hover:border-[rgba(201,191,255,0.2)] hover:bg-[rgba(255,255,255,0.04)]"
+                  className="meta-item group relative overflow-hidden rounded-2xl border border-[rgba(var(--rgb-line),0.08)] bg-[rgba(var(--rgb-film),0.02)] p-5 transition-all duration-300 hover:border-[rgba(var(--rgb-line),0.2)] hover:bg-[rgba(var(--rgb-film),0.04)]"
                   initial={{ opacity: 0, x: -24 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
@@ -522,7 +522,7 @@ function DetailView({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="rounded-2xl border border-[rgba(201,191,255,0.08)] bg-[rgba(255,255,255,0.02)] p-5"
+                className="rounded-2xl border border-[rgba(var(--rgb-line),0.08)] bg-[rgba(var(--rgb-film),0.02)] p-5"
               >
                 <h3
                   className="mb-4 font-heading text-[10px] font-bold uppercase tracking-[0.2em]"
@@ -539,7 +539,7 @@ function DetailView({
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.05 }}
                       whileHover={{ scale: 1.05, y: -2 }}
-                      className="cursor-default rounded-lg border border-[rgba(201,191,255,0.12)] bg-[rgba(155,125,255,0.06)] px-3 py-1.5 text-[11px] font-medium text-accent-lavender/80 transition-colors hover:border-[rgba(201,191,255,0.25)] hover:bg-[rgba(155,125,255,0.12)] hover:text-accent-lavender"
+                      className="cursor-default rounded-lg border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-hover),0.06)] px-3 py-1.5 text-[11px] font-medium text-accent-lavender/80 transition-colors hover:border-[rgba(var(--rgb-line),0.25)] hover:bg-[rgba(var(--rgb-hover),0.12)] hover:text-accent-lavender"
                     >
                       {tag}
                     </motion.span>
@@ -590,18 +590,18 @@ function DetailView({
               viewport={{ once: true }}
               className="mb-10 flex items-center gap-4"
             >
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[rgba(201,191,255,0.1)]" />
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[rgba(var(--rgb-line),0.1)]" />
               <h2 className="text-center font-heading text-sm font-bold uppercase tracking-[0.25em] text-text-primary">
                 {pointsHeading}
               </h2>
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[rgba(201,191,255,0.1)]" />
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[rgba(var(--rgb-line),0.1)]" />
             </motion.div>
 
             <div className="points-grid mx-auto grid max-w-5xl gap-4 sm:grid-cols-2">
               {points.map((point, index) => (
                 <motion.div
                   key={point}
-                  className="point-card group relative overflow-hidden rounded-2xl border border-[rgba(201,191,255,0.06)] bg-[rgba(255,255,255,0.015)] p-6 transition-all duration-500 hover:border-[rgba(201,191,255,0.18)]"
+                  className="point-card group relative overflow-hidden rounded-2xl border border-[rgba(var(--rgb-line),0.06)] bg-[rgba(var(--rgb-film),0.015)] p-6 transition-all duration-500 hover:border-[rgba(var(--rgb-line),0.18)]"
                   initial={{ opacity: 0, y: 32 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
@@ -646,11 +646,11 @@ function DetailView({
               viewport={{ once: true }}
               className="mb-10 flex items-center gap-4"
             >
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[rgba(201,191,255,0.1)]" />
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[rgba(var(--rgb-line),0.1)]" />
               <h2 className="text-center font-heading text-sm font-bold uppercase tracking-[0.25em] text-text-primary">
                 {highlightsHeading}
               </h2>
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[rgba(201,191,255,0.1)]" />
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[rgba(var(--rgb-line),0.1)]" />
             </motion.div>
 
             <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-3">
@@ -662,7 +662,7 @@ function DetailView({
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
                   whileHover={{ scale: 1.05, y: -2 }}
-                  className="highlight-chip group flex items-center gap-3 rounded-full border border-[rgba(201,191,255,0.1)] bg-[rgba(255,255,255,0.02)] px-5 py-3 transition-all duration-300 hover:border-[rgba(201,191,255,0.25)] hover:bg-[rgba(255,255,255,0.05)]"
+                  className="highlight-chip group flex items-center gap-3 rounded-md border border-[rgba(var(--rgb-line),0.1)] bg-[rgba(var(--rgb-film),0.02)] px-5 py-3 transition-all duration-300 hover:border-[rgba(var(--rgb-line),0.25)] hover:bg-[rgba(var(--rgb-film),0.05)]"
                 >
                   <span
                     className="h-2 w-2 shrink-0 rounded-full transition-shadow duration-300 group-hover:shadow-[0_0_12px]"
@@ -686,11 +686,11 @@ function DetailView({
               viewport={{ once: true }}
               className="mb-10 flex items-center gap-4"
             >
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[rgba(201,191,255,0.1)]" />
+              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[rgba(var(--rgb-line),0.1)]" />
               <h2 className="text-center font-heading text-sm font-bold uppercase tracking-[0.25em] text-text-primary">
                 {showcaseHeading ?? 'Showcase'}
               </h2>
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[rgba(201,191,255,0.1)]" />
+              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[rgba(var(--rgb-line),0.1)]" />
             </motion.div>
 
             <div className="mx-auto max-w-5xl">
@@ -714,7 +714,7 @@ function DetailView({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative mt-20 overflow-hidden rounded-[32px] border border-[rgba(201,191,255,0.08)] bg-[rgba(255,255,255,0.015)] p-10 sm:p-14"
+            className="relative mt-20 overflow-hidden rounded-[32px] border border-[rgba(var(--rgb-line),0.08)] bg-[rgba(var(--rgb-film),0.015)] p-10 sm:p-14"
           >
             {/* Animated background glow */}
             <motion.div
@@ -778,7 +778,7 @@ function DetailView({
         >
           <Link
             to={backTo}
-            className="group inline-flex items-center gap-3 rounded-full border border-[rgba(201,191,255,0.12)] bg-[rgba(155,125,255,0.05)] px-8 py-3 font-heading text-[12px] font-semibold uppercase tracking-[0.1em] text-accent-lavender transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(201,191,255,0.3)] hover:bg-[rgba(155,125,255,0.12)] hover:shadow-[0_10px_40px_rgba(155,125,255,0.15)]"
+            className="group inline-flex items-center gap-3 rounded-md border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-hover),0.05)] px-8 py-3 font-heading text-[12px] font-semibold uppercase tracking-[0.1em] text-accent-lavender transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(var(--rgb-line),0.3)] hover:bg-[rgba(var(--rgb-hover),0.12)] hover:shadow-[0_10px_40px_rgba(var(--rgb-hover),0.15)]"
           >
             <TbArrowLeft
               size={16}

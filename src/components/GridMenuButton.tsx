@@ -41,7 +41,7 @@ function GridMenuButton({
       className={`group inline-flex shrink-0 items-center gap-2.5 rounded-xl px-1.5 py-1 text-text-secondary transition-colors duration-200 hover:text-accent-lavender focus-visible:text-accent-lavender focus-visible:outline-none ${className}`}
     >
       {text ? (
-        <span className="font-heading text-xs font-semibold uppercase tracking-[0.18em]">
+        <span className="hidden font-heading text-xs font-semibold uppercase tracking-[0.18em] sm:inline">
           {text}
         </span>
       ) : null}
@@ -53,7 +53,7 @@ function GridMenuButton({
         {Array.from({ length: 9 }).map((_, i) => (
           <motion.span
             key={i}
-            className="h-[3px] w-[3px] rounded-full bg-current"
+            className="h-[3px] w-[3px] rounded-md bg-current"
             variants={dotVariants}
             transition={{ type: 'spring', stiffness: 340, damping: 15 }}
           />

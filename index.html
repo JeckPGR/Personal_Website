@@ -12,6 +12,19 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dzaky Razi - Portofolio Website</title>
+    <script>
+      // Paint the stored theme before first paint, otherwise a light-mode
+      // visitor gets a dark flash while React boots. Key matches useTheme.ts.
+      (function () {
+        try {
+          var stored = localStorage.getItem('dzaky-theme')
+          document.documentElement.dataset.theme =
+            stored === 'light' ? 'light' : 'dark'
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
