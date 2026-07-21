@@ -53,6 +53,8 @@ export const workExperiences: WorkExperience[] = [
     accent: '#70aaff',
     Icon: TbBuildingBank,
     thumbnail: '/Works/BankMandiri.jpg',
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     summary: {
       en: 'Research and development work inside strategic procurement, mapping the application ecosystem and shaping improvement recommendations grounded in real user workflows.',
       id: 'Kerja riset dan pengembangan di unit strategic procurement, memetakan ekosistem aplikasi dan menyusun rekomendasi perbaikan yang berangkat dari alur kerja pengguna sebenarnya.',
@@ -109,6 +111,8 @@ export const workExperiences: WorkExperience[] = [
     accent: '#e090c8',
     Icon: TbBuildingSkyscraper,
     thumbnail: '/Works/Telkom-Prop.webp',
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     summary: {
       en: 'Coordinated an IT delivery team end to end, aligning scope, backlog, and testing to keep a technology-based product on track toward release.',
       id: 'Mengoordinasikan tim delivery IT dari hulu ke hilir, menyelaraskan scope, backlog, dan pengujian agar produk berbasis teknologi tetap sesuai jalur menuju rilis.',
@@ -163,6 +167,8 @@ export const workExperiences: WorkExperience[] = [
     accent: '#60d9aa',
     Icon: TbToolsKitchen2,
     thumbnail: '/Works/CAATIS.png',
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     summary: {
       en: 'Designed and built an internal staff management platform that centralized scheduling and payroll across multiple F&B outlets.',
       id: 'Merancang dan membangun platform manajemen staf internal yang memusatkan penjadwalan dan penggajian di beberapa outlet F&B.',
@@ -213,6 +219,8 @@ export const workExperiences: WorkExperience[] = [
     accent: '#c9bfff',
     Icon: TbSchool,
     thumbnail: '/Works/Lab.jpg',
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     summary: {
       en: 'Mentored students across web development lab classes, strengthening their grasp of core web concepts and hands-on troubleshooting.',
       id: 'Membimbing mahasiswa di kelas praktikum pengembangan web, memperkuat pemahaman mereka atas konsep inti web dan kemampuan troubleshooting langsung.',
@@ -263,6 +271,8 @@ export const workExperiences: WorkExperience[] = [
     accent: '#c060f0',
     Icon: TbTable,
     thumbnail: '/Works/Jokiwithsora.png',
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     summary: {
       en: 'Built spreadsheet-based operational systems and automations that streamlined order management and saved the team hours of manual work each week.',
       id: 'Membangun sistem operasional berbasis spreadsheet beserta otomasinya untuk merapikan manajemen pesanan dan menghemat berjam-jam kerja manual tim setiap minggu.',

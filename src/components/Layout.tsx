@@ -12,12 +12,12 @@ import {
   TbHome,
   TbMail,
   TbUser,
-  TbX,
 } from 'react-icons/tb'
 import { CV_URL } from '../data/portfolio'
 import { useCopy } from '../hooks/useCopy'
 import type { CopyKey } from '../i18n/translations'
 import LanguageToggle from './LanguageToggle'
+import CloseMenuButton from './CloseMenuButton'
 import GridMenuButton from './GridMenuButton'
 import ThemeToggle from './ThemeToggle'
 
@@ -117,8 +117,16 @@ const menuItems: Array<{
 function TopNavbar() {
   const t = useCopy()
   const [isOpen, setIsOpen] = useState(false)
+  // Where the overlay's circular reveal expands from — and collapses back
+  // to on close, so the two motions are exact mirrors of each other.
+  const [menuOrigin, setMenuOrigin] = useState({ x: 0, y: 0 })
   const location = useLocation()
   const isHome = location.pathname === '/' || location.pathname === '/home'
+
+  const openMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setMenuOrigin({ x: event.clientX, y: event.clientY })
+    setIsOpen(true)
+  }
 
   // Close the mobile menu whenever the route changes.
   useEffect(() => {
@@ -214,7 +222,7 @@ function TopNavbar() {
 
             <GridMenuButton
               isOpen={isOpen}
-              onClick={() => setIsOpen(true)}
+              onClick={openMenu}
               label={t('nav.openMenu')}
               text={t('nav.menu')}
             />
@@ -222,28 +230,45 @@ function TopNavbar() {
         </motion.nav>
       </header>
 
-      <MobileMenuOverlay isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <MobileMenuOverlay
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        origin={menuOrigin}
+      />
     </>
   )
 }
 
+type MenuOrigin = { x: number; y: number }
+
 type MobileMenuOverlayProps = {
   isOpen: boolean
   onClose: () => void
+  origin: MenuOrigin
 }
 
-function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
+// A gentle, continuously-decelerating glide rather than the splash curtain's
+// snappy mid-animation whoosh — this reveal is meant to be lingered on, not
+// snapped through, so the curve is smoother and slower.
+const PORTAL_EASE = [0.16, 1, 0.3, 1] as const
+const PORTAL_DURATION = 1.1
+
+function MobileMenuOverlay({ isOpen, onClose, origin }: MobileMenuOverlayProps) {
   const t = useCopy()
+  // 0% and 150% of the reference box comfortably clear every corner of the
+  // viewport regardless of where the origin point sits.
+  const collapsed = `circle(0% at ${origin.x}px ${origin.y}px)`
+  const expanded = `circle(150% at ${origin.x}px ${origin.y}px)`
 
   return (
     <AnimatePresence>
       {isOpen ? (
         <motion.div
           key="mobile-overlay"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
+          initial={{ clipPath: collapsed }}
+          animate={{ clipPath: expanded }}
+          exit={{ clipPath: collapsed }}
+          transition={{ duration: PORTAL_DURATION, ease: PORTAL_EASE }}
           className="fixed inset-0 z-1000 flex flex-col bg-[var(--app-overlay)]"
         >
           {/* Ambient background */}
@@ -255,14 +280,7 @@ function MobileMenuOverlay({ isOpen, onClose }: MobileMenuOverlayProps) {
             <span className="font-heading text-base font-semibold text-text-primary">
               Dzaky Razi
             </span>
-            <button
-              type="button"
-              aria-label={t('nav.closeMenu')}
-              onClick={onClose}
-              className="flex h-11 w-11 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.18)] bg-[rgba(var(--rgb-film),0.04)] text-text-secondary transition hover:rotate-90 hover:border-[rgba(var(--rgb-line),0.36)] hover:text-accent-lavender"
-            >
-              <TbX size={20} />
-            </button>
+            <CloseMenuButton onClick={onClose} label={t('nav.closeMenu')} />
           </div>
 
           {/* Numbered menu list */}

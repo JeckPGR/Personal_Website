@@ -30,15 +30,15 @@ function PageShell({
 }: PageShellProps) {
   const watermark = title.split(' ')[0]?.toUpperCase() || tag.toUpperCase()
 
-  // Same scroll treatment as the About hero: the heading drifts and dims on
-  // its way out while the watermark slides faster behind it.
+  // The watermark drifts sideways as the page scrolls, a quiet background
+  // flourish. The header text itself stays put — these headers are short,
+  // so a scroll-linked drift/fade left it lagging behind and visually
+  // overlapping the content directly beneath it.
   const headerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: headerRef,
     offset: ['start start', 'end start'],
   })
-  const headerY = useTransform(scrollYProgress, [0, 1], [0, 70])
-  const headerOpacity = useTransform(scrollYProgress, [0, 0.9], [1, 0.15])
   const watermarkX = useTransform(scrollYProgress, [0, 1], [0, -90])
 
   return (
@@ -60,11 +60,7 @@ function PageShell({
           {watermark}
         </motion.div>
 
-        <motion.div
-          ref={headerRef}
-          style={{ y: headerY, opacity: headerOpacity }}
-          className="relative z-10 max-w-3xl"
-        >
+        <div ref={headerRef} className="relative z-10 max-w-3xl">
           {/* Same eyebrow as the About page: rule + label, not a pill. */}
           <div className="flex items-center gap-3">
             <span className="h-px w-8 bg-accent-lavender/40" />
@@ -92,7 +88,7 @@ function PageShell({
               ))}
             </div>
           ) : null}
-        </motion.div>
+        </div>
 
         {children ? <div className="relative z-10 mt-10 lg:mt-8">{children}</div> : null}
 

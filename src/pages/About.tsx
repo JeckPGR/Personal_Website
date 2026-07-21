@@ -445,14 +445,14 @@ function About() {
     [L],
   )
 
-  // Hero drifts and dims as it leaves, so the sections below feel like they
-  // slide over it instead of merely following it.
+  // The watermark drifts sideways as the hero scrolls, a quiet background
+  // flourish. The hero text itself stays put — drifting/fading it with
+  // scroll left it lagging behind and visually overlapping the Toolkit
+  // section directly beneath it.
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
   })
-  const heroY = useTransform(heroProgress, [0, 1], [0, 70])
-  const heroOpacity = useTransform(heroProgress, [0, 0.9], [1, 0.15])
   const watermarkX = useTransform(heroProgress, [0, 1], [0, -90])
 
   return (
@@ -472,10 +472,7 @@ function About() {
           ABOUT
         </motion.div>
 
-        <motion.div
-          style={{ y: heroY, opacity: heroOpacity }}
-          className="relative z-10"
-        >
+        <div className="relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -552,7 +549,7 @@ function About() {
               />
             </a>
           </motion.div>
-        </motion.div>
+        </div>
       </header>
 
       {/* ─── How I work ─── */}

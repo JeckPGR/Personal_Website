@@ -54,6 +54,8 @@ export const projects: ProjectItem[] = [
     accent: '#63d848',
     Icon: TbSparkles,
     thumbnail: '/Projects/Inotrive.png',
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     website: 'https://inotrive.com',
     keyPoints: {
       en: [
@@ -100,6 +102,8 @@ export const projects: ProjectItem[] = [
     accent: '#f0a860',
     Icon: TbWorld,
     thumbnail: '/Projects/Yayzi.png',
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     website: 'https://yayzi.vercel.app',
     keyPoints: {
       en: [
@@ -148,6 +152,8 @@ export const projects: ProjectItem[] = [
   accent: '#D3D3D3',
   Icon: TbWorld,
   thumbnail: '/Projects/PajaBarbershop.png',
+  // 3 gambar bisa ditaro disini
+  showcase: [],
   website: 'https://pajabarbershop.com',
   keyPoints: {
     en: [
@@ -198,6 +204,8 @@ export const projects: ProjectItem[] = [
     accent: '#c060f0',
     Icon: TbWorld,
     thumbnail: '/Projects/WatchSite.webp',
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     website: 'https://watch-site.vercel.app',
     keyPoints: {
       en: [
@@ -250,6 +258,7 @@ export const projects: ProjectItem[] = [
     accent: '#70aaff',
     Icon: TbMap,
     thumbnail: '/Projects/mandiri-1.png',
+    // 3 gambar bisa ditaro disini
     showcase: [],
     keyPoints: {
       en: [
@@ -295,6 +304,8 @@ export const projects: ProjectItem[] = [
     stack: ['Mobile', 'Location-based', 'UX'],
     accent: '#70aaff',
     Icon: TbDeviceMobile,
+    // 3 gambar bisa ditaro disini
+    showcase: [],
     keyPoints: {
       en: [
         'Helps users discover English and Mathematics courses around Bandung.',

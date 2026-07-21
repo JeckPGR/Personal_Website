@@ -25,13 +25,13 @@ const STEPS = [
 ]
 
 /** Seconds spent climbing to a milestone, resting on it, and the final push. */
-const TRAVEL = 0.55
-const HOLD = 0.85
-const FINISH = 0.45
+const TRAVEL = 0.7
+const HOLD = 1.05
+const FINISH = 0.55
 /** How long 100% stays on screen before the curtain lifts. */
-const COMPLETE_HOLD_MS = 950
+const COMPLETE_HOLD_MS = 1100
 /** Milliseconds per typed character. Must clear TRAVEL + HOLD on the longest line. */
-const TYPE_SPEED_MS = 26
+const TYPE_SPEED_MS = 34
 
 /**
  * Keyframes that climb, then sit still while the line types itself out.
