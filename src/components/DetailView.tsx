@@ -1,10 +1,12 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import type { IconType } from 'react-icons'
-import { TbArrowLeft, TbExternalLink, TbMapPin, TbCalendar, TbBriefcase, TbWorld, TbPhotoOff } from 'react-icons/tb'
+import { TbArrowLeft, TbExternalLink, TbMapPin, TbCalendar, TbBriefcase, TbWorld, TbPhotoOff, TbMaximize } from 'react-icons/tb'
 import { Link } from 'react-router-dom'
+import ImageLightbox from './ImageLightbox'
+import type { LightboxImage } from './ImageLightbox'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -148,6 +150,7 @@ function DetailView({
   const containerRef = useRef<HTMLElement>(null)
   const bannerRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
+  const [lightbox, setLightbox] = useState<LightboxImage | null>(null)
 
   const accentRgba10 = hexToRgba(accent, 0.1)
   const accentRgba20 = hexToRgba(accent, 0.2)
@@ -228,6 +231,8 @@ function DetailView({
               <img
                 src={image}
                 alt={title}
+                loading="lazy"
+                decoding="async"
                 className="absolute inset-0 h-full w-full object-contain object-center md:object-cover"
               />
             </>
@@ -313,6 +318,21 @@ function DetailView({
             </motion.a>
           )}
         </div>
+
+        {/* Expand cover — opens the full, unscaled image */}
+        {image ? (
+          <motion.button
+            type="button"
+            aria-label="View cover image"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+            onClick={() => setLightbox({ src: image, alt: title, caption: title, label: eyebrow, accent })}
+            className="absolute right-5 top-5 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(10,9,20,0.6)] text-accent-lavender backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-[rgba(201,191,255,0.45)] hover:bg-[rgba(155,125,255,0.16)] sm:right-8 sm:top-8"
+          >
+            <TbMaximize size={18} />
+          </motion.button>
+        ) : null}
       </div>
 
       {/* ─── Content Area ─── */}
@@ -462,15 +482,34 @@ function DetailView({
                         >
                           {src ? (
                             <>
-                              <img
-                                src={src}
-                                alt={`${title} — proof ${idx + 1}`}
-                                loading="lazy"
-                                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,9,20,0.5)] to-transparent" />
+                              <button
+                                type="button"
+                                aria-label={`View ${proofLabel} ${idx + 1} full size`}
+                                onClick={() =>
+                                  setLightbox({
+                                    src,
+                                    alt: `${title} — ${proofLabel} ${idx + 1}`,
+                                    caption: title,
+                                    label: `${String(idx + 1).padStart(2, '0')} / ${proofLabel}`,
+                                    accent,
+                                  })
+                                }
+                                className="absolute inset-0 h-full w-full cursor-pointer"
+                              >
+                                <img
+                                  src={src}
+                                  alt={`${title} — proof ${idx + 1}`}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,9,20,0.5)] to-transparent" />
+                                <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(201,191,255,0.18)] bg-[rgba(10,9,20,0.6)] text-accent-lavender opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100 max-md:opacity-80">
+                                  <TbMaximize size={16} />
+                                </span>
+                              </button>
                               <figcaption
-                                className="absolute bottom-3 left-3 rounded-full border border-[rgba(201,191,255,0.15)] bg-[rgba(10,9,20,0.6)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
+                                className="pointer-events-none absolute bottom-3 left-3 rounded-full border border-[rgba(201,191,255,0.15)] bg-[rgba(10,9,20,0.6)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
                                 style={{ color: accent }}
                               >
                                 {String(idx + 1).padStart(2, '0')} / {proofLabel}
@@ -706,6 +745,8 @@ function DetailView({
           </Link>
         </motion.div>
       </div>
+
+      <ImageLightbox image={lightbox} onClose={() => setLightbox(null)} />
     </motion.main>
   )
 }

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import type { IconType } from 'react-icons'
-import { TbArrowUpRight } from 'react-icons/tb'
+import { TbArrowUpRight, TbMaximize } from 'react-icons/tb'
 import { AnimatePresence, motion, useMotionValue, useSpring } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import ImageLightbox from './ImageLightbox'
+import type { LightboxImage } from './ImageLightbox'
 
 export type RevealItem = {
   id: string
@@ -76,6 +78,8 @@ function PreviewCard({ item, size }: { item: RevealItem; size: PreviewSize }) {
         <img
           src={item.image}
           alt={item.title}
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 h-full w-full object-cover"
         />
       ) : (
@@ -108,6 +112,7 @@ function PreviewCard({ item, size }: { item: RevealItem; size: PreviewSize }) {
 
 function RevealList({ items, countLabel }: RevealListProps) {
   const [active, setActive] = useState<number | null>(null)
+  const [lightbox, setLightbox] = useState<LightboxImage | null>(null)
   const hasHover = useHasHover()
   const size = usePreviewSize()
 
@@ -149,12 +154,26 @@ function RevealList({ items, countLabel }: RevealListProps) {
       <ul className="min-w-0">
         {items.map((item, index) => {
           const isDimmed = active !== null && active !== index
+          // Rows without a destination but with a cover open the image dialog —
+          // this is the only way to see the preview on touch devices.
+          const canPreview = !item.to && Boolean(item.image)
           const body = (
             <>
               <span className="flex min-w-0 items-center gap-1 sm:gap-3">
                 {item.to ? (
                   <span className="grid w-0 shrink-0 place-items-center overflow-hidden text-accent-lavender opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100 sm:group-hover:w-8">
                     <TbArrowUpRight size={22} />
+                  </span>
+                ) : null}
+                {canPreview ? (
+                  <span
+                    className={`grid shrink-0 place-items-center overflow-hidden text-accent-lavender transition-all duration-300 ${
+                      hasHover
+                        ? 'w-0 opacity-0 group-hover:w-6 group-hover:opacity-100 sm:group-hover:w-8'
+                        : 'w-6 opacity-70'
+                    }`}
+                  >
+                    <TbMaximize size={18} />
                   </span>
                 ) : null}
                 <span className="min-w-0">
@@ -191,6 +210,26 @@ function RevealList({ items, countLabel }: RevealListProps) {
                 >
                   {body}
                 </Link>
+              ) : canPreview ? (
+                <button
+                  type="button"
+                  aria-label={`View ${item.title}`}
+                  className={`${rowClass} w-full text-left`}
+                  data-cursor="spotlight"
+                  onMouseEnter={() => setActive(index)}
+                  onMouseLeave={() => setActive(null)}
+                  onClick={() =>
+                    setLightbox({
+                      src: item.image as string,
+                      alt: item.title,
+                      caption: item.title,
+                      label: item.meta,
+                      accent: item.accent,
+                    })
+                  }
+                >
+                  {body}
+                </button>
               ) : (
                 <div
                   className={rowClass}
@@ -229,6 +268,8 @@ function RevealList({ items, countLabel }: RevealListProps) {
           </motion.div>
         </>
       ) : null}
+
+      <ImageLightbox image={lightbox} onClose={() => setLightbox(null)} />
     </div>
   )
 }

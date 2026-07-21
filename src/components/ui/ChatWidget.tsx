@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const QUICK_PROMPTS = [
   "Ceritain tentang project Terakhir Dzaky dong! 🚀",
@@ -13,6 +14,10 @@ const TOOLTIP_TEXTS = [
 ];
 
 export default function ChatWidget() {
+  const { pathname } = useLocation();
+  // The auto-cycling tooltip bubble only belongs on the home page.
+  const isHome = pathname === '/' || pathname === '/home';
+
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{role: string, text: string}[]>([
@@ -54,7 +59,7 @@ export default function ChatWidget() {
 
   // Efek Animasi Loop Bubble Chat
   useEffect(() => {
-    if (isOpen) return;
+    if (isOpen || !isHome) return;
 
     const hideTimer = setTimeout(() => {
       setShowTooltip(false);
@@ -69,7 +74,7 @@ export default function ChatWidget() {
     }, 5000);
 
     return () => clearTimeout(hideTimer);
-  }, [tooltipIdx, isOpen]);
+  }, [tooltipIdx, isOpen, isHome]);
 
   const MAX_CHATS = 10;
   const userMessageCount = messages.filter(msg => msg.role === 'user').length;
@@ -230,8 +235,8 @@ export default function ChatWidget() {
         </div>
       )}
 
-      {/* 2. Tooltip Animasi */}
-      {!isOpen && (
+      {/* 2. Tooltip Animasi — hanya di halaman Home */}
+      {!isOpen && isHome && (
         <div 
           className={`mb-4 mr-2 max-w-55 p-3 bg-[rgba(20,20,30,0.95)] border border-[rgba(124,80,224,0.4)] rounded-2xl rounded-br-sm shadow-[0_0_20px_rgba(124,80,224,0.2)] backdrop-blur-md transition-all duration-500 ease-in-out transform origin-bottom-right flex items-center gap-2 cursor-pointer ${
             showTooltip ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-4 pointer-events-none'

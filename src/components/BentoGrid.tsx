@@ -320,6 +320,8 @@ function BentoGrid() {
         <img
           src={meImage}
           alt="Ahmad Dzaky Ar Razi"
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 z-1 h-full w-full object-cover object-[center_22%] lg:object-[center_23%]"
         />
         <div className="absolute inset-0 z-2 bg-[linear-gradient(180deg,rgba(10,10,18,0)_35%,rgba(10,10,18,0.86)_100%)]" />

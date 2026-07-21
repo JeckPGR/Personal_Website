@@ -32,16 +32,15 @@ function Layout() {
           isHome ? 'home-page-main' : ''
         }`}
       >
-        <AnimatePresence mode="wait">
-          <div
-            key={location.pathname}
-            className={`relative z-10 min-w-0 ${
-              isHome ? 'min-h-0 lg:h-full lg:overflow-hidden' : ''
-            }`}
-          >
-            <Outlet key={location.pathname} />
-          </div>
-        </AnimatePresence>
+        {/* Route swaps happen behind the PageTransition curtain. */}
+        <div
+          key={location.pathname}
+          className={`relative z-10 min-w-0 ${
+            isHome ? 'min-h-0 lg:h-full lg:overflow-hidden' : ''
+          }`}
+        >
+          <Outlet key={location.pathname} />
+        </div>
       </main>
     </div>
   )
