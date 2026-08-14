@@ -36,8 +36,8 @@ function PortfolioRoutes({ location }: { location: RouteLocation }) {
         <Route path="work/:slug" element={<WorkDetail />} />
         <Route path="tech-stack" element={<TechStack />} />
         <Route path="certification" element={<Certification />} />
-        <Route path="*" element={<NotFound />} />
       </Route>
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }

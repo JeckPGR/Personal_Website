@@ -40,7 +40,7 @@ export const tabs: Array<{ label: ProjectCategory; Icon: IconType }> = [
 ]
 
 export const projects: ProjectItem[] = [
-    {
+  {
     slug: 'inotrive',
     route: '/project/inotrive',
     title: 'Inotrive',
@@ -107,7 +107,11 @@ export const projects: ProjectItem[] = [
     Icon: TbWorld,
     thumbnail: '/Projects/Yayzi.png',
     // 3 gambar bisa ditaro disini
-    showcase: [],
+    showcase: [
+      '/Projects/Yayzi-Src/Yayzi-1.png',
+      '/Projects/Yayzi-Src/Yayzi-2.png',
+      '/Projects/Yayzi-Src/Yayzi-3.png',
+    ],
     website: 'https://yayzi.vercel.app',
     keyPoints: {
       en: [
@@ -143,56 +147,60 @@ export const projects: ProjectItem[] = [
     },
   },
   {
-  slug: 'paja-barbershop',
-  route: '/project/paja-barbershop',
-  title: 'Paja Barbershop',
-  category: 'Web-App',
-  context: 'Client Project / Team of 4 (Project Manager)',
-  description: {
-    en: 'A comprehensive booking and management application for Paja Barbershop, which includes a website for customers and a dedicated back-office application for staff to manage master data and handle offline bookings and orders—developed by a team of four, with me serving as Project Manager.',
-    id: 'Sebuah aplikasi pemesanan dan manajemen lengkap untuk Paja Barbershop, yang mencakup situs web untuk pelanggan serta aplikasi backoffice khusus bagi staf untuk mengelola data induk dan menangani pemesanan/pesanan offline — dikembangkan oleh tim beranggotakan 4 orang, di mana saya bertindak sebagai Manajer Proyek.',
-  },
-  stack: ['NextJS', 'React', 'Express', 'TailwindCSS', 'Vercel'],
-  accent: '#D3D3D3',
-  Icon: TbWorld,
-  thumbnail: '/Projects/PajaBarbershop.png',
-  // 3 gambar bisa ditaro disini
-  showcase: [],
-  website: 'https://pajabarbershop.com',
-  keyPoints: {
-    en: [
-      'Led project planning and team coordination across a 4-person team, from feature scoping to delivery.',
-      'Acted as the main point of contact with the client, translating business needs into actionable technical requirements.',
-      'Delivered a customer-facing website (NextJS) with online booking/reservation, service & pricing catalog, and barber profiles with gallery.',
-      'Delivered a separate backoffice application (Express + React + TailwindCSS) for staff to manage bookings, services, and promotions.',
-      'Built an integrated promo system to support the client\'s marketing and customer retention efforts.',
+    slug: 'paja-barbershop',
+    route: '/project/paja-barbershop',
+    title: 'Paja Barbershop',
+    category: 'Web-App',
+    context: 'Client Project / Team of 4 (Project Manager)',
+    description: {
+      en: 'A comprehensive booking and management application for Paja Barbershop, which includes a website for customers and a dedicated back-office application for staff to manage master data and handle offline bookings and orders—developed by a team of four, with me serving as Project Manager.',
+      id: 'Sebuah aplikasi pemesanan dan manajemen lengkap untuk Paja Barbershop, yang mencakup situs web untuk pelanggan serta aplikasi backoffice khusus bagi staf untuk mengelola data induk dan menangani pemesanan/pesanan offline — dikembangkan oleh tim beranggotakan 4 orang, di mana saya bertindak sebagai Manajer Proyek.',
+    },
+    stack: ['NextJS', 'React', 'Express', 'TailwindCSS', 'Vercel'],
+    accent: '#D3D3D3',
+    Icon: TbWorld,
+    thumbnail: '/Projects/PajaBarbershop.png',
+    // 3 gambar bisa ditaro disini
+    showcase: [
+      '/Projects/Paja-Src/Paja-1.png',
+      '/Projects/Paja-Src/Paja-2.png',
+      '/Projects/Paja-Src/Paja-3.png',
     ],
-    id: [
-      'Memimpin perencanaan proyek dan koordinasi tim beranggotakan 4 orang, dari penentuan cakupan fitur hingga delivery.',
-      'Menjadi titik komunikasi utama dengan klien, menerjemahkan kebutuhan bisnis menjadi kebutuhan teknis yang bisa dikerjakan.',
-      'Merilis situs untuk pelanggan (NextJS) dengan pemesanan/reservasi online, katalog layanan & harga, serta profil barber beserta galerinya.',
-      'Merilis aplikasi backoffice terpisah (Express + React + TailwindCSS) agar staf dapat mengelola pemesanan, layanan, dan promosi.',
-      'Membangun sistem promo terintegrasi untuk mendukung upaya pemasaran dan retensi pelanggan klien.',
-    ],
-  },
-  resultHighlights: {
-    en: [
-      'Live client website',
-      'Online booking system',
-      'Dedicated backoffice app',
-      'Integrated promo system',
-    ],
-    id: [
-      'Situs klien sudah live',
-      'Sistem pemesanan online',
-      'Aplikasi backoffice khusus',
-      'Sistem promo terintegrasi',
-    ],
-  },
-  finalOutput: {
-    en: 'Paja Barbershop was a real client engagement that pushed beyond solo development — managing a 4-person team while balancing client communication taught how to translate business needs into a coordinated technical delivery, spanning both a customer-facing site and an internal backoffice system.',
-    id: 'Paja Barbershop adalah proyek klien nyata yang menuntut lebih dari sekadar kerja solo — mengelola tim 4 orang sambil menjaga komunikasi dengan klien mengajarkan cara menerjemahkan kebutuhan bisnis menjadi delivery teknis yang terkoordinasi, mencakup situs pelanggan sekaligus sistem backoffice internal.',
-  },
+    website: 'https://pajabarbershop.com',
+    keyPoints: {
+      en: [
+        'Led project planning and team coordination across a 4-person team, from feature scoping to delivery.',
+        'Acted as the main point of contact with the client, translating business needs into actionable technical requirements.',
+        'Delivered a customer-facing website (NextJS) with online booking/reservation, service & pricing catalog, and barber profiles with gallery.',
+        'Delivered a separate backoffice application (Express + React + TailwindCSS) for staff to manage bookings, services, and promotions.',
+        'Built an integrated promo system to support the client\'s marketing and customer retention efforts.',
+      ],
+      id: [
+        'Memimpin perencanaan proyek dan koordinasi tim beranggotakan 4 orang, dari penentuan cakupan fitur hingga delivery.',
+        'Menjadi titik komunikasi utama dengan klien, menerjemahkan kebutuhan bisnis menjadi kebutuhan teknis yang bisa dikerjakan.',
+        'Merilis situs untuk pelanggan (NextJS) dengan pemesanan/reservasi online, katalog layanan & harga, serta profil barber beserta galerinya.',
+        'Merilis aplikasi backoffice terpisah (Express + React + TailwindCSS) agar staf dapat mengelola pemesanan, layanan, dan promosi.',
+        'Membangun sistem promo terintegrasi untuk mendukung upaya pemasaran dan retensi pelanggan klien.',
+      ],
+    },
+    resultHighlights: {
+      en: [
+        'Live client website',
+        'Online booking system',
+        'Dedicated backoffice app',
+        'Integrated promo system',
+      ],
+      id: [
+        'Situs klien sudah live',
+        'Sistem pemesanan online',
+        'Aplikasi backoffice khusus',
+        'Sistem promo terintegrasi',
+      ],
+    },
+    finalOutput: {
+      en: 'Paja Barbershop was a real client engagement that pushed beyond solo development — managing a 4-person team while balancing client communication taught how to translate business needs into a coordinated technical delivery, spanning both a customer-facing site and an internal backoffice system.',
+      id: 'Paja Barbershop adalah proyek klien nyata yang menuntut lebih dari sekadar kerja solo — mengelola tim 4 orang sambil menjaga komunikasi dengan klien mengajarkan cara menerjemahkan kebutuhan bisnis menjadi delivery teknis yang terkoordinasi, mencakup situs pelanggan sekaligus sistem backoffice internal.',
+    },
   },
   {
     slug: 'watch-site',
@@ -209,7 +217,11 @@ export const projects: ProjectItem[] = [
     Icon: TbWorld,
     thumbnail: '/Projects/WatchSite.webp',
     // 3 gambar bisa ditaro disini
-    showcase: [],
+    showcase: [
+      '/Projects/Watchsite-Src/Watchsite-1.png',
+      '/Projects/Watchsite-Src/Watchsite-2.png',
+      '/Projects/Watchsite-Src/Watchsite-3.png',
+    ],
     website: 'https://watch-site.vercel.app',
     keyPoints: {
       en: [

@@ -12,6 +12,23 @@ export const PAGE_EXTRA_MS = 1000
 /** "/work/telkom-property", "/project/vibe" — anything one level below a listing. */
 const DETAIL_PATTERN = /^\/[^/]+\/[^/]+$/
 
+const VALID_STATIC_ROUTES = new Set([
+  '/',
+  '/home',
+  '/about',
+  '/work',
+  '/project',
+  '/tech-stack',
+  '/certification',
+])
+
+function isKnownRoute(pathname: string): boolean {
+  if (VALID_STATIC_ROUTES.has(pathname)) return true
+  if (pathname.startsWith('/project/') && pathname.split('/').filter(Boolean).length === 2) return true
+  if (pathname.startsWith('/work/') && pathname.split('/').filter(Boolean).length === 2) return true
+  return false
+}
+
 /**
  * Going back should feel instant: browser/history pops, and the in-page "Back"
  * controls that drop from a detail route to the listing it belongs to.
@@ -23,6 +40,7 @@ function isBackNavigation(from: string, to: string, navigationType: string) {
 
 /** 0 means "swap now, no curtain". */
 function swapDurationFor(from: string, to: string, navigationType: string) {
+  if (!isKnownRoute(to)) return 0
   if (isBackNavigation(from, to, navigationType)) return 0
   if (DETAIL_PATTERN.test(to)) return SWAP_MS
   return SWAP_MS + PAGE_EXTRA_MS
