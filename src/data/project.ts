@@ -55,7 +55,11 @@ export const projects: ProjectItem[] = [
     Icon: TbSparkles,
     thumbnail: '/Projects/Inotrive.png',
     // 3 gambar bisa ditaro disini
-    showcase: [],
+    showcase: [
+      '/Projects/Inotrive-Src/Inotrive-1.png',
+      '/Projects/Inotrive-Src/Inotrive-2.png',
+      '/Projects/Inotrive-Src/Inotrive-3.png',
+    ],
     website: 'https://inotrive.com',
     keyPoints: {
       en: [
