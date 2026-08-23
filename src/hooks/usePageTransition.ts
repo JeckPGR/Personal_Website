@@ -2,12 +2,12 @@ import { useLayoutEffect, useState } from 'react'
 import { useLocation, useNavigationType } from 'react-router-dom'
 
 /** Curtain travel time before the route content is swapped underneath. */
-export const COVER_MS = 540
+export const COVER_MS = 260
 /** Beat where the panel sits fully opaque so the HUD can be read. */
-export const HOLD_MS = 150
+export const HOLD_MS = 80
 export const SWAP_MS = COVER_MS + HOLD_MS
-/** Section-to-section moves (home ↔ about ↔ work …) linger a beat longer. */
-export const PAGE_EXTRA_MS = 1000
+/** Section-to-section moves (home ↔ about ↔ work …). */
+export const PAGE_EXTRA_MS = 180
 
 /** "/work/telkom-property", "/project/vibe" — anything one level below a listing. */
 const DETAIL_PATTERN = /^\/[^/]+\/[^/]+$/

@@ -10,7 +10,6 @@ import {
 } from 'react-icons/tb'
 import { Link } from 'react-router-dom'
 import {
-  // aboutHighlights,
   CV_URL,
   aboutItem,
   aboutTechStack,
@@ -26,41 +25,23 @@ import { workExperiences } from '../data/work'
 const EASE = [0.22, 1, 0.36, 1] as const
 const VIEWPORT = { once: true, margin: '-60px' } as const
 
-/** Rotating brand accents for data that carries no accent of its own. */
-const CERT_ACCENTS = ['#c9bfff', '#c060f0', '#7c50e0']
+/** Rotating brand accents for certifications. */
+const CERT_ACCENTS = ['#7c50e0', '#c060f0', '#60d9aa']
 
-type RowItem = {
+type PreviewCardItem = {
   id: string
   title: string
-  meta: string
-  sub?: string
+  subtitle?: string
+  categoryOrRole?: string
+  period?: string
+  summary: string
+  tags?: string[]
   to: string
   accent: string
-  /** Icon tile shown when there is no image. Omit for a text-only row. */
   Icon?: IconType
-  /** Logo / cover thumbnail. */
   image?: string
-  /**
-   * `cover` fills a wide tile — right for screenshots.
-   * `contain` letterboxes inside a square — right for logos, which arrive at
-   * wildly different aspect ratios and built-in padding.
-   */
   fit?: 'cover' | 'contain'
 }
-
-/* ─── Data: only ever the first three of each list, the rest lives on its own page ─── */
-
-const projectRows: RowItem[] = projects.slice(0, 3).map((project) => ({
-  id: project.slug,
-  title: project.title,
-  meta: project.category,
-  sub: project.context.split(' / ')[0],
-  to: project.route,
-  accent: project.accent,
-  Icon: project.Icon,
-  image: project.thumbnail,
-  fit: 'contain' as const,
-}))
 
 const stats = [
   { value: workExperiences.length, key: 'about.stats.roles' },
@@ -108,9 +89,8 @@ function SectionHeading({ label }: { label: string }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={VIEWPORT}
       transition={{ duration: 0.6, ease: EASE }}
-      className="mb-10 flex items-center gap-4"
+      className="mb-8 flex items-center gap-4"
     >
-      {/* Both rules draw outward from the label as the section scrolls in. */}
       <motion.div
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
@@ -134,7 +114,6 @@ function SectionHeading({ label }: { label: string }) {
 
 /* ─── Toolkit ─── */
 
-/** Categories shown before the reader asks for the rest. */
 const COLLAPSED_ROWS = 5
 
 type ToolGroup = [category: string, entries: ToolItem[]]
@@ -149,13 +128,9 @@ function groupByCategory(items: ToolItem[]): ToolGroup[] {
         return map
       }, new Map<string, ToolItem[]>())
       .entries(),
-    // Densest categories first, so the lone entries settle at the tail
-    // instead of punching holes between the full ones — and so the collapsed
-    // view leads with the richest rows.
   ].sort((a, b) => b[1].length - a[1].length)
 }
 
-/** One `label | entries` line — a category of one costs a line, not a grid cell. */
 function ToolRow({
   category,
   entries,
@@ -165,8 +140,6 @@ function ToolRow({
   category: string
   entries: ToolItem[]
   index: number
-  /** Rows past the fold are already on screen when they mount, so they cascade
-   *  on mount instead of waiting for a scroll trigger that will never fire. */
   reveal: 'scroll' | 'mount'
 }) {
   const revealProps: MotionProps =
@@ -267,7 +240,6 @@ function ToolClusters({ title, items }: { title: string; items: ToolItem[] }) {
       </div>
 
       {rest.length ? (
-        // Centred and padded to a real tap target rather than a bare text line.
         <div className="mt-5 flex justify-center">
           <button
             type="button"
@@ -292,109 +264,146 @@ function ToolClusters({ title, items }: { title: string; items: ToolItem[] }) {
   )
 }
 
-/* ─── Flat index rows, borrowed from the work / project listings ─── */
-function IndexRows({
+/* ─── HR-Friendly Rich Summary Preview Cards ─── */
+function HRSummarySection({
   items,
   href,
   viewAllLabel,
 }: {
-  items: RowItem[]
+  items: PreviewCardItem[]
   href: string
   viewAllLabel: string
 }) {
   return (
-    <>
-      <ul className="border-t border-[rgba(var(--rgb-line),0.08)]">
+    <div className="space-y-4">
+      <div className="grid gap-3.5">
         {items.map((item, index) => {
           const ItemIcon = item.Icon
           const isContained = item.fit === 'contain'
 
           return (
-            <motion.li
+            <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={VIEWPORT}
-              transition={{ duration: 0.5, delay: index * 0.07, ease: EASE }}
+              transition={{ duration: 0.45, delay: index * 0.08, ease: EASE }}
             >
               <Link
                 to={item.to}
-                className="group relative flex items-center gap-4 border-b border-[rgba(var(--rgb-line),0.08)] py-5 pl-3 transition-colors duration-300 md:gap-6 md:py-6"
+                className="group relative flex flex-col justify-between gap-4 overflow-hidden rounded-2xl border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-film),0.025)] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(var(--rgb-hover),0.35)] hover:bg-[rgba(var(--rgb-hover),0.045)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.25)] sm:p-5.5 md:p-6"
               >
+                {/* Left vertical accent line on hover */}
                 <span
-                  className="absolute inset-y-2 left-0 w-px origin-center scale-y-0 transition-transform duration-500 group-hover:scale-y-100"
+                  className="absolute inset-y-0 left-0 w-1 origin-center scale-y-0 transition-transform duration-300 group-hover:scale-y-100"
                   style={{ background: item.accent }}
                 />
-                <span className="w-5 shrink-0 font-heading text-[11px] font-bold tabular-nums text-text-muted transition-colors duration-300 group-hover:text-accent-lavender">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                {item.image || ItemIcon ? (
-                  <span
-                    className={`relative flex shrink-0 items-center justify-center overflow-hidden border transition-transform duration-300 group-hover:scale-105 ${
-                      item.image && !isContained
-                        ? 'h-12 w-19 rounded-lg'
-                        : 'h-13 w-13 rounded-xl'
-                    }`}
-                    style={{
-                      borderColor: `${item.accent}2e`,
-                      background: `${item.accent}14`,
-                      color: item.accent,
-                    }}
-                  >
-                    {item.image ? (
-                      <>
-                        <img
-                          src={item.image}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                          className={`h-full w-full transition-transform duration-500 ${
-                            isContained
-                              ? 'object-contain p-2 group-hover:scale-105'
-                              : 'object-cover group-hover:scale-110'
-                          }`}
-                        />
-                        {isContained ? null : (
-                          <span
-                            className="pointer-events-none absolute inset-0 opacity-40 transition-opacity duration-300 group-hover:opacity-0"
-                            style={{ background: `${item.accent}1f` }}
-                          />
-                        )}
-                      </>
-                    ) : ItemIcon ? (
-                      <ItemIcon size={18} />
-                    ) : null}
-                  </span>
-                ) : null}
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate font-heading text-base font-semibold leading-tight text-text-primary transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-lavender md:text-lg">
-                    {item.title}
-                  </span>
-                  {item.sub ? (
-                    <span className="mt-1 block truncate text-[11px] text-text-muted">
-                      {item.sub}
+
+                <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                  {/* Left Column: Logo/Thumb + Details */}
+                  <div className="flex min-w-0 flex-1 items-start gap-4">
+                    {/* Index */}
+                    <span className="mt-1 shrink-0 font-heading text-xs font-bold tabular-nums text-text-muted transition-colors duration-300 group-hover:text-accent-lavender">
+                      {String(index + 1).padStart(2, '0')}
                     </span>
-                  ) : null}
-                </span>
-                <span className="hidden shrink-0 text-[10px] font-medium uppercase tracking-[0.16em] text-text-muted transition-colors duration-300 group-hover:text-text-secondary sm:block">
-                  {item.meta}
-                </span>
-                <TbArrowUpRight
-                  size={18}
-                  className="shrink-0 text-accent-lavender opacity-0 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:opacity-100"
-                />
+
+                    {/* Logo / Thumbnail */}
+                    {item.image || ItemIcon ? (
+                      <span
+                        className={`relative flex shrink-0 items-center justify-center overflow-hidden rounded-xl border transition-transform duration-300 group-hover:scale-105 ${
+                          item.image && !isContained ? 'h-12 w-18 md:h-14 md:w-20' : 'h-12 w-12 md:h-13 md:w-13'
+                        }`}
+                        style={{
+                          borderColor: `${item.accent}35`,
+                          background: `${item.accent}14`,
+                          color: item.accent,
+                        }}
+                      >
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                            className={`h-full w-full ${
+                              isContained
+                                ? 'object-contain p-2 group-hover:scale-105'
+                                : 'object-cover group-hover:scale-110'
+                            }`}
+                          />
+                        ) : ItemIcon ? (
+                          <ItemIcon size={20} />
+                        ) : null}
+                      </span>
+                    ) : null}
+
+                    {/* Content Block */}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-heading text-base font-bold text-text-primary transition-colors duration-200 group-hover:text-accent-lavender md:text-lg">
+                          {item.title}
+                        </h3>
+                        {item.categoryOrRole ? (
+                          <span className="rounded-md border border-accent-purple/30 bg-accent-purple/15 px-2 py-0.5 text-[9.5px] font-semibold text-accent-lavender">
+                            {item.categoryOrRole}
+                          </span>
+                        ) : null}
+                      </div>
+
+                      {item.subtitle ? (
+                        <p className="mt-0.5 text-xs font-medium text-text-secondary/90 md:text-[13px]">
+                          {item.subtitle}
+                        </p>
+                      ) : null}
+
+                      {/* Concise 30-second HR Summary / Impact */}
+                      <p className="mt-2 text-xs leading-relaxed text-text-secondary sm:text-[13px]">
+                        {item.summary}
+                      </p>
+
+                      {/* Tech Stack & Core Competencies Pills */}
+                      {item.tags && item.tags.length > 0 ? (
+                        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                          {item.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="rounded-md border border-[rgba(var(--rgb-line),0.18)] bg-[rgba(var(--rgb-film),0.06)] px-2 py-0.5 text-[9px] font-medium text-accent-lavender backdrop-blur-sm md:text-[9.5px]"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {/* Right Column: Period & Direct Action Button */}
+                  <div className="flex shrink-0 items-center justify-between gap-3 border-t border-[rgba(var(--rgb-line),0.08)] pt-3 md:border-t-0 md:pt-0 md:flex-col md:items-end md:justify-start">
+                    {item.period ? (
+                      <span className="text-[11px] font-medium text-text-muted">
+                        {item.period}
+                      </span>
+                    ) : null}
+
+                    <span className="inline-flex items-center gap-1 font-heading text-[11px] font-semibold uppercase tracking-wider text-accent-lavender opacity-80 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100">
+                      <span>Detail</span>
+                      <TbArrowUpRight size={15} />
+                    </span>
+                  </div>
+                </div>
               </Link>
-            </motion.li>
+            </motion.div>
           )
         })}
-      </ul>
+      </div>
 
+      {/* View All Button */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={VIEWPORT}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-7 flex justify-center"
+        transition={{ duration: 0.4, delay: 0.15 }}
+        className="mt-6 flex justify-center"
       >
         <Link
           to={href}
@@ -407,7 +416,7 @@ function IndexRows({
           />
         </Link>
       </motion.div>
-    </>
+    </div>
   )
 }
 
@@ -416,39 +425,62 @@ function About() {
   const L = useLocalize()
   const heroRef = useRef<HTMLElement>(null)
 
-  const workRows = useMemo<RowItem[]>(
+  const workPreviewItems = useMemo<PreviewCardItem[]>(
     () =>
       workExperiences.slice(0, 3).map((item) => ({
         id: item.slug,
         title: item.company,
-        meta: item.tag,
-        sub: L(item.period),
+        subtitle: item.role,
+        categoryOrRole: item.tag,
+        period: L(item.period),
+        summary: L(item.summary),
+        tags: item.tags || [item.tag],
         to: item.route,
         accent: item.accent,
         Icon: item.Icon,
         image: item.thumbnail,
+        fit: 'cover',
       })),
     [L],
   )
 
-  const certificationRows = useMemo<RowItem[]>(
+  const projectPreviewItems = useMemo<PreviewCardItem[]>(
+    () =>
+      projects.slice(0, 3).map((item) => ({
+        id: item.slug,
+        title: item.title,
+        subtitle: item.context,
+        categoryOrRole: item.category,
+        summary: L(item.description),
+        tags: item.stack,
+        to: item.route,
+        accent: item.accent,
+        Icon: item.Icon,
+        image: item.thumbnail,
+        fit: 'contain',
+      })),
+    [L],
+  )
+
+  const certificationPreviewItems = useMemo<PreviewCardItem[]>(
     () =>
       certificationItems.slice(0, 3).map((item, index) => ({
         id: `${item.issuer}-${item.title}`,
         title: item.title,
-        meta: item.issuer,
-        sub: L(item.period),
+        subtitle: item.issuer,
+        categoryOrRole: 'Verified Certificate',
+        period: L(item.period),
+        summary: L(item.description),
+        tags: ['AI & Machine Learning', 'Product Strategy', item.issuer],
         to: '/certification',
         accent: CERT_ACCENTS[index % CERT_ACCENTS.length],
-        // No tile — certifications read better as plain text rows.
+        Icon: item.Icon,
+        image: item.image,
+        fit: 'contain',
       })),
     [L],
   )
 
-  // The watermark drifts sideways as the hero scrolls, a quiet background
-  // flourish. The hero text itself stays put — drifting/fading it with
-  // scroll left it lagging behind and visually overlapping the Toolkit
-  // section directly beneath it.
   const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start'],
@@ -514,8 +546,7 @@ function About() {
             </div>
           ) : null}
 
-          {/* Counts first, so the sections below are a choice rather than a toll.
-              The CV sits on the same rule, opposite the numbers. */}
+          {/* Counts & CV */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -552,74 +583,40 @@ function About() {
         </div>
       </header>
 
-      {/* ─── How I work ─── */}
-      {/* <section className="mt-24">
-        <SectionHeading label="How I Work" />
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {aboutHighlights.map(({ title, text, Icon }, index) => (
-            <motion.article
-              key={title}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VIEWPORT}
-              transition={{ duration: 0.55, delay: index * 0.09, ease: EASE }}
-              whileHover={{ y: -4, transition: { duration: 0.3 } }}
-              className="group relative overflow-hidden rounded-2xl border border-[rgba(var(--rgb-line),0.07)] bg-[rgba(var(--rgb-film),0.015)] p-7 transition-colors duration-500 hover:border-[rgba(var(--rgb-line),0.18)]"
-            >
-              <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-[radial-gradient(420px_circle_at_50%_0%,rgba(var(--rgb-glow),0.16),transparent_65%)]" />
-
-              <div className="relative flex items-center justify-between">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[rgba(var(--rgb-glow),0.12)] text-accent-lavender shadow-[0_0_22px_rgba(var(--rgb-glow),0.16)] transition-transform duration-300 group-hover:scale-110">
-                  <Icon size={19} />
-                </div>
-                <span className="font-heading text-[11px] font-bold tabular-nums text-accent-lavender/25">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-              </div>
-
-              <h3 className="relative mt-6 font-heading text-base font-semibold text-text-primary">
-                {title}
-              </h3>
-              <p className="relative mt-2.5 text-[13px] font-light leading-[1.8] text-text-secondary transition-colors duration-300 group-hover:text-text-primary">
-                {text}
-              </p>
-            </motion.article>
-          ))}
-        </div>
-      </section> */}
-
       {/* ─── Toolkit ─── */}
-      <section className="mt-24">
+      <section className="mt-20">
         <SectionHeading label={t('about.section.toolkit')} />
-
-        <div className="space-y-14">
+        <div className="space-y-12">
           <ToolClusters title={t('about.techStack')} items={aboutTechStack} />
           <ToolClusters title={t('about.tools')} items={aboutTools} />
         </div>
       </section>
 
-      {/* ─── Selected work ─── */}
-      <section className="mt-24">
+      {/* ─── Selected Work Experience ─── */}
+      <section className="mt-20">
         <SectionHeading label={t('about.section.experience')} />
-        <IndexRows
-          items={workRows}
+        <HRSummarySection
+          items={workPreviewItems}
           href="/work"
           viewAllLabel={t('about.allExperience')}
         />
       </section>
 
-      {/* ─── Projects ─── */}
-      <section className="mt-24">
+      {/* ─── Top Projects ─── */}
+      <section className="mt-20">
         <SectionHeading label={t('about.section.projects')} />
-        <IndexRows items={projectRows} href="/project" viewAllLabel={t('about.allProjects')} />
+        <HRSummarySection
+          items={projectPreviewItems}
+          href="/project"
+          viewAllLabel={t('about.allProjects')}
+        />
       </section>
 
       {/* ─── Certifications ─── */}
-      <section className="mt-24">
+      <section className="mt-20">
         <SectionHeading label={t('about.section.certifications')} />
-        <IndexRows
-          items={certificationRows}
+        <HRSummarySection
+          items={certificationPreviewItems}
           href="/certification"
           viewAllLabel={t('about.allCertifications')}
         />

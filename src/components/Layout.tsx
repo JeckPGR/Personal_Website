@@ -27,28 +27,24 @@ function Layout() {
 
   return (
     <div
-      className={`min-h-screen overflow-x-hidden bg-base text-text-primary ${
-        isHome ? 'home-page-shell lg:h-dvh lg:max-h-dvh lg:overflow-hidden' : ''
-      }`}
+      className={`min-h-screen overflow-x-hidden bg-base text-text-primary ${isHome ? 'home-page-shell lg:h-dvh lg:max-h-dvh lg:overflow-hidden' : ''
+        }`}
     >
       {!isHome ? <ScrollProgress /> : null}
       {/* The navbar carries the theme toggle, so it ships on every route. */}
       <TopNavbar />
       <main
-        className={`relative mx-auto flex w-full min-w-0 max-w-480 flex-1 flex-col gap-3 overflow-x-hidden px-3 sm:px-4 md:px-5 lg:gap-3 ${
-          isHome
-            ? 'min-h-screen pb-8 pt-4 md:pb-4 md:pt-4 lg:h-dvh lg:max-h-dvh lg:min-h-0 lg:overflow-hidden lg:py-2'
-            : 'pb-24 pt-8 md:pt-10'
-        } ${
-          isHome ? 'home-page-main' : ''
-        }`}
+        className={`relative mx-auto flex w-full min-w-0 max-w-480 flex-1 flex-col gap-3 overflow-x-hidden px-3 sm:px-4 md:px-5 lg:gap-3 ${isHome
+          ? 'min-h-screen pb-8 pt-4 md:pb-4 md:pt-4 lg:h-dvh lg:max-h-dvh lg:min-h-0 lg:overflow-hidden lg:py-2'
+          : 'pb-24 pt-8 md:pt-10'
+          } ${isHome ? 'home-page-main' : ''
+          }`}
       >
         {/* Route swaps happen behind the PageTransition curtain. */}
         <div
           key={location.pathname}
-          className={`relative z-10 min-w-0 ${
-            isHome ? 'min-h-0 lg:h-full lg:overflow-hidden' : ''
-          }`}
+          className={`relative z-10 min-w-0 ${isHome ? 'min-h-0 lg:h-full lg:overflow-hidden' : ''
+            }`}
         >
           <Outlet key={location.pathname} />
         </div>
@@ -81,25 +77,25 @@ const contactLinks: Array<{
   Icon: typeof TbMail
   external: boolean
 }> = [
-  {
-    labelKey: 'contact.email',
-    href: 'mailto:dzakyrazi@gmail.com',
-    Icon: TbMail,
-    external: false,
-  },
-  {
-    label: '@dzaky_arrazy',
-    href: 'https://www.instagram.com/dzaky_arrazy/',
-    Icon: TbBrandInstagram,
-    external: true,
-  },
-  {
-    label: 'LinkedIn',
-    href: 'https://www.linkedin.com/in/ahmad-dzaky-67b630248/',
-    Icon: TbBrandLinkedin,
-    external: true,
-  },
-]
+    {
+      labelKey: 'contact.email',
+      href: 'mailto:dzakyrazi@gmail.com',
+      Icon: TbMail,
+      external: false,
+    },
+    {
+      label: 'Instagram',
+      href: 'https://www.instagram.com/dzaky_arrazy/',
+      Icon: TbBrandInstagram,
+      external: true,
+    },
+    {
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/in/ahmad-dzaky-67b630248/',
+      Icon: TbBrandLinkedin,
+      external: true,
+    },
+  ]
 
 const menuItems: Array<{
   labelKey: CopyKey
@@ -107,12 +103,51 @@ const menuItems: Array<{
   Icon: typeof TbHome
   end: boolean
 }> = [
-  { labelKey: 'nav.home', to: '/', Icon: TbHome, end: true },
-  { labelKey: 'nav.about', to: '/about', Icon: TbUser, end: true },
-  { labelKey: 'nav.work', to: '/work', Icon: TbBriefcase, end: true },
-  { labelKey: 'nav.project', to: '/project', Icon: TbFolder, end: true },
-  { labelKey: 'nav.certification', to: '/certification', Icon: TbCertificate, end: true },
-]
+    { labelKey: 'nav.home', to: '/', Icon: TbHome, end: true },
+    { labelKey: 'nav.about', to: '/about', Icon: TbUser, end: true },
+    { labelKey: 'nav.work', to: '/work', Icon: TbBriefcase, end: true },
+    { labelKey: 'nav.project', to: '/project', Icon: TbFolder, end: true },
+    { labelKey: 'nav.certification', to: '/certification', Icon: TbCertificate, end: true },
+  ]
+
+/** Smooth floating tooltip that appears on hover/focus */
+function NavTooltip({
+  label,
+  children,
+  className = '',
+}: {
+  label: string
+  children: React.ReactNode
+  className?: string
+}) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div
+      className={`relative inline-flex items-center justify-center ${className}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+    >
+      {children}
+      <AnimatePresence>
+        {hovered ? (
+          <motion.div
+            initial={{ opacity: 0, y: -4, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -2, scale: 0.94 }}
+            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+            className="pointer-events-none absolute top-full mt-2.5 z-1000 hidden whitespace-nowrap rounded-lg border border-[rgba(var(--rgb-line),0.18)] bg-[var(--app-panel)] px-2.5 py-1 text-[10px] font-semibold text-accent-lavender shadow-[0_8px_20px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:block"
+          >
+            {label}
+            <span className="absolute -top-1 left-1/2 -translate-x-1/2 border-x-3.5 border-b-4 border-x-transparent border-b-[var(--app-panel)]" />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 function TopNavbar() {
   const t = useCopy()
@@ -155,9 +190,8 @@ function TopNavbar() {
       {/* Bottom-centred everywhere, except the home page from `lg` up, where the
           bento fills the viewport and the bar moves to the top — still centred. */}
       <header
-        className={`pointer-events-none fixed inset-x-0 bottom-0 z-999 flex justify-center px-3 pb-4 sm:px-4 md:pb-6 ${
-          isHome ? 'lg:bottom-auto lg:top-0 lg:pb-0 lg:pt-4' : ''
-        }`}
+        className={`pointer-events-none fixed inset-x-0 bottom-0 z-999 flex justify-center px-3 pb-4 sm:px-4 md:pb-6 ${isHome ? 'lg:bottom-auto lg:top-0 lg:pb-0 lg:pt-4' : ''
+          }`}
       >
         {/* max-w-full + a truncating brand name: on a narrow phone the name
             gives up width instead of the bar overflowing the screen. */}
@@ -167,65 +201,75 @@ function TopNavbar() {
           transition={{ duration: 0.4, ease: 'easeOut' }}
           className="pointer-events-auto relative flex w-fit max-w-full items-center gap-2 rounded-2xl border border-[rgba(var(--rgb-line),0.14)] bg-[var(--app-panel)] px-3 py-2 shadow-[0_16px_44px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:gap-4 sm:px-4 md:gap-6 md:px-5"
         >
-          <NavLink
-            to="/"
-            end
-            onClick={() => setIsOpen(false)}
-            className="group flex min-w-0 items-center gap-2 rounded-xl px-1 py-1"
-          >
-            <span className="truncate font-heading text-sm font-semibold text-text-primary transition-colors duration-200 group-hover:text-accent-lavender">
-              Dzaky Razi
-            </span>
-          </NavLink>
+          <NavTooltip label={t('nav.home')}>
+            <NavLink
+              to="/"
+              end
+              onClick={() => setIsOpen(false)}
+              className="group flex min-w-0 items-center gap-2 rounded-xl px-1 py-1"
+            >
+              <span className="truncate font-heading text-sm font-semibold text-text-primary transition-colors duration-200 group-hover:text-accent-lavender">
+                Dzaky Razi
+              </span>
+            </NavLink>
+          </NavTooltip>
 
           <div className="flex shrink-0 items-center gap-1.5 md:gap-3">
             {/* CV leads the cluster and is filled, so it reads as the action
                 among a row of quieter contact icons. */}
-            <a
-              href={CV_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={t('cv.label')}
-              title={t('cv.label')}
-              className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-[rgba(var(--rgb-line),0.24)] bg-[rgba(var(--rgb-hover),0.14)] px-2 text-accent-lavender transition-colors duration-300 hover:border-[rgba(var(--rgb-line),0.44)] hover:bg-[rgba(var(--rgb-hover),0.24)] sm:h-8 sm:px-2.5"
-            >
-              <TbFileText size={15} />
-              <span className="hidden font-heading text-[10px] font-semibold uppercase tracking-[0.16em] md:inline">
-                {t('cv.short')}
-              </span>
-            </a>
+            <NavTooltip label={t('cv.label')}>
+              <a
+                href={CV_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t('cv.label')}
+                className="flex h-7 shrink-0 items-center gap-1.5 rounded-md border border-[rgba(var(--rgb-line),0.24)] bg-[rgba(var(--rgb-hover),0.14)] px-2 text-accent-lavender transition-colors duration-300 hover:border-[rgba(var(--rgb-line),0.44)] hover:bg-[rgba(var(--rgb-hover),0.24)] sm:h-8 sm:px-2.5"
+              >
+                <TbFileText size={15} />
+                <span className="hidden font-heading text-[10px] font-semibold uppercase tracking-[0.16em] md:inline">
+                  {t('cv.short')}
+                </span>
+              </a>
+            </NavTooltip>
 
             {/* All three contacts, every breakpoint. They shrink rather than
                 disappear on mobile; the overlay keeps the labelled versions. */}
             {contactLinks.map(({ labelKey, label, href, Icon, external }) => {
               const name = labelKey ? t(labelKey) : (label as string)
               return (
-              <a
-                key={name}
-                href={href}
-                {...(external
-                  ? { target: '_blank', rel: 'noopener noreferrer' }
-                  : {})}
-                aria-label={name}
-                title={name}
-                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.14)] bg-[rgba(var(--rgb-film),0.05)] text-text-secondary transition-colors duration-300 hover:border-[rgba(var(--rgb-line),0.32)] hover:bg-[rgba(var(--rgb-hover),0.14)] hover:text-accent-lavender sm:h-8 sm:w-8"
-              >
-                <Icon size={15} />
-              </a>
+                <NavTooltip key={name} label={name}>
+                  <a
+                    href={href}
+                    {...(external
+                      ? { target: '_blank', rel: 'noopener noreferrer' }
+                      : {})}
+                    aria-label={name}
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.14)] bg-[rgba(var(--rgb-film),0.05)] text-text-secondary transition-colors duration-300 hover:border-[rgba(var(--rgb-line),0.32)] hover:bg-[rgba(var(--rgb-hover),0.14)] hover:text-accent-lavender sm:h-8 sm:w-8"
+                  >
+                    <Icon size={15} />
+                  </a>
+                </NavTooltip>
               )
             })}
 
-            <LanguageToggle />
-            <ThemeToggle />
+            <NavTooltip label="Language (ID/EN)">
+              <LanguageToggle />
+            </NavTooltip>
+
+            <NavTooltip label="Theme (Light/Dark)">
+              <ThemeToggle />
+            </NavTooltip>
 
             <span className="h-5 w-px bg-[rgba(var(--rgb-line),0.16)]" />
 
-            <GridMenuButton
-              isOpen={isOpen}
-              onClick={openMenu}
-              label={t('nav.openMenu')}
-              text={t('nav.menu')}
-            />
+            <NavTooltip label={t('nav.menu')}>
+              <GridMenuButton
+                isOpen={isOpen}
+                onClick={openMenu}
+                label={t('nav.openMenu')}
+                text={t('nav.menu')}
+              />
+            </NavTooltip>
           </div>
         </motion.nav>
       </header>
@@ -306,28 +350,25 @@ function MobileMenuOverlay({ isOpen, onClose, origin }: MobileMenuOverlayProps) 
                   {({ isActive }) => (
                     <>
                       <span
-                        className={`font-heading text-xs font-semibold tabular-nums transition-colors ${
-                          isActive ? 'text-accent-violet' : 'text-accent-lavender/40'
-                        }`}
+                        className={`font-heading text-xs font-semibold tabular-nums transition-colors ${isActive ? 'text-accent-violet' : 'text-accent-lavender/40'
+                          }`}
                       >
                         {String(index + 1).padStart(2, '0')}
                       </span>
                       <span
-                        className={`font-heading text-4xl font-black uppercase tracking-tight transition-all duration-300 group-hover:translate-x-2 sm:text-5xl ${
-                          isActive
-                            ? 'text-accent-lavender'
-                            : 'text-text-primary group-hover:text-accent-lavender'
-                        }`}
+                        className={`font-heading text-4xl font-black uppercase tracking-tight transition-all duration-300 group-hover:translate-x-2 sm:text-5xl ${isActive
+                          ? 'text-accent-lavender'
+                          : 'text-text-primary group-hover:text-accent-lavender'
+                          }`}
                       >
                         {t(labelKey)}
                       </span>
                       <TbArrowUpRight
                         size={26}
-                        className={`ml-auto shrink-0 transition-all duration-300 ${
-                          isActive
-                            ? 'text-accent-violet opacity-100'
-                            : 'text-accent-lavender opacity-0 group-hover:opacity-100'
-                        }`}
+                        className={`ml-auto shrink-0 transition-all duration-300 ${isActive
+                          ? 'text-accent-violet opacity-100'
+                          : 'text-accent-lavender opacity-0 group-hover:opacity-100'
+                          }`}
                       />
                     </>
                   )}

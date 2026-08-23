@@ -40,7 +40,7 @@ function PageTransitionOverlay({ active, target, durationMs }: OverlayProps) {
             initial={reduceMotion ? { opacity: 0 } : { clipPath: 'inset(100% 0% 0% 0%)' }}
             animate={reduceMotion ? { opacity: 1 } : { clipPath: 'inset(0% 0% 0% 0%)' }}
             exit={reduceMotion ? { opacity: 0 } : { clipPath: 'inset(0% 0% 100% 0%)' }}
-            transition={{ duration: reduceMotion ? 0.2 : 0.46, ease: WIPE_EASE, delay: reduceMotion ? 0 : 0.09 }}
+            transition={{ duration: reduceMotion ? 0.15 : 0.32, ease: WIPE_EASE, delay: reduceMotion ? 0 : 0.04 }}
           />
 
           {/* Layer 2 — the dark stage the HUD lives on, trails by a beat */}
@@ -49,7 +49,7 @@ function PageTransitionOverlay({ active, target, durationMs }: OverlayProps) {
             initial={reduceMotion ? { opacity: 0 } : { clipPath: 'inset(100% 0% 0% 0%)' }}
             animate={reduceMotion ? { opacity: 1 } : { clipPath: 'inset(0% 0% 0% 0%)' }}
             exit={reduceMotion ? { opacity: 0 } : { clipPath: 'inset(0% 0% 100% 0%)' }}
-            transition={{ duration: reduceMotion ? 0.2 : 0.46, ease: WIPE_EASE, delay: reduceMotion ? 0 : 0.16 }}
+            transition={{ duration: reduceMotion ? 0.15 : 0.32, ease: WIPE_EASE, delay: reduceMotion ? 0 : 0.08 }}
           >
             <HudScene
               target={target}
@@ -92,8 +92,8 @@ function HudScene({
       className="relative h-full w-full"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.2, delay: 0 } }}
-      transition={{ duration: 0.22, delay: reduceMotion ? 0 : 0.28 }}
+      exit={{ opacity: 0, transition: { duration: 0.15, delay: 0 } }}
+      transition={{ duration: 0.18, delay: reduceMotion ? 0 : 0.12 }}
     >
       {/* Blueprint grid */}
       <div className="absolute inset-0 opacity-[0.07] bg-[linear-gradient(rgba(var(--rgb-line),.6)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--rgb-line),.6)_1px,transparent_1px)] [background-size:48px_48px]" />
@@ -107,7 +107,7 @@ function HudScene({
           className="absolute inset-x-0 h-px bg-[linear-gradient(90deg,transparent,rgba(var(--rgb-line),0.75),transparent)] shadow-[0_0_18px_rgba(var(--rgb-line),0.5)]"
           initial={{ top: '-5%' }}
           animate={{ top: '105%' }}
-          transition={{ duration: 1.15, ease: 'linear', repeat: Infinity }}
+          transition={{ duration: 0.9, ease: 'linear', repeat: Infinity }}
         />
       ) : null}
 
@@ -134,7 +134,7 @@ function HudScene({
         <motion.span
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
+          transition={{ duration: 0.2 }}
           className="font-heading text-[10px] font-bold uppercase tracking-[0.5em] text-accent-lavender/60"
         >
           Loading
@@ -147,7 +147,7 @@ function HudScene({
               className="inline-block"
               initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: '55%' }}
               animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: index * 0.028, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.28, delay: index * 0.015, ease: [0.22, 1, 0.36, 1] }}
             >
               {char === ' ' ? ' ' : char}
             </motion.span>
