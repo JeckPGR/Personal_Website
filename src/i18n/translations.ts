@@ -103,6 +103,8 @@ const copy = {
 
   // ─── Detail pages ───
   'detail.back': { en: 'Back', id: 'Kembali' },
+  'detail.prev': { en: 'Previous', id: 'Sebelumnya' },
+  'detail.next': { en: 'Next', id: 'Selanjutnya' },
   'detail.focusAreas': { en: 'Focus Areas', id: 'Area Fokus' },
   'detail.responsibilities': {
     en: 'Responsibilities & Impact',
@@ -194,6 +196,10 @@ const copy = {
 
   // ─── Lists ───
   'list.index': { en: 'Index', id: 'Indeks' },
+  'list.empty': {
+    en: 'No projects in this category yet.',
+    id: 'Belum ada proyek di kategori ini.',
+  },
 
   // ─── Not found ───
   'notFound.eyebrow': { en: 'Page not found', id: 'Halaman tidak ditemukan' },

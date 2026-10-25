@@ -1,14 +1,17 @@
 import type { IconType } from 'react-icons'
 import {
+  TbBrandMeta,
+  TbBrandTelegram,
   TbDeviceDesktop,
   TbDeviceMobile,
   TbMap,
+  TbRobot,
   TbSparkles,
   TbWorld,
 } from 'react-icons/tb'
 import type { Localized } from '../i18n/localized'
 
-export type ProjectCategory = 'Web-App' | 'Mobile App'
+export type ProjectCategory = 'Web-App' | 'Mobile App' | 'Automation & Bot'
 
 export type ProjectItem = {
   slug: string
@@ -37,9 +40,62 @@ export type ProjectItem = {
 export const tabs: Array<{ label: ProjectCategory; Icon: IconType }> = [
   { label: 'Web-App', Icon: TbDeviceDesktop },
   { label: 'Mobile App', Icon: TbDeviceMobile },
+  { label: 'Automation & Bot', Icon: TbRobot },
 ]
 
 export const projects: ProjectItem[] = [
+  {
+    slug: 'fidela',
+    route: '/project/fidela',
+    title: 'Fidela',
+    category: 'Web-App',
+    context: 'SaaS / AI Virtual Photo Studio',
+    description: {
+      en: 'With Fidela I learned that fashion sellers care more about a result that matches the real garment than one that just looks impressive. If the fabric texture or color is off, the photo can’t be used to sell.',
+      id: 'Di Fidela saya belajar bahwa bagi penjual fashion, hasil yang mirip aslinya lebih penting daripada hasil yang sekadar keren. Kalau tekstur kain atau warnanya meleset, fotonya tidak bisa dipakai untuk jualan.',
+    },
+    stack: ['Next.js', 'NestJS', 'TypeScript', 'Redis', 'PostgreSQL', 'Google Cloud Console'],
+    accent: '#8b5cf6',
+    Icon: TbSparkles,
+    thumbnail: '/Projects/Fidela-Logo.webp',
+    showcase: [
+      '/Projects/fidela-raw.webp',
+      '/Projects/Fidela-Logo.webp',
+    ],
+    website: 'https://fidela.asia',
+    keyPoints: {
+      en: [
+        'Engineered an automated garment masking and neural pose-transfer pipeline for virtual fashion models with ~30s turnaround.',
+        'Built an integrated e-commerce suite featuring an AI Photo Studio, AI Product Description text generator, and Campaign Maker.',
+        'Developed an Image Eraser and aspect ratio tool optimized for multi-platform e-commerce standards (1:1, 3:4, and 9:16).',
+        'Architected backend services on NestJS, Redis, PostgreSQL, and Google Cloud Console for rapid batching and low latency.',
+        'Ensured fabric texture preservation, exact color hue fidelity, and marketplace-compliant lighting outputs.',
+      ],
+      id: [
+        'Merancang pipeline masking pakaian otomatis dan pose-transfer neural untuk model fashion virtual dengan proses ~30 detik.',
+        'Membangun rangkaian fitur e-commerce terintegrasi: AI Photo Studio, AI Product Description generator, dan Campaign Maker.',
+        'Mengembangkan alat Image Eraser dan penyesuaian rasio foto standar e-commerce (1:1, 3:4, dan 9:16).',
+        'Merancang layanan backend dengan NestJS, Redis, PostgreSQL, dan Google Cloud Console untuk proses batching cepat dan latensi rendah.',
+        'Menjaga retensi tekstur kain, akurasi tone warna asli, dan pencahayaan studio siap katalog marketplace.',
+      ],
+    },
+    resultHighlights: {
+      en: [
+        '~30s turnaround time',
+        'Up to 90% cost savings',
+        'Studio-grade lookbook fidelity',
+      ],
+      id: [
+        'Proses ~30 detik',
+        'Hemat biaya hingga 90%',
+        'Kualitas lookbook studio',
+      ],
+    },
+    finalOutput: {
+      en: 'Building Fidela taught me that in e-commerce AI, fidelity and speed matter more than pure generative novelty — preserving exact garment texture and accurate color tones is what turns AI curiosity into a real business tool.',
+      id: 'Membangun Fidela mengajarkan bahwa dalam AI e-commerce, akurasi tekstur dan kecepatan jauh lebih penting daripada sekadar efek visual — menjaga warna asli pakaian dan detail kain adalah pembeda antara eksperimen AI dan alat bisnis nyata.',
+    },
+  },
   {
     slug: 'inotrive',
     route: '/project/inotrive',
@@ -50,7 +106,7 @@ export const projects: ProjectItem[] = [
       en: 'An AI-based creative platform that helps TikTok creators, personal brands, and MSMEs turn early content ideas into structured, ready-to-execute content concepts, solving the friction of the early content creation process.',
       id: 'Platform kreatif berbasis AI yang membantu kreator TikTok, personal brand, dan UMKM mengubah ide konten awal menjadi konsep yang terstruktur dan siap dieksekusi, mengurai hambatan di tahap paling awal proses pembuatan konten.',
     },
-    stack: ['NestJS', 'React', 'Next.js', 'Redis', 'PostgreSQL', 'Apify', 'OpenRouter'],
+    stack: ['React', 'TypeScript', 'Next.js', 'NestJS', 'Redis', 'PostgreSQL', 'Apify', 'OpenRouter', 'RAG'],
     accent: '#63d848',
     Icon: TbSparkles,
     thumbnail: '/Projects/Inotrive.png',
@@ -63,33 +119,37 @@ export const projects: ProjectItem[] = [
     website: 'https://inotrive.com',
     keyPoints: {
       en: [
-        'Turns early content ideas into structured, ready-to-execute concepts for creators, personal brands, and MSMEs.',
-        'Guides content angle discovery, hook structuring, and problem–solution framing.',
-        'Generates section-based scripts and prepares visual cues for production.',
-        'Produces supporting elements such as captions, hashtags, and sound references.',
+        'Onboarding with custom creator persona, target audience profiling, and brand voice calibration.',
+        'Brainstorms angles and viral hooks powered by real-time Brave Web Search and trend tools.',
+        'Flexible script generation: builds from scratch, raw ideas, brainstormed concepts, or Apify web crawlers.',
+        'Benchmarked 8+ models (Muse, DeepSeek, Claude, ChatGPT, Gemini, Mistral, MiniMax); selected Muse Spark 1.1 for most natural phrasing.',
+        'Built-in in-house web teleprompter with synchronized pacing cues, ready for recording and external video editing.',
+        'Integrated RAG vector retrieval and chatbot assistant for interactive creator ideation.',
       ],
       id: [
-        'Mengubah ide konten awal menjadi konsep terstruktur yang siap dieksekusi bagi kreator, personal brand, dan UMKM.',
-        'Memandu pencarian angle konten, penyusunan hook, dan pembingkaian masalah–solusi.',
-        'Menghasilkan naskah per bagian sekaligus menyiapkan petunjuk visual untuk produksi.',
-        'Menyediakan elemen pendukung seperti caption, hashtag, dan referensi sound.',
+        'Onboarding dengan profil persona kreator, pemetaan audiens target, dan kalibrasi karakter suara.',
+        'Brainstorming angle dan hook viral ditenagai pencarian real-time Brave Web Search dan alat riset tren.',
+        'Pembuatan naskah fleksibel: dari nol, ide mentah, konsep hasil brainstorming, atau data crawler Apify.',
+        'Menguji 8+ model (Muse, DeepSeek, Claude, ChatGPT, Gemini, Mistral, MiniMax); memilih Muse Spark 1.1 untuk hasil naskah paling natural.',
+        'Teleprompter web in-house dengan pengaturan ritme tersinkronisasi, siap rekaman dan lanjut ke editing video di luar aplikasi.',
+        'Integrasi retrieval vektor RAG dan asisten chatbot cerdas untuk pendampingan ideasi kreator.',
       ],
     },
     resultHighlights: {
       en: [
         'Structured content concepts',
-        'Faster ideation for creators',
-        'AI-assisted scripting & assets',
+        'Muse Spark 1.1 natural script flow',
+        'Integrated in-house teleprompter',
       ],
       id: [
         'Konsep konten terstruktur',
-        'Ideasi kreator lebih cepat',
-        'Naskah & aset dibantu AI',
+        'Naskah natural Muse Spark 1.1',
+        'Teleprompter web in-house',
       ],
     },
     finalOutput: {
-      en: 'Building Inotrive pushed me to treat AI as a practical product layer — reducing the friction creators feel at the very start of the content process, not just automating the output.',
-      id: 'Membangun Inotrive mendorong saya memperlakukan AI sebagai lapisan alat bantu yang praktis, mengurangi hambatan yang dirasakan kreator di awal proses konten, bukan sekadar mengotomasi hasil akhirnya.',
+      en: 'Inotrive taught me that the hardest part of making content is often the start, not knowing where to begin. So I focused on helping creators get past that point, not just on generating scripts.',
+      id: 'Dari Inotrive saya belajar bahwa bagian tersulit membuat konten sering ada di awal, yaitu bingung mau mulai dari mana. Jadi fokus saya membantu kreator melewati tahap itu, bukan hanya menghasilkan naskahnya.',
     },
   },
   {
@@ -97,7 +157,7 @@ export const projects: ProjectItem[] = [
     route: '/project/yayzi',
     title: 'Yayzi',
     category: 'Web-App',
-    context: 'Personal Product / Idea Validation Platform',
+    context: 'Free Website / Idea Validation Platform',
     description: {
       en: 'A temporary idea validation platform that prioritizes privacy and security, where creators can upload products, designs, concepts, or ideas, and gather quick feedback in the form of “Agree” or “Disagree” from real people—complete with an admin dashboard for in-depth insights and data ready for AI processing. No login or registration is required for creators or voters; there are no lengthy surveys, and no data is stored permanently.',
       id: 'Sebuah platform validasi ide sementara yang mengutamakan privasi dan keamanan, tempat para kreator dapat mengunggah produk, desain, konsep, atau ide, serta mengumpulkan umpan balik cepat berupa “Setuju” atau “Tidak Setuju” dari orang-orang sungguhan, dilengkapi dengan dasbor admin untuk wawasan mendalam dan data yang siap diolah oleh AI. Tidak perlu login atau mendaftar bagi kreator maupun pemberi suara, tidak ada survei panjang, dan tidak ada data permanen.',
@@ -143,7 +203,7 @@ export const projects: ProjectItem[] = [
     },
     finalOutput: {
       en: 'Yayzi was created to quickly answer one question—do people really want this?—and its launch immediately turned that question into a real, usable tool, rather than just another idea stuck in the planning stage.',
-      id: 'Yayzi dibangun untuk menjawab satu pertanyaan dengan cepat, apakah orang-orang benar-benar menginginkan ini? — dan peluncurannya secara langsung mengubah pertanyaan itu menjadi alat yang nyata dan dapat digunakan, alih-alih sekadar ide lain yang tertahan di tahap perencanaan',
+      id: 'Yayzi dibangun untuk menjawab satu pertanyaan dengan cepat, apakah orang-orang benar-benar menginginkan ini? Dan peluncurannya secara langsung mengubah pertanyaan itu menjadi alat yang nyata dibutuhkan dan dapat digunakan, daripada sekadar ide lain yang tertahan di tahap perencanaan.',
     },
   },
   {
@@ -198,8 +258,8 @@ export const projects: ProjectItem[] = [
       ],
     },
     finalOutput: {
-      en: 'Paja Barbershop was a real client engagement that pushed beyond solo development — managing a 4-person team while balancing client communication taught how to translate business needs into a coordinated technical delivery, spanning both a customer-facing site and an internal backoffice system.',
-      id: 'Paja Barbershop adalah proyek klien nyata yang menuntut lebih dari sekadar kerja solo — mengelola tim 4 orang sambil menjaga komunikasi dengan klien mengajarkan cara menerjemahkan kebutuhan bisnis menjadi delivery teknis yang terkoordinasi, mencakup situs pelanggan sekaligus sistem backoffice internal.',
+      en: 'Paja Barbershop was a real client project I worked on with a team. As Project Manager, I learned that much of the job is turning what the client wants into clear tasks for the team.',
+      id: 'Paja Barbershop adalah proyek klien nyata yang saya kerjakan bersama tim. Sebagai Project Manager, saya belajar bahwa pekerjaan terbesarnya ada di menerjemahkan kebutuhan klien menjadi tugas yang jelas untuk tim.',
     },
   },
   {
@@ -209,10 +269,10 @@ export const projects: ProjectItem[] = [
     category: 'Web-App',
     context: 'Personal Learning Project / Movie Discovery App',
     description: {
-      en: 'A self-driven learning project for exploring movies — browsing titles, watching trailers, and reading synopses, powered by The Movie Database (TMDB) API.',
-      id: 'Proyek belajar mandiri untuk menjelajahi film — menelusuri judul, menonton trailer, dan membaca sinopsis, ditenagai oleh API The Movie Database (TMDB).',
+      en: 'A self-driven learning project for exploring movies — browsing titles, watching trailers, and reading synopses with zero-friction direct access and no login required, powered by The Movie Database (TMDB) API.',
+      id: 'Proyek belajar mandiri untuk menjelajahi film — menelusuri judul, menonton trailer, dan membaca sinopsis secara instan tanpa perlu login, ditenagai oleh API The Movie Database (TMDB).',
     },
-    stack: ['NextJS', 'Vercel', 'TMDB API'],
+    stack: ['React', 'Next.js', 'TMDB API', 'Vercel'],
     accent: '#c060f0',
     Icon: TbWorld,
     thumbnail: '/Projects/WatchSite.webp',
@@ -225,86 +285,90 @@ export const projects: ProjectItem[] = [
     website: 'https://watch-site.vercel.app',
     keyPoints: {
       en: [
-        'Integrated the TMDB API to fetch and display movie data, trailers, and synopses in real time.',
-        'Built a browsing experience for discovering both classic and latest movie releases.',
-        'Used this project as a hands-on way to learn API integration and data fetching patterns.',
-        'Deployed on Vercel for quick iteration and easy sharing.',
+        'Zero-friction instant access: No account creation or login required to explore movies, search, or stream trailers.',
+        'Integrated the TMDB API to fetch real-time movie catalogs, cast metadata, synopses, and backdrop artwork.',
+        'Debounced query dispatcher preventing redundant API calls during rapid search typing.',
+        'Continuous deployment on Vercel edge infrastructure for low-latency media and streaming delivery.',
       ],
       id: [
-        'Mengintegrasikan API TMDB untuk mengambil dan menampilkan data film, trailer, serta sinopsis secara real time.',
-        'Membangun pengalaman penelusuran untuk menemukan film klasik maupun rilisan terbaru.',
-        'Menjadikan proyek ini latihan langsung untuk mempelajari integrasi API dan pola pengambilan data.',
-        'Dideploy di Vercel agar iterasi cepat dan mudah dibagikan.',
+        'Akses instan tanpa hambatan: Tanpa perlu registrasi atau login untuk menjelajahi film, mencari, dan menonton trailer.',
+        'Mengintegrasikan API TMDB untuk mengambil katalog film, informasi pemeran, sinopsis, dan poster resolusi tinggi secara real time.',
+        'Debounced query dispatcher untuk mencegah pemanggilan API berlebih saat pengguna mengetik pencarian cepat.',
+        'Deployment stabil di infrastruktur edge Vercel untuk latensi rendah dan pemutaran media responsif.',
       ],
     },
     resultHighlights: {
       en: [
         'Live on Vercel',
+        'No login required',
         'TMDB API integration',
-        'Movie browsing & trailers',
       ],
       id: [
         'Live di Vercel',
+        'Tanpa perlu login',
         'Integrasi API TMDB',
-        'Penelusuran film & trailer',
       ],
     },
     finalOutput: {
-      en: 'WatchSite was built purely as a learning exercise — working with a real-world API like TMDB taught more about handling external data than any tutorial could, and turned theory into a working, browsable app.',
-      id: 'WatchSite dibangun murni sebagai latihan — bekerja dengan API nyata seperti TMDB mengajarkan pengelolaan data eksternal jauh lebih baik daripada tutorial mana pun, dan mengubah teori menjadi aplikasi yang benar-benar bisa dijelajahi.',
+      en: 'I built WatchSite to learn. Working with the TMDB API directly taught me how to handle external data, like limiting API calls while someone types in the search box.',
+      id: 'WatchSite saya buat untuk belajar. Dengan memakai API TMDB langsung, saya jadi paham cara menangani data dari luar, misalnya membatasi pemanggilan API saat pengguna mengetik di kolom pencarian.',
     },
   },
   {
     slug: 'procurement-ecosystem-mapping',
     route: '/project/procurement-ecosystem-mapping',
     title: 'Procurement OCR & AI Compliance Checker (PoC)',
-    category: 'Web-App',
+    category: 'Automation & Bot',
     context: 'PT Bank Mandiri / Enterprise Workflow',
     description: {
-      en: 'Built out of a recurring problem in daily procurement work — missing written clauses and mismatched data between documents. Developed an MVP using Azure Document Intelligence (OCR) and Generative AI (Vertex AI) as an early guard to catch these errors before they slip through.',
-      id: 'Berangkat dari masalah yang berulang dalam pekerjaan procurement sehari-hari — klausul yang tidak tertulis dan data yang tidak cocok antar dokumen. Membangun MVP dengan Azure Document Intelligence (OCR) dan Generative AI (Vertex AI) sebagai penjaga awal untuk menangkap kesalahan tersebut sebelum lolos.',
+      en: 'Built out of a recurring problem in daily procurement work — missing written clauses and mismatched data between documents. Developed an internal PoC sandbox with no login required using Azure Document Intelligence (OCR) to parse raw text and Google Gemini AI to map JSON fields, automatically distinguishing filled fields against missing SOP clauses.',
+      id: 'Berangkat dari masalah yang berulang dalam pekerjaan procurement sehari-hari — klausul yang tidak tertulis dan data yang tidak cocok antar dokumen. Membangun sandbox PoC internal tanpa login memakai Azure Document Intelligence (OCR) untuk membaca teks mentah dan Google Gemini AI untuk memetakan skema JSON, membedakan field yang terisi vs klausul SOP yang hilang.',
     },
     stack: [
-      'Google Apps Script',
       'Azure Document Intelligence (OCR)',
-      'Vertex AI (Generative AI)',
-      'System Mapping',
+      'Google Gemini AI',
+      'Google Apps Script',
+      'JSON Schema Validation',
       'Workflow Analysis',
     ],
     accent: '#70aaff',
     Icon: TbMap,
-    thumbnail: '/Projects/mandiri-1.png',
+    thumbnail: '/Works/BankMandiri.jpg',
     // 3 gambar bisa ditaro disini
     showcase: [],
     keyPoints: {
       en: [
-        'Noticed a recurring problem in daily procurement work: missing written information and data mismatches between related documents.',
-        'Mapped the procurement application ecosystem and document flow to understand where these inconsistencies originated.',
-        'Built an MVP in Google Apps Script integrating Azure Document Intelligence (OCR) and Generative AI (Vertex AI) as an early guard to automatically flag missing or conflicting information against SOP requirements.',
-        'Validated the Proof of Concept using anonymized past documents, with sensitive figures and data removed or altered, to demonstrate feasibility without exposing confidential information.',
+        'Noticed recurring friction in daily procurement work: missing written clauses and data discrepancies across cross-referenced documents.',
+        'Built a zero-login internal PoC sandbox allowing procurement specialists to immediately upload bank guarantee and agreement PDFs.',
+        'Integrated Azure Document Intelligence OCR to extract raw unstructured text and complex multi-page financial tables.',
+        'Orchestrated Google Gemini AI to gather and match extracted text into standardized JSON schema fields.',
+        'Automated discrepancy analysis, instantly contrasting filled valid fields against missing mandatory SOP clauses.',
+        'Validated Proof of Concept using anonymized historical documents with zero leakage of banking data.',
       ],
       id: [
         'Menemukan masalah yang berulang dalam pekerjaan procurement sehari-hari: informasi yang tidak tertulis dan ketidakcocokan data antar dokumen terkait.',
-        'Memetakan ekosistem aplikasi procurement dan alur dokumennya untuk memahami dari mana ketidakkonsistenan itu berasal.',
-        'Membangun MVP di Google Apps Script yang memadukan Azure Document Intelligence (OCR) dan Generative AI (Vertex AI) sebagai penjaga awal untuk menandai informasi yang hilang atau bertentangan dengan ketentuan SOP secara otomatis.',
-        'Memvalidasi Proof of Concept memakai dokumen lampau yang dianonimkan — angka dan data sensitif dihapus atau diubah — untuk membuktikan kelayakannya tanpa membuka informasi rahasia.',
+        'Membangun sandbox PoC internal tanpa login, memungkinkan spesialis pengadaan langsung mengunggah PDF jaminan bank dan kontrak.',
+        'Mengintegrasikan Azure Document Intelligence OCR untuk membaca teks mentah dan mengekstrak tabel finansial multi-halaman.',
+        'Mengorkestrasi Google Gemini AI untuk mengumpulkan dan mencocokkan teks ke field format skema JSON terstandar.',
+        'Analisis ketidaksesuaian otomatis, membandingkan field yang terisi valid terhadap klausul wajib SOP yang hilang.',
+        'Memvalidasi Proof of Concept memakai dokumen lampau yang dianonimkan untuk membuktikan kelayakan dengan jaminan nol kebocoran data.',
       ],
     },
     resultHighlights: {
       en: [
-        'Working MVP built on Google Apps Script',
-        'Early-guard checkpoint against document errors',
-        'Validated PoC using anonymized historical documents',
+        'Working MVP on Google Apps Script',
+        'Zero-login internal PoC sandbox',
+        'Azure OCR & Gemini JSON matching',
       ],
       id: [
         'MVP berjalan di Google Apps Script',
-        'Titik jaga awal terhadap kesalahan dokumen',
-        'PoC tervalidasi dengan dokumen historis anonim',
+        'Sandbox PoC internal tanpa login',
+        'Pencocokan JSON Azure OCR & Gemini',
       ],
     },
     finalOutput: {
-      en: 'This project started from a problem I lived with daily, not one assigned to me — repeatedly catching missing clauses or mismatched data between documents. Turning that frustration into a working MVP taught me how everyday friction, if paid attention to, can become the seed of a real product solution.',
-      id: 'Proyek ini berawal dari masalah yang saya alami sendiri setiap hari, bukan tugas yang diberikan kepada saya — berulang kali menemukan klausul yang hilang atau data yang tidak cocok antar dokumen. Mengubah rasa frustrasi itu menjadi MVP yang berjalan mengajarkan saya bahwa gesekan sehari-hari, kalau diperhatikan, bisa menjadi benih solusi produk yang nyata.',
+      en: 'This project originated from my daily work validating guarantee documents. Manually checking the completeness of clauses and reconciling data across documents is time-consuming and prone to errors, while a single revision can delay the process by 1–2 days. I built this MVP to make these checks faster and more consistent.',
+      id: 'Proyek ini berawal dari pekerjaan harian saya memvalidasi dokumen penjaminan. Memeriksa kelengkapan klausul dan mencocokkan data antar dokumen secara manual memakan waktu dan mudah terlewat, sementara satu kali revisi bisa menunda proses 1–2 hari. Saya membangun MVP ini untuk membuat pemeriksaan tersebut lebih cepat dan konsisten.',
     },
   },
   {
@@ -314,43 +378,142 @@ export const projects: ProjectItem[] = [
     category: 'Mobile App',
     context: 'College Group Assignments / Course Discovery',
     description: {
-      en: 'A mobile app that helps users discover English and Mathematics courses around Bandung, with detailed pricing, class options, syllabus, and categories — plus a location-based feature that surfaces the nearest course providers first.',
-      id: 'Aplikasi mobile yang membantu pengguna menemukan kursus Bahasa Inggris dan Matematika di sekitar Bandung, lengkap dengan rincian harga, pilihan kelas, silabus, dan kategori — ditambah fitur berbasis lokasi yang menampilkan penyedia kursus terdekat lebih dulu.',
+      en: 'A cross-platform mobile application built with Flutter and Firebase that connects learners with nearby English and Mathematics courses, featuring location-based discovery for students and an onboarding & CRM lead console for course partners.',
+      id: 'Aplikasi mobile multiplatform yang dibangun dengan Flutter dan Firebase untuk menghubungkan siswa dengan kursus Bahasa Inggris dan Matematika terdekat, dilengkapi penelusuran berbasis lokasi untuk siswa serta konsol pendaftaran dan CRM prospek untuk mitra kursus.',
     },
-    stack: ['Mobile', 'Location-based', 'UX'],
+    stack: ['Flutter', 'Dart', 'Firebase', 'Cloud Firestore', 'Location-based'],
     accent: '#70aaff',
     Icon: TbDeviceMobile,
     // 3 gambar bisa ditaro disini
     showcase: [],
     keyPoints: {
       en: [
-        'Helps users discover English and Mathematics courses around Bandung.',
-        'Presents detailed course information: pricing, class options, syllabus, and categories.',
-        'Location-based feature highlights the nearest course providers from the main menu.',
-        'Improves accessibility to relevant local learning options.',
+        'Engineered dual-role mobile workflows: learner discovery journey and course partner (mitra kursus) operations.',
+        'Student flow: Login, dashboard, GPS location detection, nearby English & Math recommendations, syllabus check, transparent pricing, and registration form.',
+        'Mitra flow: Login, course management, coordinate location pinning, 2–3 photo uploads, syllabus authoring, and course publishing.',
+        'Real-time CRM lead management: Empowers tutoring partners to monitor and follow up with registered student submissions.',
+        'Built cross-platform with Flutter and backed by Firebase Authentication, Cloud Firestore, and Cloud Storage.',
       ],
       id: [
-        'Membantu pengguna menemukan kursus Bahasa Inggris dan Matematika di sekitar Bandung.',
-        'Menyajikan informasi kursus secara rinci: harga, pilihan kelas, silabus, dan kategori.',
-        'Fitur berbasis lokasi menyorot penyedia kursus terdekat langsung dari menu utama.',
-        'Meningkatkan akses ke pilihan pembelajaran lokal yang relevan.',
+        'Merancang alur mobile dua peran: pengalaman penelusuran siswa dan operasional mitra penyedia kursus.',
+        'Alur siswa: Login, dashboard, deteksi lokasi GPS, rekomendasi les Bahasa Inggris & Matematika terdekat, cek silabus, cek biaya, dan formulir pendaftaran.',
+        'Alur mitra: Login, kelola kursus, pin koordinat lokasi, unggah 2–3 foto tempat, susun silabus, dan terbitkan kursus.',
+        'Manajemen prospek CRM real-time: Memudahkan mitra kursus memantau dan mem-follow up siswa yang mendaftar.',
+        'Dibangun cross-platform dengan Flutter ditenagai Firebase Auth, Cloud Firestore, dan Firebase Storage.',
       ],
     },
     resultHighlights: {
       en: [
-        'Location-first discovery',
-        'Detailed course information',
-        'Better local learning access',
+        'Location-first course discovery',
+        'Dual student & partner workflows',
+        'Direct CRM lead follow-up',
       ],
       id: [
-        'Penemuan berbasis lokasi',
-        'Informasi kursus terperinci',
-        'Akses belajar lokal lebih mudah',
+        'Penemuan kursus berbasis lokasi',
+        'Alur terpadu siswa & mitra',
+        'Follow-up prospek CRM langsung',
       ],
     },
     finalOutput: {
-      en: 'EduLocal taught me how much location context shapes a good discovery experience — the right information matters, but surfacing what is nearby first is what makes it genuinely useful.',
-      id: 'EduLocal mengajarkan betapa besar pengaruh konteks lokasi pada pengalaman penemuan yang baik — informasi yang tepat itu penting, tetapi menampilkan yang terdekat lebih dulu yang membuatnya benar-benar berguna.',
+      en: 'With EduLocal I learned that complete information isn’t enough. Users are better served when the closest courses show up first.',
+      id: 'Di EduLocal saya belajar bahwa informasi yang lengkap saja belum cukup. Pengguna lebih terbantu kalau kursus yang paling dekat dengan mereka ditampilkan lebih dulu.',
+    },
+  },
+  {
+    slug: 'meta-lead-bot',
+    route: '/project/meta-lead-bot',
+    title: 'Meta AI Commerce Autoresponder',
+    category: 'Automation & Bot',
+    context: 'Personal Project / E-Commerce AI Bot',
+    description: {
+      en: 'A high-concurrency serverless autoresponder built with Hono.js on Cloudflare Workers and Supabase pgvector, designed to handle viral social campaign spikes across Meta Messenger and comments with 24/7 RAG answers.',
+      id: 'Bot autoresponder serverless berkinerja tinggi yang dibangun dengan Hono.js di Cloudflare Workers dan Supabase pgvector, dirancang untuk menangani lonjakan kampanye viral di Meta Messenger dan komentar dengan balasan RAG 24/7.',
+    },
+    stack: ['Hono.js', 'Cloudflare Workers', 'Wrangler', 'Supabase Vector', 'OpenRouter', 'Mistral'],
+    accent: '#0084ff',
+    Icon: TbBrandMeta,
+    showcase: [],
+    keyPoints: {
+      en: [
+        "Built to solve a sudden viral surge on my mother's Meta business account that gained 12K followers in 2–3 weeks.",
+        'Eliminated customer service backlog where 1 staff member was overwhelmed by incoming personal messages and leads.',
+        'Engineered edge webhook listener using Hono.js on Cloudflare Workers deployed via Wrangler for ultra-low latency.',
+        'Integrated Supabase pgvector cosine similarity search to retrieve exact product catalogs, pricing, and business FAQs.',
+        'Orchestrated OpenRouter with Mistral-7B to synthesize friendly, context-accurate responses directly to customer DMs.',
+      ],
+      id: [
+        'Dibuat untuk mengatasi lonjakan konten viral di akun bisnis Meta milik ibu saya yang meraih 12 ribu followers dalam 2–3 minggu.',
+        'Mengatasi keterbatasan 1 orang staf karyawan yang kewalahan membalas banjir chat personal dan pertanyaan produk.',
+        'Membangun listener webhook edge memakai Hono.js di Cloudflare Workers dideploy dengan Wrangler untuk latensi sub-detik.',
+        'Mengintegrasikan pencarian kemiripan kosinus Supabase pgvector untuk mengambil data katalog produk, harga, dan FAQ.',
+        'Mengorkestrasi OpenRouter dengan Mistral-7B untuk menyusun balasan percakapan yang ramah dan akurat langsung ke DM pelanggan.',
+      ],
+    },
+    resultHighlights: {
+      en: [
+        'Handled 12K+ follower traffic spike',
+        '24/7 instant lead capture',
+        '<800ms edge response latency',
+      ],
+      id: [
+        'Menangani lonjakan 12K+ followers',
+        'Penangkapan leads instan 24/7',
+        'Latensi respon edge <800ms',
+      ],
+    },
+    finalOutput: {
+      en: 'I built this bot because my mom business account suddenly got blew up, and only one staff member was replying to messages and also keep the store. The bot answers automatically from product data and the FAQ, so no potential buyer gets missed and server costs didn’t go up.',
+      id: 'Bot ini saya buat karena akun bisnis ibu saya tiba-tiba ramai, sementara hanya ada satu staf yang membalas pesan dan menjaga toko sekalian. Bot menjawab otomatis dari data produk dan FAQ, jadi tidak ada calon pembeli yang terlewat dan biaya server tidak ikut naik.',
+    },
+  },
+  {
+    slug: 'telegram-pos-bot',
+    route: '/project/telegram-pos-bot',
+    title: 'Telegram POS & Cashier Bot',
+    category: 'Automation & Bot',
+    context: 'Personal Project / Serverless Retail POS',
+    description: {
+      en: 'A serverless conversational cashier terminal built on Cloudflare Workers and Neon PostgreSQL, featuring two-tier parsing (deterministic regex rules + Claude Haiku AI recovery), pre-upload summaries, debt tracking, and PIN-secured profit reports.',
+      id: 'Terminal kasir percakapan serverless di Cloudflare Workers dan Neon PostgreSQL, dilengkapi parser dua tahap (aturan regex deterministik + pemulihan AI Claude Haiku), ringkasan pre-upload, buku utang bon, dan rekap laba ber-PIN.',
+    },
+    stack: ['Telegram Bot API', 'Hono.js', 'Cloudflare Workers', 'Neon Tech', 'PostgreSQL', 'Claude Haiku 3.5'],
+    accent: '#2AABEE',
+    Icon: TbBrandTelegram,
+    showcase: [],
+    keyPoints: {
+      en: [
+        'Engineered 6 core retail modules: Penjualan (/jual), Pembelian (/beli), Rekap Harian (/rekapharian), Utang & Bon (/utangbon), Manajemen Akun (/manajemenakun), and Rekap Full (/rekapfull).',
+        'Streamlined sales command workflow: Cashiers type natural shorthand strings (e.g. jual [product] harga [xxx] modal [xxx] metode [cash/qris]).',
+        'Two-tier parsing architecture: Fast deterministic regex rules match standard inputs; automatic Claude Haiku 3.5 fallback repairs broken syntax and typos.',
+        'Interactive transaction review: Generates pre-upload summary messages with Edit and Cancel buttons before asking final confirmation.',
+        'Real-time automated accounting: Commits ACID records to Neon Serverless PostgreSQL and immediately broadcasts the updated daily recap.',
+        'PIN-protected admin audit: Restricts sensitive full profit-and-loss margins and net revenue analytics to authorized store owners.',
+      ],
+      id: [
+        'Membangun 6 modul kasir esensial: Penjualan (/jual), Pembelian (/beli), Rekap Harian (/rekapharian), Utang & Bon (/utangbon), Manajemen Akun (/manajemenakun), dan Rekap Full (/rekapfull).',
+        'Alur perintah jual terstandar: Kasir mengetik format ringkas (contoh: jual [produk] harga [xxx] modal [xxx] metode [cash/qris]).',
+        'Arsitektur parsing dua tahap: Regex deterministik cepat untuk input standar; fallback otomatis Claude Haiku 3.5 untuk memperbaiki salah ketik atau format bebas.',
+        'Review transaksi interaktif: Menampilkan ringkasan pre-upload dengan tombol Edit dan Batal sebelum konfirmasi final.',
+        'Pembukuan otomatis real-time: Menyimpan transaksi ACID ke Neon Serverless PostgreSQL dan langsung menampilkan rekapan harian terbaru.',
+        'Audit laba ber-PIN: Mengunci laporan keuangan komprehensif dan perhitungan keuntungan bersih hanya untuk pemilik toko ber-PIN.',
+      ],
+    },
+    resultHighlights: {
+      en: [
+        '6 complete retail POS modules',
+        'Rules + Claude Haiku hybrid parser',
+        'PIN-secured profit analytics',
+      ],
+      id: [
+        '6 modul kasir retail lengkap',
+        'Parser hybrid Aturan + Claude Haiku',
+        'Analisis laba bersih berproteksi PIN',
+      ],
+    },
+    finalOutput: {
+      en: 'I wanted cashiers to record sales without dedicated POS hardware, just through Telegram. The cashier types a short message, regex rules read the standard format, and AI only steps in when there’s a typo. Recording stays fast and the daily recap shows up right away.',
+      id: 'Saya ingin kasir bisa mencatat penjualan tanpa alat POS khusus, cukup lewat Telegram. Kasir mengetik pesan singkat, aturan regex membaca format yang standar, dan AI hanya turun tangan kalau ada salah ketik. Pencatatan tetap cepat dan rekap harian langsung muncul..',
     },
   },
 ]
+

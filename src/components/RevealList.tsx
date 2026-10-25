@@ -153,110 +153,118 @@ function RevealList({ items, countLabel }: RevealListProps) {
         </span>
       </div>
 
-      <ul className="min-w-0">
-        {items.map((item, index) => {
-          const isDimmed = active !== null && active !== index
-          // Rows without a destination but with a cover open the image dialog —
-          // this is the only way to see the preview on touch devices.
-          const canPreview = !item.to && Boolean(item.image)
-          const body = (
-            <>
-              <span className="flex min-w-0 items-center gap-1 sm:gap-3">
-                {item.to ? (
-                  <span className="grid w-0 shrink-0 place-items-center overflow-hidden text-accent-lavender opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100 sm:group-hover:w-8">
-                    <TbArrowUpRight size={22} />
-                  </span>
-                ) : null}
-                {canPreview ? (
-                  <span
-                    className={`grid shrink-0 place-items-center overflow-hidden text-accent-lavender transition-all duration-300 ${
-                      hasHover
-                        ? 'w-0 opacity-0 group-hover:w-6 group-hover:opacity-100 sm:group-hover:w-8'
-                        : 'w-6 opacity-70'
-                    }`}
-                  >
-                    <TbMaximize size={18} />
-                  </span>
-                ) : null}
-                <span className="min-w-0">
-                  <span className="block truncate font-heading text-lg font-bold leading-tight text-text-primary transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-lavender sm:text-xl lg:text-2xl">
-                    {item.title}
-                  </span>
-                  {item.sub ? (
-                    <span className="mt-1 block truncate text-[11px] text-text-muted">
-                      {item.sub}
+      {items.length === 0 ? (
+        <div className="py-20 text-center">
+          <p className="font-heading text-xs uppercase tracking-[0.2em] text-text-muted">
+            {t('list.empty')}
+          </p>
+        </div>
+      ) : (
+        <ul className="min-w-0">
+          {items.map((item, index) => {
+            const isDimmed = active !== null && active !== index
+            // Rows without a destination but with a cover open the image dialog —
+            // this is the only way to see the preview on touch devices.
+            const canPreview = !item.to && Boolean(item.image)
+            const body = (
+              <>
+                <span className="flex min-w-0 items-center gap-1 sm:gap-3">
+                  {item.to ? (
+                    <span className="grid w-0 shrink-0 place-items-center overflow-hidden text-accent-lavender opacity-0 transition-all duration-300 group-hover:w-6 group-hover:opacity-100 sm:group-hover:w-8">
+                      <TbArrowUpRight size={22} />
                     </span>
                   ) : null}
+                  {canPreview ? (
+                    <span
+                      className={`grid shrink-0 place-items-center overflow-hidden text-accent-lavender transition-all duration-300 ${
+                        hasHover
+                          ? 'w-0 opacity-0 group-hover:w-6 group-hover:opacity-100 sm:group-hover:w-8'
+                          : 'w-6 opacity-70'
+                      }`}
+                    >
+                      <TbMaximize size={18} />
+                    </span>
+                  ) : null}
+                  <span className="min-w-0">
+                    <span className="block truncate font-heading text-lg font-bold leading-tight text-text-primary transition-all duration-300 group-hover:translate-x-1 group-hover:text-accent-lavender sm:text-xl lg:text-2xl">
+                      {item.title}
+                    </span>
+                    {item.sub ? (
+                      <span className="mt-1 block truncate text-[11px] text-text-muted">
+                        {item.sub}
+                      </span>
+                    ) : null}
+                  </span>
                 </span>
-              </span>
-              <span className="shrink-0 pl-3 text-right text-[10px] font-medium uppercase tracking-[0.16em] text-text-muted transition-colors duration-300 group-hover:text-text-secondary sm:text-xs">
-                {item.meta}
-              </span>
-            </>
-          )
+                <span className="shrink-0 pl-3 text-right text-[10px] font-medium uppercase tracking-[0.16em] text-text-muted transition-colors duration-300 group-hover:text-text-secondary sm:text-xs">
+                  {item.meta}
+                </span>
+              </>
+            )
 
-          const rowClass = `group flex items-center justify-between gap-3 border-b border-[rgba(var(--rgb-line),0.1)] px-1 py-10 transition-opacity duration-300 sm:px-2 md:py-13 ${
-            isDimmed ? 'opacity-40' : 'opacity-100'
-          } ${hasHover ? 'cursor-none' : ''}`
+            const rowClass = `group flex items-center justify-between gap-3 border-b border-[rgba(var(--rgb-line),0.1)] px-1 py-10 transition-opacity duration-300 sm:px-2 md:py-13 ${
+              isDimmed ? 'opacity-40' : 'opacity-100'
+            } ${hasHover ? 'cursor-none' : ''}`
 
-          return (
-            <motion.li
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{
-                duration: 0.5,
-                // Capped so a long list doesn't leave the last rows waiting.
-                delay: Math.min(index, 6) * 0.07,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              {item.to ? (
-                <Link
-                  to={item.to}
-                  className={rowClass}
-                  data-cursor="spotlight"
-                  data-cursor-arrow="true"
-                  onMouseEnter={() => setActive(index)}
-                  onMouseLeave={() => setActive(null)}
-                >
-                  {body}
-                </Link>
-              ) : canPreview ? (
-                <button
-                  type="button"
-                  aria-label={`View ${item.title}`}
-                  className={`${rowClass} w-full text-left`}
-                  data-cursor="spotlight"
-                  onMouseEnter={() => setActive(index)}
-                  onMouseLeave={() => setActive(null)}
-                  onClick={() =>
-                    setLightbox({
-                      src: item.image as string,
-                      alt: item.title,
-                      caption: item.title,
-                      label: item.meta,
-                      accent: item.accent,
-                    })
-                  }
-                >
-                  {body}
-                </button>
-              ) : (
-                <div
-                  className={rowClass}
-                  data-cursor="spotlight"
-                  onMouseEnter={() => setActive(index)}
-                  onMouseLeave={() => setActive(null)}
-                >
-                  {body}
-                </div>
-              )}
-            </motion.li>
-          )
-        })}
-      </ul>
+            return (
+              <motion.li
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{
+                  duration: 0.5,
+                  // Capped so a long list doesn't leave the last rows waiting.
+                  delay: Math.min(index, 6) * 0.07,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                {item.to ? (
+                  <Link
+                    to={item.to}
+                    className={rowClass}
+                    data-cursor="spotlight"
+                    data-cursor-arrow="true"
+                    onMouseEnter={() => setActive(index)}
+                    onMouseLeave={() => setActive(null)}
+                  >
+                    {body}
+                  </Link>
+                ) : canPreview ? (
+                  <button
+                    type="button"
+                    aria-label={`View ${item.title}`}
+                    className={`${rowClass} w-full text-left`}
+                    data-cursor="spotlight"
+                    onMouseEnter={() => setActive(index)}
+                    onMouseLeave={() => setActive(null)}
+                    onClick={() =>
+                      setLightbox({
+                        src: item.image as string,
+                        alt: item.title,
+                        caption: item.title,
+                        label: item.meta,
+                        accent: item.accent,
+                      })
+                    }
+                  >
+                    {body}
+                  </button>
+                ) : (
+                  <div
+                    className={rowClass}
+                    data-cursor="spotlight"
+                    onMouseEnter={() => setActive(index)}
+                    onMouseLeave={() => setActive(null)}
+                  >
+                    {body}
+                  </div>
+                )}
+              </motion.li>
+            )
+          })}
+        </ul>
+      )}
 
       {hasHover ? (
         <>

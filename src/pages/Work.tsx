@@ -3,13 +3,15 @@ import { TbBriefcase } from 'react-icons/tb'
 import PageShell from '../components/PageShell'
 import { useCopy } from '../hooks/useCopy'
 import { useLocalize } from '../hooks/useLocalize'
-import RevealList from '../components/RevealList'
-import type { RevealItem } from '../components/RevealList'
+import { useLanguage } from '../hooks/useLanguage'
+import { useDocumentHead } from '../hooks/useDocumentHead'
+import RevealList, { type RevealItem } from '../components/RevealList'
 import { workExperiences } from '../data/work'
 
-function Work() {
+export function Work() {
   const t = useCopy()
   const L = useLocalize()
+  const { language } = useLanguage()
 
   const workListItems = useMemo<RevealItem[]>(
     () =>
@@ -25,6 +27,14 @@ function Work() {
       })),
     [L],
   )
+
+  useDocumentHead({
+    title: language === 'id' ? 'Pengalaman Kerja' : 'Work Experience',
+    description:
+      language === 'id'
+        ? 'Rekam jejak pengalaman kerja dan kontribusi rekayasa sistem nyata.'
+        : 'Track record of work experience and real-world system engineering contributions.',
+  })
 
   return (
     <PageShell

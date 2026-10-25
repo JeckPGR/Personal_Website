@@ -24,14 +24,14 @@ const STEPS = [
   { at: 99, text: 'Extract completed' },
 ]
 
-/** Seconds spent climbing to a milestone, resting on it, and the final push. Calibrated for 1.5s total. */
-const TRAVEL = 0.08
-const HOLD = 0.14
-const FINISH = 0.10
+/** Seconds spent climbing to a milestone, resting on it, and the final push. Calibrated for 2.8s total (2.5s progress + 0.3s hold). */
+const TRAVEL = 0.18
+const HOLD = 0.24
+const FINISH = 0.16
 /** How long 100% stays on screen before the curtain lifts. */
-const COMPLETE_HOLD_MS = 160
+const COMPLETE_HOLD_MS = 300
 /** Milliseconds per typed character. Must clear TRAVEL + HOLD on the longest line. */
-const TYPE_SPEED_MS = 4
+const TYPE_SPEED_MS = 8
 
 /**
  * Keyframes that climb, then sit still while the line types itself out.

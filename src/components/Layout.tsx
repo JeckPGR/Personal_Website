@@ -27,14 +27,14 @@ function Layout() {
 
   return (
     <div
-      className={`min-h-screen overflow-x-hidden bg-base text-text-primary ${isHome ? 'home-page-shell lg:h-dvh lg:max-h-dvh lg:overflow-hidden' : ''
+      className={`min-h-screen overflow-x-clip bg-base text-text-primary ${isHome ? 'home-page-shell lg:h-dvh lg:max-h-dvh lg:overflow-hidden' : ''
         }`}
     >
       {!isHome ? <ScrollProgress /> : null}
       {/* The navbar carries the theme toggle, so it ships on every route. */}
       <TopNavbar />
       <main
-        className={`relative mx-auto flex w-full min-w-0 max-w-480 flex-1 flex-col gap-3 overflow-x-hidden px-3 sm:px-4 md:px-5 lg:gap-3 ${isHome
+        className={`relative mx-auto flex w-full min-w-0 max-w-480 flex-1 flex-col gap-3 overflow-x-clip px-3 sm:px-4 md:px-5 lg:gap-3 ${isHome
           ? 'min-h-screen pb-8 pt-4 md:pb-4 md:pt-4 lg:h-dvh lg:max-h-dvh lg:min-h-0 lg:overflow-hidden lg:py-2'
           : 'pb-24 pt-8 md:pt-10'
           } ${isHome ? 'home-page-main' : ''

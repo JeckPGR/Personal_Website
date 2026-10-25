@@ -162,7 +162,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   color: var(--app-text-primary);
   background: var(--app-body);
   font-family: "Inter", sans-serif;
@@ -222,7 +222,11 @@ body::-webkit-scrollbar-corner {
 
 #root {
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.overflow-x-clip {
+  overflow-x: clip;
 }
 
 a {
