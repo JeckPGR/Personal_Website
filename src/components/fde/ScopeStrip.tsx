@@ -31,18 +31,18 @@ export function ScopeStrip({ caseStudy }: ScopeStripProps) {
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[rgba(var(--rgb-line),0.08)] pb-4">
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
           <span
-            className={`inline-flex items-center rounded-lg border px-2.5 py-1 font-mono text-[10px] font-bold tracking-wider ${scopeConf.class}`}
+            className={`inline-flex items-center rounded-lg border px-2.5 py-1 font-heading text-[10.5px] font-bold tracking-wide ${scopeConf.class}`}
           >
             {scopeConf[language]}
           </span>
           <span
-            className={`inline-flex items-center rounded-lg border px-2.5 py-1 font-mono text-[10px] font-semibold tracking-wider ${statusConf.class}`}
+            className={`inline-flex items-center rounded-lg border px-2.5 py-1 font-heading text-[10.5px] font-semibold tracking-wide ${statusConf.class}`}
           >
             {statusConf[language]}
           </span>
         </div>
 
-        <div className="flex items-center gap-3 font-mono text-xs text-text-muted">
+        <div className="flex items-center gap-3 text-xs font-medium text-text-muted">
           <span>{caseStudy.period.start} → {caseStudy.period.end}</span>
           {caseStudy.org?.name && (
             <>

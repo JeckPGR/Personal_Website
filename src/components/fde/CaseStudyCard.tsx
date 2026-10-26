@@ -43,19 +43,19 @@ export function CaseStudyCard({ caseStudy }: CaseStudyCardProps) {
         <div className="flex flex-wrap items-center justify-between gap-2.5 mb-4">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider ${scope.class}`}
+              className={`inline-flex items-center rounded-md border px-2 py-0.5 font-heading text-[10px] font-bold tracking-wide ${scope.class}`}
             >
               {scope[language]}
             </span>
 
             {categoryLabel && (
-              <span className="inline-flex items-center rounded-md border border-[rgba(var(--rgb-line),0.14)] bg-white/5 px-2 py-0.5 font-mono text-[9px] font-medium text-accent-lavender">
+              <span className="inline-flex items-center rounded-md border border-[rgba(var(--rgb-line),0.14)] bg-white/5 px-2 py-0.5 font-heading text-[10px] font-medium text-accent-lavender">
                 {categoryLabel}
               </span>
             )}
 
             {caseStudy.org?.name && (
-              <span className="font-mono text-[10px] text-text-muted truncate max-w-[160px]">
+              <span className="text-[11px] font-medium text-text-muted truncate max-w-[160px]">
                 {caseStudy.org.name}
               </span>
             )}
@@ -86,17 +86,17 @@ export function CaseStudyCard({ caseStudy }: CaseStudyCardProps) {
             <span className="font-heading text-sm sm:text-base font-extrabold text-accent-lavender">
               {featuredResult.value}
             </span>
-            <span className="font-mono text-[10px] text-text-muted truncate">
+            <span className="text-[11px] font-medium text-text-muted truncate">
               {resultLabel}
             </span>
           </div>
         ) : (
-          <span className="font-mono text-[11px] text-text-muted">
+          <span className="text-[11px] font-medium text-text-muted">
             {caseStudy.period.start} → {caseStudy.period.end}
           </span>
         )}
 
-        <span className="font-mono text-[10px] text-accent-lavender/60 group-hover:text-accent-lavender transition-colors">
+        <span className="font-heading text-[11px] font-semibold text-accent-lavender/70 group-hover:text-accent-lavender transition-colors">
           {language === 'id' ? 'Buka Studi Kasus →' : 'Read Case Study →'}
         </span>
       </div>

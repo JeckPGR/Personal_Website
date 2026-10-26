@@ -55,12 +55,13 @@ export const projects: ProjectItem[] = [
       id: 'Di Fidela saya belajar bahwa bagi penjual fashion, hasil yang mirip aslinya lebih penting daripada hasil yang sekadar keren. Kalau tekstur kain atau warnanya meleset, fotonya tidak bisa dipakai untuk jualan.',
     },
     stack: ['Next.js', 'NestJS', 'TypeScript', 'Redis', 'PostgreSQL', 'Google Cloud Console'],
-    accent: '#8b5cf6',
+    accent: '#10b981',
     Icon: TbSparkles,
-    thumbnail: '/Projects/Fidela-Logo.webp',
+    thumbnail: '/Projects/Fidela.svg',
     showcase: [
-      '/Projects/fidela-raw.webp',
-      '/Projects/Fidela-Logo.webp',
+      '/Projects/Fidela-Src/Fidela-1.png',
+      '/Projects/Fidela-Src/Fidela-2.png',
+      '/Projects/Fidela-Src/Fidela-3.png',
     ],
     website: 'https://fidela.asia',
     keyPoints: {

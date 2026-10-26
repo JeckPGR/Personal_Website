@@ -204,7 +204,7 @@ function RevealList({ items, countLabel }: RevealListProps) {
 
             const rowClass = `group flex items-center justify-between gap-3 border-b border-[rgba(var(--rgb-line),0.1)] px-1 py-10 transition-opacity duration-300 sm:px-2 md:py-13 ${
               isDimmed ? 'opacity-40' : 'opacity-100'
-            } ${hasHover ? 'cursor-none' : ''}`
+            }`
 
             return (
               <motion.li

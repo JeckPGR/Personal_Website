@@ -42,8 +42,6 @@ function CustomCursor() {
 
   useEffect(() => {
     if (!enabled) return
-    const root = document.documentElement
-    root.classList.add('custom-cursor-active')
 
     const handleMove = (event: PointerEvent) => {
       x.set(event.clientX)
@@ -73,7 +71,6 @@ function CustomCursor() {
     window.addEventListener('blur', hide)
 
     return () => {
-      root.classList.remove('custom-cursor-active')
       window.removeEventListener('pointermove', handleMove)
       document.removeEventListener('mouseleave', hide)
       window.removeEventListener('blur', hide)
@@ -86,24 +83,18 @@ function CustomCursor() {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-[10000]" aria-hidden>
-      {/* Ring / spotlight — lags slightly behind the pointer */}
+      {/* Spotlight follower — highlights over interactive cards/rows */}
       <motion.div
         className="absolute left-0 top-0"
         style={{ x: ringX, y: ringY }}
-        animate={{ opacity: visible ? 1 : 0 }}
+        animate={{ opacity: visible && isSpot ? 1 : 0 }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
       >
         <motion.span
-          className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-solid"
+          className="flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-solid border-[rgba(var(--rgb-line),0.55)] bg-[rgba(var(--rgb-hover),0.2)] shadow-[0_0_34px_rgba(var(--rgb-glow),0.4)] backdrop-blur-[2px]"
           animate={{
-            width: isSpot ? 64 : 30,
-            height: isSpot ? 64 : 30,
-            borderWidth: isSpot ? 1 : 1.5,
-            borderColor: isSpot ? 'rgba(var(--rgb-line),0.5)' : 'rgba(var(--rgb-line),0.55)',
-            backgroundColor: isSpot ? 'rgba(var(--rgb-line),0.22)' : 'rgba(var(--rgb-line),0)',
-            boxShadow: isSpot
-              ? '0 0 34px rgba(var(--rgb-glow),0.4)'
-              : '0 0 0 rgba(var(--rgb-glow),0)',
+            width: isSpot ? 64 : 32,
+            height: isSpot ? 64 : 32,
           }}
           transition={{ type: 'spring', stiffness: 300, damping: 26 }}
         >
@@ -111,16 +102,6 @@ function CustomCursor() {
             <TbArrowUpRight size={22} className="text-accent-lavender" />
           ) : null}
         </motion.span>
-      </motion.div>
-
-      {/* Center dot — follows the pointer tightly, hidden while spotlighting */}
-      <motion.div
-        className="absolute left-0 top-0"
-        style={{ x, y }}
-        animate={{ opacity: visible && !isSpot ? 1 : 0 }}
-        transition={{ duration: 0.15 }}
-      >
-        <span className="block h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-lavender" />
       </motion.div>
     </div>
   )

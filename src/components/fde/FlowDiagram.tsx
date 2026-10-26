@@ -1,8 +1,17 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { FlowDiagram as FlowDiagramType, FlowNode, FlowNodeType } from '../../content/schema'
 import { resolveLocalized } from '../../content/schema'
-import { useLanguage } from '../../hooks/useLanguage'
+import { useLanguage, type Language } from '../../hooks/useLanguage'
 import { useTheme } from '../../hooks/useTheme'
+import {
+  TbZoomIn,
+  TbZoomOut,
+  TbMaximize,
+  TbMinimize,
+  TbFocusCentered,
+  TbX,
+} from 'react-icons/tb'
 
 type FlowDiagramProps = {
   diagram: FlowDiagramType
@@ -22,61 +31,103 @@ const TYPE_CONFIG: Record<FlowNodeType, NodeStyleConfig> = {
   actor: {
     label: 'CLIENT',
     badgeDark: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/25',
-    badgeLight: 'bg-cyan-50 text-cyan-800 border-cyan-300',
+    badgeLight: 'bg-cyan-50 text-cyan-900 border-cyan-400 font-bold',
     borderDark: 'border-cyan-500/30 hover:border-cyan-400/60',
     borderLight: 'border-cyan-300 hover:border-cyan-500',
   },
   human: {
     label: 'HUMAN',
     badgeDark: 'bg-amber-500/10 text-amber-400 border-amber-500/25',
-    badgeLight: 'bg-amber-50 text-amber-800 border-amber-300',
+    badgeLight: 'bg-amber-50 text-amber-900 border-amber-400 font-bold',
     borderDark: 'border-amber-500/30 hover:border-amber-400/60',
     borderLight: 'border-amber-300 hover:border-amber-500',
   },
   step: {
     label: 'STEP',
     badgeDark: 'bg-purple-500/10 text-purple-300 border-purple-500/25',
-    badgeLight: 'bg-purple-50 text-purple-800 border-purple-300',
+    badgeLight: 'bg-purple-50 text-purple-900 border-purple-400 font-bold',
     borderDark: 'border-purple-500/30 hover:border-purple-400/60',
     borderLight: 'border-purple-300 hover:border-purple-500',
   },
   service: {
     label: 'SERVICE',
     badgeDark: 'bg-blue-500/10 text-blue-400 border-blue-500/25',
-    badgeLight: 'bg-blue-50 text-blue-800 border-blue-300',
+    badgeLight: 'bg-blue-50 text-blue-900 border-blue-400 font-bold',
     borderDark: 'border-blue-500/30 hover:border-blue-400/60',
     borderLight: 'border-blue-300 hover:border-blue-500',
   },
   data: {
     label: 'DATA',
     badgeDark: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
-    badgeLight: 'bg-emerald-50 text-emerald-800 border-emerald-300',
+    badgeLight: 'bg-emerald-50 text-emerald-900 border-emerald-400 font-bold',
     borderDark: 'border-emerald-500/30 hover:border-emerald-400/60',
     borderLight: 'border-emerald-300 hover:border-emerald-500',
   },
   ai: {
     label: 'AI',
     badgeDark: 'bg-fuchsia-500/10 text-fuchsia-300 border-fuchsia-500/25',
-    badgeLight: 'bg-fuchsia-50 text-fuchsia-800 border-fuchsia-300',
+    badgeLight: 'bg-fuchsia-50 text-fuchsia-900 border-fuchsia-400 font-bold',
     borderDark: 'border-fuchsia-500/30 hover:border-fuchsia-400/60',
     borderLight: 'border-fuchsia-300 hover:border-fuchsia-500',
   },
   external: {
     label: 'EXTERNAL',
     badgeDark: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/25',
-    badgeLight: 'bg-cyan-50 text-cyan-800 border-cyan-300',
+    badgeLight: 'bg-sky-50 text-sky-900 border-sky-400 font-bold',
     borderDark: 'border-cyan-500/30 hover:border-cyan-400/60',
     borderLight: 'border-cyan-300 hover:border-cyan-500',
   },
 }
 
-export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
-  const { language } = useLanguage()
-  const { theme } = useTheme()
-  const isLight = theme === 'light'
+/** Walks up offsetParent to get precise untransformed coordinates relative to ancestor */
+function getOffsetRelativeTo(child: HTMLElement, ancestor: HTMLElement) {
+  let x = 0
+  let y = 0
+  let current: HTMLElement | null = child
+  while (current && current !== ancestor) {
+    x += current.offsetLeft
+    y += current.offsetTop
+    current = current.offsetParent as HTMLElement | null
+  }
+  return {
+    left: x,
+    top: y,
+    width: child.offsetWidth,
+    height: child.offsetHeight,
+  }
+}
 
-  const containerRef = useRef<HTMLDivElement>(null)
+/** Interactive Canvas Viewport (shared between inline panel & full-screen portal) */
+function CanvasViewport({
+  diagram,
+  mode = 'system',
+  isFullscreen = false,
+  onToggleFullscreen,
+  isLight,
+  language,
+}: {
+  diagram: FlowDiagramType
+  mode?: 'system' | 'architecture'
+  isFullscreen?: boolean
+  onToggleFullscreen: () => void
+  isLight: boolean
+  language: Language
+}) {
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
   const nodeRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+
+  const [zoom, setZoom] = useState(1)
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const [isDragging, setIsDragging] = useState(false)
+
+  const zoomRef = useRef(zoom)
+  zoomRef.current = zoom
+  const panRef = useRef(pan)
+  panRef.current = pan
+  const isDraggingRef = useRef(false)
+  const dragStartRef = useRef({ x: 0, y: 0 })
+
   const [connections, setConnections] = useState<
     Array<{
       fromId: string
@@ -95,14 +146,12 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
     const nodeMap = new Map(diagram.nodes.map((n) => [n.id, n]))
     const layerMap = new Map<string, number>()
 
-    // Use lane hints if provided
     diagram.nodes.forEach((n) => {
       if (typeof n.lane === 'number') {
         layerMap.set(n.id, n.lane)
       }
     })
 
-    // Compute topological layer based on in-edges
     let changed = true
     let iterations = 0
     while (changed && iterations < 15) {
@@ -116,7 +165,6 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
         const fromLayer = layerMap.get(fromNode.id) ?? 0
         const toLayer = layerMap.get(toNode.id) ?? 0
 
-        // If toNode doesn't have an explicit lane and needs to be placed on a lower tier
         if (typeof toNode.lane !== 'number' && toLayer <= fromLayer) {
           layerMap.set(toNode.id, fromLayer + 1)
           changed = true
@@ -124,12 +172,10 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
       }
     }
 
-    // Default unassigned to layer 0
     diagram.nodes.forEach((n) => {
       if (!layerMap.has(n.id)) layerMap.set(n.id, 0)
     })
 
-    // Group nodes by layer
     const maxLayer = Math.max(0, ...Array.from(layerMap.values()))
     const layerBuckets: FlowNode[][] = Array.from({ length: maxLayer + 1 }, () => [])
 
@@ -141,22 +187,11 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
     return layerBuckets.filter((bucket) => bucket.length > 0)
   }, [diagram])
 
-  // Check if any node is classified
-  const hasClassified = useMemo(() => {
-    if (mode !== 'architecture') return false
-    return diagram.nodes.some((n) => {
-      const isClassifiable = ['service', 'data', 'ai', 'external'].includes(n.type)
-      const hasNoTools = !n.tools || n.tools.length === 0
-      return isClassifiable && hasNoTools && !n.hideTools
-    })
-  }, [diagram, mode])
-
-  // Measure and calculate clean, non-overlapping connector paths with port distribution
+  // Measure connectors in unscaled local contentRef space (100% immune to zoom/pan)
   const updateConnectors = useCallback(() => {
-    if (!containerRef.current) return
-    const containerRect = containerRef.current.getBoundingClientRect()
+    if (!contentRef.current) return
+    const contentEl = contentRef.current
 
-    // 1. Group outgoing and incoming edges to distribute connection ports across card width
     const outgoingMap = new Map<string, Array<{ toId: string; toCenterX: number }>>()
     const incomingMap = new Map<string, Array<{ fromId: string; fromCenterX: number }>>()
 
@@ -165,10 +200,10 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
       const toEl = nodeRefs.current.get(edge.to)
       if (!fromEl || !toEl) continue
 
-      const fromRect = fromEl.getBoundingClientRect()
-      const toRect = toEl.getBoundingClientRect()
-      const fromCenterX = fromRect.left + fromRect.width / 2 - containerRect.left
-      const toCenterX = toRect.left + toRect.width / 2 - containerRect.left
+      const fromPos = getOffsetRelativeTo(fromEl, contentEl)
+      const toPos = getOffsetRelativeTo(toEl, contentEl)
+      const fromCenterX = fromPos.left + fromPos.width / 2
+      const toCenterX = toPos.left + toPos.width / 2
 
       if (!outgoingMap.has(edge.from)) outgoingMap.set(edge.from, [])
       outgoingMap.get(edge.from)!.push({ toId: edge.to, toCenterX })
@@ -177,7 +212,6 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
       incomingMap.get(edge.to)!.push({ fromId: edge.from, fromCenterX })
     }
 
-    // Sort outgoing by target X, incoming by source X
     for (const [_, list] of outgoingMap) {
       list.sort((a, b) => a.toCenterX - b.toCenterX)
     }
@@ -185,7 +219,7 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
       list.sort((a, b) => a.fromCenterX - b.fromCenterX)
     }
 
-    const getPortOffset = (idx: number, count: number, spread = 48) => {
+    const getPortOffset = (idx: number, count: number, spread = 36) => {
       if (count <= 1 || idx < 0) return 0
       const step = spread / (count - 1)
       return -spread / 2 + idx * step
@@ -198,25 +232,25 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
       const toEl = nodeRefs.current.get(edge.to)
       if (!fromEl || !toEl) continue
 
-      const fromRect = fromEl.getBoundingClientRect()
-      const toRect = toEl.getBoundingClientRect()
+      const fromPos = getOffsetRelativeTo(fromEl, contentEl)
+      const toPos = getOffsetRelativeTo(toEl, contentEl)
 
-      const baseFromCenterX = fromRect.left + fromRect.width / 2 - containerRect.left
-      const baseToCenterX = toRect.left + toRect.width / 2 - containerRect.left
+      const baseFromCenterX = fromPos.left + fromPos.width / 2
+      const baseToCenterX = toPos.left + toPos.width / 2
 
       const outList = outgoingMap.get(edge.from) || []
       const outIdx = outList.findIndex((item) => item.toId === edge.to)
-      const outOffset = getPortOffset(outIdx, outList.length, 52)
+      const outOffset = getPortOffset(outIdx, outList.length, 40)
 
       const inList = incomingMap.get(edge.to) || []
       const inIdx = inList.findIndex((item) => item.fromId === edge.from)
-      const inOffset = getPortOffset(inIdx, inList.length, 48)
+      const inOffset = getPortOffset(inIdx, inList.length, 36)
 
       const fromCenterX = baseFromCenterX + outOffset
       const toCenterX = baseToCenterX + inOffset
 
-      const isDownward = toRect.top >= fromRect.bottom - 12
-      const isUpward = fromRect.top >= toRect.bottom - 12
+      const isDownward = toPos.top >= fromPos.top + fromPos.height - 8
+      const isUpward = fromPos.top >= toPos.top + toPos.height - 8
 
       let startX: number
       let startY: number
@@ -227,22 +261,19 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
       let labelY = 0
 
       if (isDownward) {
-        // Normal top-to-bottom vertical flow
         startX = fromCenterX
-        startY = fromRect.bottom - containerRect.top
+        startY = fromPos.top + fromPos.height
         endX = toCenterX
-        endY = toRect.top - containerRect.top - 7
+        endY = toPos.top - 7
 
         const dx = endX - startX
         const dy = endY - startY
 
         if (Math.abs(dx) < 6) {
-          // Perfectly straight vertical drop
           path = `M ${startX} ${startY} L ${endX} ${endY}`
           labelX = startX
           labelY = startY + dy * 0.5
         } else {
-          // Elegant, smooth S-curve (cubic Bezier) that never collides with sharp corners
           const cy1 = startY + dy * 0.45
           const cy2 = endY - dy * 0.45
           path = `M ${startX} ${startY} C ${startX} ${cy1}, ${endX} ${cy2}, ${endX} ${endY}`
@@ -250,11 +281,10 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
           labelY = (startY + endY) * 0.5
         }
       } else if (isUpward) {
-        // Bottom-to-top flow
         startX = fromCenterX
-        startY = fromRect.top - containerRect.top
+        startY = fromPos.top
         endX = toCenterX
-        endY = toRect.bottom - containerRect.top + 7
+        endY = toPos.top + toPos.height + 7
 
         const dx = endX - startX
         const dy = endY - startY
@@ -271,19 +301,18 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
           labelY = (startY + endY) * 0.5
         }
       } else {
-        // Same tier horizontal connection
-        const fromCenterY = fromRect.top + fromRect.height / 2 - containerRect.top
-        const toCenterY = toRect.top + toRect.height / 2 - containerRect.top
+        const fromCenterY = fromPos.top + fromPos.height / 2
+        const toCenterY = toPos.top + toPos.height / 2
 
-        if (toRect.left >= fromRect.right) {
-          startX = fromRect.right - containerRect.left
+        if (toPos.left >= fromPos.left + fromPos.width) {
+          startX = fromPos.left + fromPos.width
           startY = fromCenterY
-          endX = toRect.left - containerRect.left - 7
+          endX = toPos.left - 7
           endY = toCenterY
         } else {
-          startX = fromRect.left - containerRect.left
+          startX = fromPos.left
           startY = fromCenterY
-          endX = toRect.right - containerRect.left + 7
+          endX = toPos.left + toPos.width + 7
           endY = toCenterY
         }
 
@@ -308,27 +337,616 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
     setConnections(newPaths)
   }, [diagram.edges, language])
 
+  // Fit view calculation to center and scale content cleanly inside viewport
+  const fitToView = useCallback(() => {
+    if (!viewportRef.current || !contentRef.current) return
+    const vpRect = viewportRef.current.getBoundingClientRect()
+    const contentEl = contentRef.current
+
+    const contentW = contentEl.offsetWidth || contentEl.scrollWidth || 600
+    const contentH = contentEl.offsetHeight || contentEl.scrollHeight || 500
+
+    if (contentW <= 0 || contentH <= 0 || vpRect.width <= 0) return
+
+    const padX = vpRect.width < 500 ? 16 : 36
+    const padY = vpRect.width < 500 ? 20 : 36
+
+    const availW = Math.max(120, vpRect.width - padX * 2)
+    const availH = Math.max(120, vpRect.height - padY * 2)
+
+    const scaleW = availW / contentW
+    const scaleH = availH / contentH
+
+    let targetZoom: number
+    if (vpRect.width < 640) {
+      targetZoom = Math.min(0.95, Math.max(0.46, Math.min(scaleW, 0.90)))
+    } else {
+      targetZoom = Math.min(1.0, Math.max(0.46, Math.min(scaleW, scaleH)))
+    }
+
+    targetZoom = Math.round(targetZoom * 100) / 100
+
+    const scaledW = contentW * targetZoom
+    const scaledH = contentH * targetZoom
+
+    const targetPanX = Math.round((vpRect.width - scaledW) / 2)
+    let targetPanY = 24
+    if (scaledH <= availH) {
+      targetPanY = Math.round((vpRect.height - scaledH) / 2)
+    }
+
+    setZoom(targetZoom)
+    zoomRef.current = targetZoom
+    setPan({ x: targetPanX, y: targetPanY })
+    panRef.current = { x: targetPanX, y: targetPanY }
+  }, [])
+
+  const handleZoomStep = (delta: number) => {
+    const currentZ = zoomRef.current
+    const newZ = Math.min(1.85, Math.max(0.35, Math.round((currentZ + delta) * 100) / 100))
+    if (!viewportRef.current) return
+    const vp = viewportRef.current.getBoundingClientRect()
+    const cx = vp.width / 2
+    const cy = vp.height / 2
+    const currentP = panRef.current
+    const newPanX = Math.round(cx - (cx - currentP.x) * (newZ / currentZ))
+    const newPanY = Math.round(cy - (cy - currentP.y) * (newZ / currentZ))
+    setZoom(newZ)
+    zoomRef.current = newZ
+    setPan({ x: newPanX, y: newPanY })
+    panRef.current = { x: newPanX, y: newPanY }
+  }
+
+  // Pointer drag panning (Mouse)
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse') {
+      if (e.button !== 0) return
+      const target = e.target as HTMLElement
+      if (target.closest('button, a, input, select')) return
+
+      isDraggingRef.current = true
+      setIsDragging(true)
+      dragStartRef.current = {
+        x: e.clientX - panRef.current.x,
+        y: e.clientY - panRef.current.y,
+      }
+      e.currentTarget.setPointerCapture(e.pointerId)
+    }
+  }
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse' && isDraggingRef.current) {
+      const newPan = {
+        x: Math.round(e.clientX - dragStartRef.current.x),
+        y: Math.round(e.clientY - dragStartRef.current.y),
+      }
+      setPan(newPan)
+      panRef.current = newPan
+    }
+  }
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse') {
+      isDraggingRef.current = false
+      setIsDragging(false)
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId)
+      } catch {
+        // ignore
+      }
+    }
+  }
+
+  // Mouse wheel zoom centered on cursor
+  useEffect(() => {
+    const vp = viewportRef.current
+    if (!vp) return
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      const factor = e.deltaY < 0 ? 1.08 : 0.92
+      const currentZ = zoomRef.current
+      const newZoom = Math.min(1.85, Math.max(0.35, Math.round(currentZ * factor * 100) / 100))
+      const rect = vp.getBoundingClientRect()
+      const mouseX = e.clientX - rect.left
+      const mouseY = e.clientY - rect.top
+      const currentP = panRef.current
+      const newPanX = Math.round(mouseX - (mouseX - currentP.x) * (newZoom / currentZ))
+      const newPanY = Math.round(mouseY - (mouseY - currentP.y) * (newZoom / currentZ))
+      setZoom(newZoom)
+      zoomRef.current = newZoom
+      setPan({ x: newPanX, y: newPanY })
+      panRef.current = { x: newPanX, y: newPanY }
+    }
+
+    vp.addEventListener('wheel', handleWheel, { passive: false })
+    return () => {
+      vp.removeEventListener('wheel', handleWheel)
+    }
+  }, [])
+
+  // Touch gestures (Pinch-to-zoom & 1-finger / 2-finger pan)
+  useEffect(() => {
+    const vp = viewportRef.current
+    if (!vp) return
+
+    let touchMode: 'none' | 'pan' | 'pinch' = 'none'
+    let startDist = 0
+    let startZoom = 1
+    let startMid = { x: 0, y: 0 }
+    let startPan = { x: 0, y: 0 }
+    let singleTouchStart = { x: 0, y: 0 }
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        touchMode = 'pinch'
+        const t1 = e.touches[0]
+        const t2 = e.touches[1]
+        startDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY)
+        startZoom = zoomRef.current
+        startMid = {
+          x: (t1.clientX + t2.clientX) / 2,
+          y: (t1.clientY + t2.clientY) / 2,
+        }
+        startPan = { ...panRef.current }
+      } else if (e.touches.length === 1) {
+        const target = e.target as HTMLElement
+        if (target.closest('button, a, input, select')) return
+
+        touchMode = 'pan'
+        singleTouchStart = {
+          x: e.touches[0].clientX - panRef.current.x,
+          y: e.touches[0].clientY - panRef.current.y,
+        }
+      }
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 2 && touchMode === 'pinch') {
+        e.preventDefault()
+        const t1 = e.touches[0]
+        const t2 = e.touches[1]
+        const currentDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY)
+        const currentMid = {
+          x: (t1.clientX + t2.clientX) / 2,
+          y: (t1.clientY + t2.clientY) / 2,
+        }
+
+        if (startDist > 0) {
+          const scaleFactor = currentDist / startDist
+          const newZoom = Math.min(1.85, Math.max(0.35, Math.round(startZoom * scaleFactor * 100) / 100))
+          const rect = vp.getBoundingClientRect()
+          const localMidX = startMid.x - rect.left
+          const localMidY = startMid.y - rect.top
+          const deltaMidX = currentMid.x - startMid.x
+          const deltaMidY = currentMid.y - startMid.y
+
+          const newPanX = Math.round(localMidX - (localMidX - startPan.x) * (newZoom / startZoom) + deltaMidX)
+          const newPanY = Math.round(localMidY - (localMidY - startPan.y) * (newZoom / startZoom) + deltaMidY)
+
+          setZoom(newZoom)
+          zoomRef.current = newZoom
+          setPan({ x: newPanX, y: newPanY })
+          panRef.current = { x: newPanX, y: newPanY }
+        }
+      } else if (e.touches.length === 1 && touchMode === 'pan') {
+        e.preventDefault()
+        const newPanX = Math.round(e.touches[0].clientX - singleTouchStart.x)
+        const newPanY = Math.round(e.touches[0].clientY - singleTouchStart.y)
+        setPan({ x: newPanX, y: newPanY })
+        panRef.current = { x: newPanX, y: newPanY }
+      }
+    }
+
+    const handleTouchEnd = () => {
+      touchMode = 'none'
+    }
+
+    vp.addEventListener('touchstart', handleTouchStart, { passive: true })
+    vp.addEventListener('touchmove', handleTouchMove, { passive: false })
+    vp.addEventListener('touchend', handleTouchEnd, { passive: true })
+    vp.addEventListener('touchcancel', handleTouchEnd, { passive: true })
+
+    return () => {
+      vp.removeEventListener('touchstart', handleTouchStart)
+      vp.removeEventListener('touchmove', handleTouchMove)
+      vp.removeEventListener('touchend', handleTouchEnd)
+      vp.removeEventListener('touchcancel', handleTouchEnd)
+    }
+  }, [])
+
+  // Measure connectors on mount and layout updates
   useEffect(() => {
     updateConnectors()
     const rafId = requestAnimationFrame(updateConnectors)
-    const timeoutId = setTimeout(updateConnectors, 120)
+    const t1 = setTimeout(updateConnectors, 80)
+    const t2 = setTimeout(updateConnectors, 250)
 
     const observer = new ResizeObserver(() => {
       updateConnectors()
     })
-    if (containerRef.current) observer.observe(containerRef.current)
-    window.addEventListener('resize', updateConnectors)
+    if (contentRef.current) observer.observe(contentRef.current)
 
     return () => {
       cancelAnimationFrame(rafId)
-      clearTimeout(timeoutId)
+      clearTimeout(t1)
+      clearTimeout(t2)
       observer.disconnect()
-      window.removeEventListener('resize', updateConnectors)
     }
   }, [updateConnectors, layers])
 
+  // Fit to view on initial mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fitToView()
+      updateConnectors()
+    }, 90)
+    return () => clearTimeout(timer)
+  }, [fitToView, updateConnectors])
+
   return (
-    <div className="relative my-6 sm:my-8 rounded-2xl border border-[rgba(var(--rgb-line),0.12)] bg-[var(--app-panel-strong)] p-5 sm:p-8 md:p-10 shadow-2xl backdrop-blur-md transition-colors duration-300">
+    <div
+      ref={viewportRef}
+      tabIndex={0}
+      aria-label={
+        mode === 'architecture'
+          ? 'Interactive Architecture Canvas'
+          : 'Interactive System Flow Canvas'
+      }
+      className={`relative w-full h-full overflow-hidden select-none outline-none ${
+        isDragging ? 'cursor-grabbing' : 'cursor-grab'
+      }`}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+    >
+      {/* Subtle Dot Grid Background */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: isLight
+            ? 'radial-gradient(circle, rgba(99, 102, 241, 0.22) 1.2px, transparent 1.2px)'
+            : 'radial-gradient(circle, rgba(167, 139, 250, 0.20) 1.2px, transparent 1.2px)',
+          backgroundSize: `${24 * zoom}px ${24 * zoom}px`,
+          backgroundPosition: `${pan.x}px ${pan.y}px`,
+        }}
+      />
+
+      {/* Floating Canvas Controls Toolbar */}
+      <div
+        className={`absolute bottom-3 right-3 sm:bottom-4 sm:right-4 z-30 flex items-center gap-1 sm:gap-1.5 rounded-full border px-2.5 py-1.5 shadow-xl backdrop-blur-xl ${
+          isLight
+            ? 'border-zinc-300 bg-white/95 text-zinc-900 shadow-zinc-900/10'
+            : 'border-[rgba(var(--rgb-line),0.18)] bg-[var(--app-panel)]/92 text-text-primary'
+        }`}
+      >
+        {/* Zoom Out */}
+        <button
+          type="button"
+          onClick={() => handleZoomStep(-0.15)}
+          className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
+            isLight
+              ? 'hover:bg-zinc-100 text-zinc-600 hover:text-zinc-950'
+              : 'hover:bg-[rgba(var(--rgb-hover),0.2)] text-text-secondary hover:text-text-primary'
+          }`}
+          title={language === 'id' ? 'Perkecil' : 'Zoom Out'}
+          aria-label="Zoom Out"
+        >
+          <TbZoomOut size={15} />
+        </button>
+
+        {/* Zoom display */}
+        <button
+          type="button"
+          onClick={() => fitToView()}
+          className={`px-1.5 py-0.5 font-mono text-[11px] font-bold rounded transition-colors ${
+            isLight
+              ? 'text-indigo-800 hover:bg-zinc-100'
+              : 'text-accent-lavender hover:bg-[rgba(var(--rgb-hover),0.2)]'
+          }`}
+          title={language === 'id' ? 'Reset / Pas ke Layar' : 'Fit to Screen'}
+        >
+          {Math.round(zoom * 100)}%
+        </button>
+
+        {/* Zoom In */}
+        <button
+          type="button"
+          onClick={() => handleZoomStep(0.15)}
+          className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
+            isLight
+              ? 'hover:bg-zinc-100 text-zinc-600 hover:text-zinc-950'
+              : 'hover:bg-[rgba(var(--rgb-hover),0.2)] text-text-secondary hover:text-text-primary'
+          }`}
+          title={language === 'id' ? 'Perbesar' : 'Zoom In'}
+          aria-label="Zoom In"
+        >
+          <TbZoomIn size={15} />
+        </button>
+
+        <div
+          className={`h-3.5 w-px ${
+            isLight ? 'bg-zinc-300' : 'bg-[rgba(var(--rgb-line),0.18)]'
+          }`}
+        />
+
+        {/* Fit to View */}
+        <button
+          type="button"
+          onClick={() => fitToView()}
+          className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
+            isLight
+              ? 'hover:bg-zinc-100 text-zinc-600 hover:text-zinc-950'
+              : 'hover:bg-[rgba(var(--rgb-hover),0.2)] text-text-secondary hover:text-text-primary'
+          }`}
+          title={language === 'id' ? 'Paskan ke Layar' : 'Fit to View'}
+          aria-label="Fit to View"
+        >
+          <TbFocusCentered size={15} />
+        </button>
+
+        {/* Fullscreen / Expand Toggle */}
+        <button
+          type="button"
+          onClick={onToggleFullscreen}
+          className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
+            isLight
+              ? 'hover:bg-zinc-100 text-zinc-600 hover:text-zinc-950'
+              : 'hover:bg-[rgba(var(--rgb-hover),0.2)] text-text-secondary hover:text-text-primary'
+          }`}
+          title={
+            isFullscreen
+              ? language === 'id'
+                ? 'Keluar Layar Penuh'
+                : 'Exit Fullscreen'
+              : language === 'id'
+              ? 'Perbesar Penuh Semua Layar'
+              : 'Expand Fullscreen'
+          }
+          aria-label="Toggle Fullscreen"
+        >
+          {isFullscreen ? <TbMinimize size={15} /> : <TbMaximize size={15} />}
+        </button>
+      </div>
+
+      {/* Transform Surface */}
+      <div
+        style={{
+          transform: `translate3d(${pan.x}px, ${pan.y}px, 0) scale(${zoom})`,
+          transformOrigin: '0 0',
+          width: 'max-content',
+        }}
+        className="relative"
+      >
+        <div ref={contentRef} className="relative min-w-fit px-8 sm:px-12 py-8">
+          {/* SVG Connector Lines (z-0 under cards) */}
+          <svg
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible"
+          >
+            <defs>
+              <marker
+                id={`arrow-${arrowMarkerId}`}
+                viewBox="0 0 10 10"
+                refX="7"
+                refY="5"
+                markerWidth="6"
+                markerHeight="6"
+                orient="auto"
+              >
+                <path
+                  d="M 1 2 L 8 5 L 1 8 z"
+                  fill={isLight ? '#4f46e5' : 'rgba(167, 139, 250, 0.85)'}
+                />
+              </marker>
+            </defs>
+
+            {connections.map((c, i) => (
+              <path
+                key={`path-${c.fromId}-${c.toId}-${i}`}
+                d={c.path}
+                fill="none"
+                stroke={isLight ? '#6366f1' : 'rgba(167, 139, 250, 0.55)'}
+                strokeWidth={isLight ? '2' : '1.75'}
+                strokeDasharray={c.style === 'dashed' ? '5,5' : undefined}
+                markerEnd={`url(#arrow-${arrowMarkerId})`}
+                className="transition-all duration-300"
+              />
+            ))}
+          </svg>
+
+          {/* SVG Connector Labels (z-20 floating cleanly above lines) */}
+          <svg
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-20 h-full w-full overflow-visible"
+          >
+            {connections.map((c, i) => {
+              if (!c.label) return null
+              const labelWidth = Math.max(48, c.label.length * 6.2 + 18)
+              const labelHeight = 20
+              return (
+                <g key={`label-${c.fromId}-${c.toId}-${i}`} className="transition-opacity duration-200">
+                  <rect
+                    x={c.labelX - labelWidth / 2}
+                    y={c.labelY - labelHeight / 2}
+                    width={labelWidth}
+                    height={labelHeight}
+                    rx={5}
+                    fill={isLight ? '#ffffff' : '#0e0c1f'}
+                    stroke={isLight ? '#818cf8' : 'rgba(167, 139, 250, 0.35)'}
+                    strokeWidth={isLight ? '1.2' : '1'}
+                    className={isLight ? 'shadow-sm' : ''}
+                  />
+                  <text
+                    x={c.labelX}
+                    y={c.labelY + 3.5}
+                    textAnchor="middle"
+                    className={`font-mono text-[8.5px] sm:text-[9.5px] uppercase tracking-wider select-none ${
+                      isLight ? 'fill-indigo-950 font-bold' : 'fill-purple-200 font-semibold'
+                    }`}
+                  >
+                    {c.label}
+                  </text>
+                </g>
+              )
+            })}
+          </svg>
+
+          {/* Node Layers (Vertical top-down tier stack with generous vertical gap) */}
+          <div className="relative z-10 flex flex-col items-center gap-14 sm:gap-20 py-4">
+            {layers.map((layerNodes, layerIndex) => {
+              const isSingle = layerNodes.length === 1
+              return (
+                <div
+                  key={`layer-${layerIndex}`}
+                  className="flex flex-nowrap items-center justify-center gap-3 sm:gap-6 md:gap-8 w-full"
+                >
+                  {layerNodes.map((node) => {
+                    const conf = TYPE_CONFIG[node.type] ?? TYPE_CONFIG.service
+                    const labelText = resolveLocalized(node.label, language)
+                    const descText = resolveLocalized(node.description, language)
+
+                    // Tooling rules
+                    const isClassifiable = ['service', 'data', 'ai', 'external'].includes(node.type)
+                    const isArchitecture = mode === 'architecture'
+                    const hasTools = Boolean(node.tools && node.tools.length > 0)
+                    const showClassified =
+                      isArchitecture && isClassifiable && !hasTools && !node.hideTools
+                    const showTools = isArchitecture && hasTools && !node.hideTools
+
+                    const badgeClass = isLight ? conf.badgeLight : conf.badgeDark
+                    const borderClass = isLight ? conf.borderLight : conf.borderDark
+
+                    return (
+                      <div
+                        key={node.id}
+                        ref={(el) => {
+                          if (el) nodeRefs.current.set(node.id, el)
+                          else nodeRefs.current.delete(node.id)
+                        }}
+                        role="region"
+                        tabIndex={0}
+                        aria-label={`${conf.label}: ${labelText}`}
+                        className={`group relative flex flex-col justify-between rounded-xl border p-3 sm:p-4 shadow-lg transition-all duration-200 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-accent-lavender/40 ${
+                          isSingle
+                            ? 'w-full max-w-[250px] sm:max-w-[275px]'
+                            : 'w-[155px] sm:w-[220px] md:w-[250px] shrink-0'
+                        } ${
+                          isLight
+                            ? 'bg-white border-zinc-300 shadow-zinc-900/[0.06] text-zinc-900'
+                            : 'bg-[#100e1f]/95 border-white/[0.08] shadow-black/40 text-white'
+                        } ${borderClass}`}
+                      >
+                        {/* Header: Type Badge & Classified status */}
+                        <div className="flex items-center justify-between gap-1.5">
+                          <span
+                            className={`inline-flex items-center rounded-md border px-1.5 py-0.5 font-mono text-[8px] sm:text-[9px] font-bold tracking-widest uppercase ${badgeClass}`}
+                          >
+                            {conf.label}
+                          </span>
+                          {showClassified && (
+                            <span
+                              title={
+                                language === 'id'
+                                  ? 'Perkakas dirahasiakan (Konfidensial)'
+                                  : 'Tooling undisclosed (confidential)'
+                              }
+                              className={`inline-flex cursor-help items-center gap-1 rounded border px-1.5 py-0.5 font-mono text-[7.5px] sm:text-[8px] font-bold tracking-wide select-none ${
+                                isLight
+                                  ? 'border-red-400 bg-red-50 text-red-800'
+                                  : 'border-red-500/25 bg-red-950/30 text-red-300/80'
+                              }`}
+                            >
+                              <span className="opacity-50 text-[7px]">▒▒</span> Classified
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Node Title */}
+                        <p
+                          className={`mt-1.5 sm:mt-2 text-[12px] sm:text-[13.5px] md:text-[14px] font-extrabold tracking-tight leading-snug ${
+                            isLight ? 'text-zinc-950' : 'text-white'
+                          }`}
+                        >
+                          {labelText}
+                        </p>
+
+                        {/* Description */}
+                        {descText && (
+                          <p
+                            className={`mt-1 text-[9.5px] sm:text-[10.5px] md:text-[11px] leading-relaxed line-clamp-3 sm:line-clamp-none ${
+                              isLight ? 'text-zinc-700 font-medium' : 'text-zinc-400'
+                            }`}
+                          >
+                            {descText}
+                          </p>
+                        )}
+
+                        {/* Tools disclosed badges */}
+                        {showTools && (
+                          <div className="mt-2.5 flex flex-wrap gap-1">
+                            {node.tools!.map((tool) => (
+                              <span
+                                key={tool}
+                                className={`inline-flex items-center rounded-md border px-1.5 py-0.5 font-mono text-[7.5px] sm:text-[8.5px] ${
+                                  isLight
+                                    ? 'border-zinc-300 bg-zinc-100 text-zinc-800 font-semibold'
+                                    : 'border-white/[0.08] bg-white/[0.04] text-zinc-300'
+                                }`}
+                              >
+                                {tool}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
+  const { language } = useLanguage()
+  const { theme } = useTheme()
+  const isLight = theme === 'light'
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  // Check if any node is classified
+  const hasClassified = useMemo(() => {
+    if (mode !== 'architecture') return false
+    return diagram.nodes.some((n) => {
+      const isClassifiable = ['service', 'data', 'ai', 'external'].includes(n.type)
+      const hasNoTools = !n.tools || n.tools.length === 0
+      return isClassifiable && hasNoTools && !n.hideTools
+    })
+  }, [diagram, mode])
+
+  // Fullscreen escape key & body lock
+  useEffect(() => {
+    if (!isFullscreen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsFullscreen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = ''
+    }
+  }, [isFullscreen])
+
+  return (
+    <>
       {/* Screen reader text-only fallback */}
       <div className="sr-only">
         <h4>Diagram Flow Summary</h4>
@@ -349,201 +967,101 @@ export function FlowDiagram({ diagram, mode = 'system' }: FlowDiagramProps) {
         </ol>
       </div>
 
-      {/* Visual Diagram Canvas */}
-      <div ref={containerRef} className="relative w-full">
-        {/* SVG Connector Lines (z-0 under cards) */}
-        <svg
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible"
-        >
-          <defs>
-            <marker
-              id={`arrow-${arrowMarkerId}`}
-              viewBox="0 0 10 10"
-              refX="7"
-              refY="5"
-              markerWidth="6"
-              markerHeight="6"
-              orient="auto"
-            >
-              <path
-                d="M 1 2 L 8 5 L 1 8 z"
-                fill={isLight ? 'rgba(99, 102, 241, 0.85)' : 'rgba(167, 139, 250, 0.85)'}
-              />
-            </marker>
-          </defs>
-
-          {connections.map((c, i) => (
-            <path
-              key={`path-${c.fromId}-${c.toId}-${i}`}
-              d={c.path}
-              fill="none"
-              stroke={isLight ? 'rgba(99, 102, 241, 0.45)' : 'rgba(167, 139, 250, 0.55)'}
-              strokeWidth="1.75"
-              strokeDasharray={c.style === 'dashed' ? '5,5' : undefined}
-              markerEnd={`url(#arrow-${arrowMarkerId})`}
-              className="transition-all duration-300"
-            />
-          ))}
-        </svg>
-
-        {/* SVG Connector Labels (z-20 floating above lines and cards) */}
-        <svg
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-20 h-full w-full overflow-visible"
-        >
-          {connections.map((c, i) => {
-            if (!c.label) return null
-            const labelWidth = Math.max(52, c.label.length * 6.6 + 22)
-            const labelHeight = 22
-            return (
-              <g key={`label-${c.fromId}-${c.toId}-${i}`} className="transition-opacity duration-200">
-                <rect
-                  x={c.labelX - labelWidth / 2}
-                  y={c.labelY - labelHeight / 2}
-                  width={labelWidth}
-                  height={labelHeight}
-                  rx={6}
-                  fill={isLight ? '#ffffff' : '#0e0c1f'}
-                  stroke={isLight ? 'rgba(99, 102, 241, 0.35)' : 'rgba(167, 139, 250, 0.35)'}
-                  strokeWidth="1"
-                  className="shadow-sm"
-                />
-                <text
-                  x={c.labelX}
-                  y={c.labelY + 3.5}
-                  textAnchor="middle"
-                  className={`font-mono text-[9.5px] sm:text-[10px] uppercase tracking-wider select-none ${
-                    isLight ? 'fill-indigo-950 font-bold' : 'fill-purple-200 font-semibold'
-                  }`}
-                >
-                  {c.label}
-                </text>
-              </g>
-            )
-          })}
-        </svg>
-
-        {/* Node Layers (Vertical top-down tier stack) */}
-        <div className="relative z-10 flex flex-col items-center gap-16 sm:gap-20 py-4">
-          {layers.map((layerNodes, layerIndex) => (
-            <div
-              key={`layer-${layerIndex}`}
-              className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 w-full"
-            >
-              {layerNodes.map((node) => {
-                const conf = TYPE_CONFIG[node.type] ?? TYPE_CONFIG.service
-                const labelText = resolveLocalized(node.label, language)
-                const descText = resolveLocalized(node.description, language)
-
-                // Tooling rules
-                const isClassifiable = ['service', 'data', 'ai', 'external'].includes(node.type)
-                const isArchitecture = mode === 'architecture'
-                const hasTools = Boolean(node.tools && node.tools.length > 0)
-                const showClassified =
-                  isArchitecture && isClassifiable && !hasTools && !node.hideTools
-                const showTools = isArchitecture && hasTools && !node.hideTools
-
-                const badgeClass = isLight ? conf.badgeLight : conf.badgeDark
-                const borderClass = isLight ? conf.borderLight : conf.borderDark
-
-                return (
-                  <div
-                    key={node.id}
-                    ref={(el) => {
-                      if (el) nodeRefs.current.set(node.id, el)
-                      else nodeRefs.current.delete(node.id)
-                    }}
-                    role="region"
-                    tabIndex={0}
-                    aria-label={`${conf.label}: ${labelText}`}
-                    className={`group relative flex w-full max-w-[270px] flex-col justify-between rounded-xl border p-4 shadow-xl transition-all duration-300 hover:shadow-2xl focus:outline-none focus:ring-2 focus:ring-accent-lavender/40 ${
-                      isLight
-                        ? 'bg-white/95 border-zinc-200/80 shadow-zinc-900/[0.04]'
-                        : 'bg-[#100e1f]/95 border-white/[0.08] shadow-black/40'
-                    } ${borderClass}`}
-                  >
-                    {/* Header: Type Badge & Classified status */}
-                    <div className="flex items-center justify-between gap-2">
-                      <span
-                        className={`inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-[9px] font-bold tracking-widest uppercase ${badgeClass}`}
-                      >
-                        {conf.label}
-                      </span>
-                      {showClassified && (
-                        <span
-                          title={
-                            language === 'id'
-                              ? 'Perkakas dirahasiakan (Konfidensial)'
-                              : 'Tooling undisclosed (confidential)'
-                          }
-                          className={`inline-flex cursor-help items-center gap-1 rounded border px-1.5 py-0.5 font-mono text-[8.5px] font-semibold tracking-wide select-none ${
-                            isLight
-                              ? 'border-red-300 bg-red-50 text-red-700'
-                              : 'border-red-500/25 bg-red-950/30 text-red-300/80'
-                          }`}
-                        >
-                          <span className="opacity-50 text-[8px]">▒▒</span> Classified
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Node Title */}
-                    <p
-                      className={`mt-2.5 text-sm sm:text-[14.5px] font-bold tracking-tight leading-snug ${
-                        isLight ? 'text-zinc-900' : 'text-white'
-                      }`}
-                    >
-                      {labelText}
-                    </p>
-
-                    {/* Description */}
-                    {descText && (
-                      <p
-                        className={`mt-1.5 text-[11px] sm:text-[11.5px] leading-relaxed ${
-                          isLight ? 'text-zinc-600' : 'text-zinc-400'
-                        }`}
-                      >
-                        {descText}
-                      </p>
-                    )}
-
-                    {/* Tools disclosed badges */}
-                    {showTools && (
-                      <div className="mt-3 flex flex-wrap gap-1.5">
-                        {node.tools!.map((tool) => (
-                          <span
-                            key={tool}
-                            className={`inline-flex items-center rounded-md border px-1.5 py-0.5 font-mono text-[9px] ${
-                              isLight
-                                ? 'border-zinc-200 bg-zinc-100 text-zinc-700'
-                                : 'border-white/[0.08] bg-white/[0.04] text-zinc-300'
-                            }`}
-                          >
-                            {tool}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          ))}
+      {/* Inline Canvas Container */}
+      <div
+        className={`relative my-6 sm:my-8 rounded-2xl border shadow-xl backdrop-blur-md transition-colors duration-300 overflow-hidden ${
+          isLight
+            ? 'border-zinc-300 bg-slate-50/80 shadow-zinc-900/[0.06]'
+            : 'border-[rgba(var(--rgb-line),0.14)] bg-[var(--app-panel-strong)]'
+        }`}
+      >
+        <div className="relative w-full h-[450px] sm:h-[520px] md:h-[580px]">
+          <CanvasViewport
+            diagram={diagram}
+            mode={mode}
+            isFullscreen={false}
+            onToggleFullscreen={() => setIsFullscreen(true)}
+            isLight={isLight}
+            language={language}
+          />
         </div>
+
+        {/* Footnote */}
+        {hasClassified && (
+          <p
+            className={`border-t px-4 py-2.5 text-right font-mono text-[10px] ${
+              isLight
+                ? 'border-zinc-200 text-zinc-600'
+                : 'border-[rgba(var(--rgb-line),0.08)] text-text-muted'
+            }`}
+          >
+            {language === 'id'
+              ? 'Beberapa komponen dirahasiakan (Classified).'
+              : 'Some components are undisclosed.'}
+          </p>
+        )}
       </div>
 
-      {/* Undisclosed tooling footnote */}
-      {hasClassified && (
-        <p className="mt-6 border-t border-[rgba(var(--rgb-line),0.08)] pt-3 text-right font-mono text-[10px] text-text-muted">
-          {language === 'id'
-            ? 'Beberapa komponen dirahasiakan (Classified).'
-            : 'Some components are undisclosed.'}
-        </p>
-      )}
-    </div>
+      {/* Fullscreen Modal rendered directly into document.body to take over the ENTIRE SCREEN without dock overlap */}
+      {isFullscreen &&
+        createPortal(
+          <div
+            className={`fixed inset-0 z-[99999] flex flex-col select-none overflow-hidden ${
+              isLight ? 'bg-[#f8fafc] text-zinc-900' : 'bg-[#070611] text-white'
+            }`}
+          >
+            {/* Fullscreen Header Bar with prominent Close Button */}
+            <div
+              className={`flex shrink-0 items-center justify-between border-b px-4 sm:px-6 py-3.5 backdrop-blur-xl z-50 ${
+                isLight
+                  ? 'border-zinc-200 bg-white/95 text-zinc-900 shadow-sm'
+                  : 'border-white/10 bg-[#090818]/95 text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <span className="font-heading text-sm sm:text-base font-bold text-accent-lavender">
+                  {mode === 'architecture'
+                    ? language === 'id'
+                      ? 'Arsitektur Teknis'
+                      : 'Technical Architecture'
+                    : language === 'id'
+                    ? 'Alur Sistem'
+                    : 'System Flow'}
+                </span>
+              </div>
+
+              {/* Prominent Close Button */}
+              <button
+                type="button"
+                onClick={() => setIsFullscreen(false)}
+                className={`flex items-center gap-2 rounded-xl border px-3.5 py-1.5 font-mono text-xs font-semibold shadow-sm transition-all duration-200 active:scale-95 ${
+                  isLight
+                    ? 'border-zinc-300 bg-white hover:bg-zinc-100 text-zinc-900 hover:border-zinc-400'
+                    : 'border-white/20 bg-white/10 hover:bg-white/20 text-white hover:border-white/30'
+                }`}
+                aria-label="Tutup Layar Penuh"
+              >
+                <TbX size={16} />
+                <span>{language === 'id' ? 'Tutup (Esc)' : 'Close (Esc)'}</span>
+              </button>
+            </div>
+
+            {/* Fullscreen Canvas Viewport */}
+            <div className="flex-1 w-full h-full relative overflow-hidden">
+              <CanvasViewport
+                diagram={diagram}
+                mode={mode}
+                isFullscreen={true}
+                onToggleFullscreen={() => setIsFullscreen(false)}
+                isLight={isLight}
+                language={language}
+              />
+            </div>
+          </div>,
+          document.body,
+        )}
+    </>
   )
 }
 
 export default FlowDiagram
-

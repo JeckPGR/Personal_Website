@@ -20,7 +20,7 @@ export const fidelaCaseStudy: CaseStudy = {
     en: 'AI VIRTUAL PHOTO STUDIO',
     id: 'STUDIO FOTO AI VIRTUAL',
   },
-  thumbnail: '/Projects/Fidela-Logo.webp',
+  thumbnail: '/Projects/Fidela.svg',
   status: 'live',
   period: {
     start: '2024-10',

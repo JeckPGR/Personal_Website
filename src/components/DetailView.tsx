@@ -200,7 +200,7 @@ function ShowcaseGrid({
       <div
         className="relative flex h-full min-h-[300px] items-center justify-center overflow-hidden rounded-3xl border border-[rgba(var(--rgb-line),0.1)]"
         style={{
-          background: `linear-gradient(135deg, ${hexToRgba(accent, 0.1)} 0%, rgba(var(--rgb-film),0.015) 55%, rgba(10,9,20,0.6) 100%)`,
+          background: `linear-gradient(135deg, ${hexToRgba(accent, 0.1)} 0%, rgba(var(--rgb-film),0.015) 55%, var(--app-panel) 100%)`,
         }}
       >
         {/* Grid pattern */}
@@ -276,13 +276,13 @@ function ShowcaseGrid({
                     decoding="async"
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(10,9,20,0.5)] to-transparent" />
-                  <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.18)] bg-[rgba(10,9,20,0.6)] text-accent-lavender opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100 max-md:opacity-80">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--app-overlay)]/70 to-transparent" />
+                  <span className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.18)] bg-[var(--app-panel)] text-accent-lavender opacity-0 backdrop-blur-md transition-opacity duration-300 group-hover:opacity-100 max-md:opacity-80">
                     <TbMaximize size={16} />
                   </span>
                 </button>
                 <figcaption
-                  className="pointer-events-none absolute bottom-3 left-3 rounded-md border border-[rgba(var(--rgb-line),0.15)] bg-[rgba(10,9,20,0.6)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
+                  className="pointer-events-none absolute bottom-3 left-3 rounded-md border border-[rgba(var(--rgb-line),0.15)] bg-[var(--app-panel)] px-2.5 py-1 font-heading text-[9px] font-bold uppercase tracking-[0.16em] backdrop-blur-md"
                   style={{ color: accent }}
                 >
                   {caption}
@@ -523,7 +523,7 @@ function DetailView({
             image
               ? undefined
               : {
-                background: `linear-gradient(135deg, ${accent}20 0%, rgba(10,9,20,0.98) 60%, #0a0914 100%)`,
+                background: `linear-gradient(135deg, ${accent}20 0%, rgba(var(--rgb-film),0.02) 60%, var(--app-body) 100%)`,
               }
           }
         >
@@ -569,7 +569,7 @@ function DetailView({
         </div>
 
         {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[rgba(10,9,20,0.3)] to-[#0a0914]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[rgba(var(--rgb-film),0.04)] to-[var(--app-body)]" />
 
         {/* Grid Pattern */}
         <div className="pointer-events-none absolute inset-0 opacity-[0.04] bg-[linear-gradient(rgba(var(--rgb-line),.5)_1px,transparent_1px),linear-gradient(90deg,rgba(var(--rgb-line),.5)_1px,transparent_1px)] [background-size:60px_60px]" />
@@ -776,10 +776,10 @@ function DetailView({
 
                 <div className="w-full rounded-2xl border border-[rgba(var(--rgb-line),0.12)] bg-[var(--app-panel)] p-6 sm:p-8 backdrop-blur-md shadow-sm">
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-                    <span className="font-heading text-[10.5px] font-bold uppercase tracking-[0.2em] text-accent-lavender">
+                    <span className="font-heading text-[11px] font-bold uppercase tracking-[0.14em] text-accent-lavender">
                       {language === 'id' ? 'Tools & Technology Stack' : 'Core Technology Stack & Tools'}
                     </span>
-                    <span className="font-mono text-[10.5px] text-text-muted">
+                    <span className="text-[11.5px] font-medium text-text-muted">
                       {tags.length} Technologies
                     </span>
                   </div>
@@ -787,7 +787,7 @@ function DetailView({
                     {tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-lg border border-[rgba(var(--rgb-line),0.15)] bg-[rgba(var(--rgb-hover),0.08)] px-3.5 py-1.5 font-mono text-[11.5px] font-medium text-accent-lavender hover:border-[rgba(var(--rgb-line),0.3)] hover:bg-[rgba(var(--rgb-hover),0.15)] transition-all"
+                        className="rounded-lg border border-[rgba(var(--rgb-line),0.16)] bg-[rgba(var(--rgb-hover),0.08)] px-3.5 py-1.5 font-heading text-[12px] font-medium text-accent-lavender hover:border-[rgba(var(--rgb-line),0.35)] hover:bg-[rgba(var(--rgb-hover),0.16)] transition-all"
                       >
                         {tag}
                       </span>
@@ -814,7 +814,7 @@ function DetailView({
                       viewport={{ once: true, margin: '-20px' }}
                       transition={{ duration: 0.4, delay: index * 0.05 }}
                     >
-                      <span className="font-mono text-xs sm:text-sm font-bold text-accent-lavender tracking-wider shrink-0 pt-0.5">
+                      <span className="font-heading text-xs sm:text-sm font-bold text-accent-lavender tracking-wider shrink-0 pt-0.5">
                         {String(index + 1).padStart(2, '0')}
                       </span>
                       <p className="text-[14px] sm:text-[15.5px] leading-[1.8] text-text-secondary transition-colors duration-200 group-hover:text-text-primary">
@@ -972,7 +972,7 @@ function DetailView({
 
           {/* Sticky Sidebar: ON THIS PAGE */}
           <aside className="sticky top-28 hidden lg:block self-start w-full z-20 max-h-[calc(100vh-9rem)] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-            <div className="font-mono text-[10.5px] font-bold uppercase tracking-[0.25em] text-text-muted mb-4 px-2">
+            <div className="font-heading text-[11px] font-bold uppercase tracking-[0.16em] text-accent-lavender/70 mb-4 px-2">
               {language === 'id' ? 'DI HALAMAN INI' : 'ON THIS PAGE'}
             </div>
             <nav className="flex flex-col space-y-1">
@@ -993,14 +993,14 @@ function DetailView({
                       }
                     }}
                     className={`group relative flex items-center gap-2.5 rounded-lg px-3 py-1.5 text-[12.5px] outline-none focus:outline-none focus-visible:outline-none select-none transition-colors duration-200 ${isActive
-                        ? 'text-white font-medium'
+                        ? 'text-accent-lavender font-semibold'
                         : 'text-text-muted hover:text-text-primary hover:bg-[rgba(var(--rgb-film),0.03)] font-normal'
                       }`}
                   >
                     {isActive ? (
                       <motion.div
                         layoutId="active-toc-pill"
-                        className="pointer-events-none absolute inset-0 rounded-lg border border-purple-500/50 bg-purple-500/10 shadow-[0_0_15px_rgba(168,85,247,0.2)]"
+                        className="pointer-events-none absolute inset-0 rounded-lg border border-[rgba(var(--rgb-line),0.3)] bg-[rgba(var(--rgb-hover),0.12)] shadow-[0_0_15px_rgba(var(--rgb-glow),0.18)]"
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
                     ) : null}
@@ -1038,19 +1038,21 @@ function DetailView({
             {prevItem ? (
               <Link
                 to={prevItem.to}
-                className="group relative flex flex-1 items-center gap-4 rounded-2xl border border-[rgba(var(--rgb-line),0.14)] bg-[var(--app-panel)] p-4 sm:p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(var(--rgb-line),0.35)] hover:bg-[rgba(var(--rgb-hover),0.1)] hover:shadow-[0_12px_36px_rgba(var(--rgb-hover),0.15)]"
+                className="group relative flex flex-1 items-center gap-4 rounded-2xl border border-[rgba(var(--rgb-line),0.18)] bg-[var(--app-panel)] p-4 sm:p-5 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(var(--rgb-line),0.4)] hover:bg-[rgba(var(--rgb-hover),0.12)] hover:shadow-[0_12px_36px_rgba(var(--rgb-hover),0.18)]"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[rgba(var(--rgb-line),0.15)] bg-[rgba(var(--rgb-hover),0.1)] text-accent-lavender transition-all duration-300 group-hover:scale-105 group-hover:-translate-x-1 group-hover:border-accent-lavender/50 group-hover:bg-[rgba(var(--rgb-hover),0.2)]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[rgba(var(--rgb-line),0.2)] bg-[rgba(var(--rgb-hover),0.12)] text-accent-lavender transition-all duration-300 group-hover:scale-105 group-hover:-translate-x-1 group-hover:border-accent-lavender/60 group-hover:bg-[rgba(var(--rgb-hover),0.22)]">
                   <TbArrowLeft size={20} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted transition-colors group-hover:text-accent-lavender">
-                    <span>{language === 'id' ? 'SEBELUMNYA' : 'PREVIOUS'}</span>
-                    <kbd className="hidden sm:inline-block rounded border border-[rgba(var(--rgb-line),0.15)] bg-black/20 px-1.5 py-0.5 text-[9px] text-text-muted opacity-75 group-hover:border-accent-lavender/40 group-hover:text-accent-lavender">
+                  <div className="flex items-center gap-2">
+                    <span className="font-heading text-[10.5px] font-bold uppercase tracking-[0.14em] text-text-muted transition-colors group-hover:text-accent-lavender">
+                      {language === 'id' ? 'SEBELUMNYA' : 'PREVIOUS'}
+                    </span>
+                    <kbd className="hidden sm:inline-flex items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.28)] bg-[rgba(var(--rgb-film),0.06)] px-2 py-0.5 font-sans text-[11px] font-bold text-accent-lavender shadow-xs transition-colors group-hover:border-accent-lavender/60">
                       ←
                     </kbd>
-                  </span>
-                  <span className="mt-1 block truncate font-heading text-sm font-semibold text-text-primary transition-colors group-hover:text-white sm:text-[15px]">
+                  </div>
+                  <span className="mt-1 block truncate font-heading text-sm font-bold text-text-primary transition-colors group-hover:text-accent-lavender sm:text-[15px]">
                     {prevItem.title}
                   </span>
                 </div>
@@ -1061,7 +1063,7 @@ function DetailView({
             <div className="flex items-center justify-center sm:self-center">
               <Link
                 to={backTo}
-                className="group inline-flex items-center gap-2.5 rounded-xl border border-[rgba(var(--rgb-line),0.15)] bg-[rgba(var(--rgb-film),0.03)] px-6 py-3 font-heading text-[11.5px] font-bold uppercase tracking-[0.12em] text-accent-lavender backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(var(--rgb-line),0.35)] hover:bg-[rgba(var(--rgb-hover),0.12)] hover:shadow-[0_8px_25px_rgba(var(--rgb-hover),0.14)]"
+                className="group inline-flex items-center gap-2.5 rounded-xl border border-[rgba(var(--rgb-line),0.18)] bg-[var(--app-panel)] px-6 py-3 font-heading text-[11.5px] font-bold uppercase tracking-[0.14em] text-accent-lavender backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-[rgba(var(--rgb-line),0.4)] hover:bg-[rgba(var(--rgb-hover),0.14)] hover:shadow-[0_8px_25px_rgba(var(--rgb-hover),0.16)]"
               >
                 <TbLayoutGrid size={15} className="transition-transform duration-300 group-hover:rotate-12" />
                 <span>{backLabel}</span>
@@ -1072,20 +1074,22 @@ function DetailView({
             {nextItem ? (
               <Link
                 to={nextItem.to}
-                className="group relative flex flex-1 items-center justify-between gap-4 rounded-2xl border border-[rgba(var(--rgb-line),0.14)] bg-[var(--app-panel)] p-4 sm:p-5 text-right backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(var(--rgb-line),0.35)] hover:bg-[rgba(var(--rgb-hover),0.1)] hover:shadow-[0_12px_36px_rgba(var(--rgb-hover),0.15)]"
+                className="group relative flex flex-1 items-center justify-between gap-4 rounded-2xl border border-[rgba(var(--rgb-line),0.18)] bg-[var(--app-panel)] p-4 sm:p-5 text-right backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(var(--rgb-line),0.4)] hover:bg-[rgba(var(--rgb-hover),0.12)] hover:shadow-[0_12px_36px_rgba(var(--rgb-hover),0.18)]"
               >
                 <div className="min-w-0 flex-1">
-                  <span className="flex items-center justify-end gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted transition-colors group-hover:text-accent-lavender">
-                    <kbd className="hidden sm:inline-block rounded border border-[rgba(var(--rgb-line),0.15)] bg-black/20 px-1.5 py-0.5 text-[9px] text-text-muted opacity-75 group-hover:border-accent-lavender/40 group-hover:text-accent-lavender">
+                  <div className="flex items-center justify-end gap-2">
+                    <kbd className="hidden sm:inline-flex items-center justify-center rounded-md border border-[rgba(var(--rgb-line),0.28)] bg-[rgba(var(--rgb-film),0.06)] px-2 py-0.5 font-sans text-[11px] font-bold text-accent-lavender shadow-xs transition-colors group-hover:border-accent-lavender/60">
                       →
                     </kbd>
-                    <span>{language === 'id' ? 'SELANJUTNYA' : 'NEXT'}</span>
-                  </span>
-                  <span className="mt-1 block truncate font-heading text-sm font-semibold text-text-primary transition-colors group-hover:text-white sm:text-[15px]">
+                    <span className="font-heading text-[10.5px] font-bold uppercase tracking-[0.14em] text-text-muted transition-colors group-hover:text-accent-lavender">
+                      {language === 'id' ? 'SELANJUTNYA' : 'NEXT'}
+                    </span>
+                  </div>
+                  <span className="mt-1 block truncate font-heading text-sm font-bold text-text-primary transition-colors group-hover:text-accent-lavender sm:text-[15px]">
                     {nextItem.title}
                   </span>
                 </div>
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[rgba(var(--rgb-line),0.15)] bg-[rgba(var(--rgb-hover),0.1)] text-accent-lavender transition-all duration-300 group-hover:scale-105 group-hover:translate-x-1 group-hover:border-accent-lavender/50 group-hover:bg-[rgba(var(--rgb-hover),0.2)]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[rgba(var(--rgb-line),0.2)] bg-[rgba(var(--rgb-hover),0.12)] text-accent-lavender transition-all duration-300 group-hover:scale-105 group-hover:translate-x-1 group-hover:border-accent-lavender/60 group-hover:bg-[rgba(var(--rgb-hover),0.22)]">
                   <TbArrowRight size={20} />
                 </span>
               </Link>

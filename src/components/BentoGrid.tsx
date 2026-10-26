@@ -54,22 +54,22 @@ const projectPreviewKeys: Array<{
   tags?: string[]
 }> = [
   {
+    title: 'Fidela',
+    metaKey: 'home.preview.fidela.meta',
+    detailKey: 'home.preview.fidela.detail',
+    tags: ['Next.js', 'NestJS', 'TypeScript', 'Redis', 'PostgreSQL'],
+  },
+  {
     title: 'Inotrive',
     metaKey: 'home.preview.inotrive.meta',
     detailKey: 'home.preview.inotrive.detail',
-    tags: ['NestJS', 'React', 'Next.js', 'Redis', 'PostgreSQL', 'Apify', 'OpenRouter'],
+    tags: ['NestJS', 'React', 'Next.js', 'Redis', 'PostgreSQL', 'Apify'],
   },
   {
     title: 'Yayzi',
     metaKey: 'home.preview.yayzi.meta',
     detailKey: 'home.preview.yayzi.detail',
     tags: ['Next.js', 'Supabase'],
-  },
-  {
-    title: 'PajaBarbershop',
-    metaKey: 'home.preview.paja.meta',
-    detailKey: 'home.preview.paja.detail',
-    tags: ['Next.js', 'React', 'Express.js', 'PostgreSQL'],
   },
 ]
 

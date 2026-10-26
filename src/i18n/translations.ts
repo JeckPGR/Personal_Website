@@ -169,6 +169,14 @@ const copy = {
   },
 
   // ─── Home project previews ───
+  'home.preview.fidela.meta': {
+    en: 'AI Virtual Photo Studio | Personal Product',
+    id: 'Studio Foto Virtual AI | Produk Pribadi',
+  },
+  'home.preview.fidela.detail': {
+    en: 'Transforms flat garment photos into professional e-commerce model lookbooks in 30 seconds.',
+    id: 'Mengubah foto pakaian biasa menjadi model katalog e-commerce profesional dalam 30 detik.',
+  },
   'home.preview.inotrive.meta': {
     en: 'AI TikTok Script Intelligence | Personal Product',
     id: 'Naskah TikTok Berbasis AI | Produk Pribadi',

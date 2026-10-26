@@ -107,7 +107,7 @@ export function CaseStudyLayout({ caseStudy }: CaseStudyLayoutProps) {
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
         <Link
           to={backUrl}
-          className="group inline-flex items-center gap-2 rounded-xl border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-film),0.02)] px-4 py-2 font-mono text-xs text-text-secondary transition-all hover:border-accent-lavender/40 hover:text-text-primary"
+          className="group inline-flex items-center gap-2 rounded-xl border border-[rgba(var(--rgb-line),0.12)] bg-[rgba(var(--rgb-film),0.02)] px-4 py-2 font-heading text-xs font-semibold text-text-secondary transition-all hover:border-accent-lavender/40 hover:text-text-primary"
         >
           <TbArrowLeft className="transition-transform group-hover:-translate-x-1" size={16} />
           {backLabel}
@@ -118,7 +118,7 @@ export function CaseStudyLayout({ caseStudy }: CaseStudyLayoutProps) {
             href={caseStudy.link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl border border-accent-lavender/30 bg-accent-lavender/10 px-4 py-2 font-mono text-xs font-semibold text-accent-lavender transition-all hover:bg-accent-lavender/20 shadow-[0_0_20px_rgba(var(--rgb-glow),0.15)]"
+            className="inline-flex items-center gap-2 rounded-xl border border-accent-lavender/30 bg-accent-lavender/10 px-4 py-2 font-heading text-xs font-semibold text-accent-lavender transition-all hover:bg-accent-lavender/20 shadow-[0_0_20px_rgba(var(--rgb-glow),0.15)]"
           >
             <span>{caseStudy.link.label}</span>
             <TbExternalLink size={15} />
@@ -129,7 +129,7 @@ export function CaseStudyLayout({ caseStudy }: CaseStudyLayoutProps) {
       {/* Hero Header */}
       <header className="mb-10 sm:mb-14">
         {caseStudy.org?.domain && (
-          <p className="font-mono text-xs uppercase tracking-widest text-accent-lavender/70 mb-2">
+          <p className="font-heading text-xs font-semibold uppercase tracking-wider text-accent-lavender/70 mb-2">
             {caseStudy.org.domain}
           </p>
         )}

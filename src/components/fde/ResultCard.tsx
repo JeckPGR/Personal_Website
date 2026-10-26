@@ -38,7 +38,7 @@ export function ResultCard({ result }: ResultCardProps) {
       {/* Evidence Tag */}
       <div className="flex items-center justify-between">
         <span
-          className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 font-mono text-[9px] font-bold tracking-wider ${conf.badgeClass}`}
+          className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 font-heading text-[10px] font-bold tracking-wide ${conf.badgeClass}`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${conf.dotClass}`} />
           {conf.label[language]}
