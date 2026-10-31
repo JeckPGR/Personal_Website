@@ -9,6 +9,8 @@ import {
   SiBootstrap,
   SiCanva,
   SiExpress,
+  SiFastapi,
+  SiGo,
   SiFigma,
   SiFirebase,
   SiGithub,
@@ -19,12 +21,15 @@ import {
   SiLaravel,
   SiMariadb,
   SiMysql,
+  SiNestjs,
   SiNextdotjs,
   SiNodedotjs,
   SiNotion,
   SiPostgresql,
   SiPostman,
+  SiPython,
   SiReact,
+  SiSass,
   SiShadcnui,
   SiSupabase,
   SiTailwindcss,
@@ -49,8 +54,6 @@ import {
   TbMap,
   TbMicrophone,
   TbPresentationAnalytics,
-  TbReportAnalytics,
-  TbRocket,
   TbSchool,
   TbSparkles,
   TbTable,
@@ -133,7 +136,7 @@ export const CV_URL =
 
 export const aboutItem: BentoItem = {
   title: 'About Me',
-  subtitle: 'IT graduate · Digital Product Enthusiast · builder',
+  subtitle: '3 Years Software Engineer · Product Engineer · AI Agent & Automation ',
   route: '/about',
   tag: 'About Me',
   gradient: 'linear-gradient(135deg, #1a0a3a, #2a1060)',
@@ -141,32 +144,36 @@ export const aboutItem: BentoItem = {
   span: 2,
   Icon: TbUser,
   description: {
-    en: 'IT graduate with 2 years of experience in full-stack development, along with hands-on project management experience, now also deepening my knowledge in Product Management through building innovative web applications like Inotrive and Yayzi, along with certifications and continuous learning',
-    id: 'Lulusan Teknologi Informasi dengan 2 tahun pengalaman di pengembangan full-stack serta pengalaman langsung mejadi Project Manajer, kini juga memperdalam Product Management lewat pembuatan aplikasi web inovatif seperti Inotrive dan Yayzi, ditopang sertifikasi dan pembelajaran yang terus berjalan',
+    en: 'Software engineer with 3 years of experience building full-stack applications in the JavaScript/TypeScript ecosystem (React, Next.js, Node.js, NestJS, Express) and Python, now going deeper into Golang and AI Automation & AI Agents. I’m used to stepping into messy business problems, understanding how the work actually flows, and turning it into systems people really use. My background as a Project Manager lets me work comfortably with stakeholders, and products like Fidela, Inotrive, and Yayzi are where I sharpen my product sense from idea to release. My goal is to be an engineer with strong technical depth and real product understanding, working close to users and business teams.',
+    id: 'Software engineer dengan 3 tahun pengalaman membangun aplikasi full-stack di ekosistem JavaScript/TypeScript (React, Next.js, Node.js, NestJS, Express) dan Python, kini mendalami Golang serta AI Automation & AI Agent. Saya terbiasa masuk ke masalah bisnis yang masih berantakan, memahami alur kerjanya, lalu mengubahnya menjadi sistem yang benar-benar dipakai. Pengalaman sebagai Project Manager membuat saya nyaman bekerja langsung dengan stakeholder, dan produk seperti Fidela, Inotrive, dan Yayzi jadi tempat saya melatih product sense dari ide sampai rilis. Tujuan saya: menjadi engineer yang kuat secara teknis, paham produk, dan bisa bekerja dekat dengan pengguna maupun tim bisnis.',
   },
   chips: {
     en: [
-      'Product Thinking',
-      'User Research',
-      'Process Optimization',
+      'Software Engineer',
+      'Full-Stack Development',
+      'Product Engineer',
+      'API & Database Design',
       'AI & Automation',
-      'Agile / Scrum',
-      'Data-Driven',
+      'Performance Optimization',
+      'Clean Code',
+      'Product Thinking'
     ],
     id: [
-      'Pola Pikir Produk',
-      'Riset Pengguna',
-      'Optimasi Proses',
+      'Software Engineer',
+      'Pengembangan Full-Stack',
+      'Product Engineer',
+      'Desain API & Database',
       'AI & Otomasi',
-      'Agile / Scrum',
-      'Berbasis Data',
+      'Optimasi Performa',
+      'Clean Code',
+      'Product Thinking'
     ],
   },
 }
 
 export const whatIDoItem: BentoItem = {
   title: 'What I Do',
-  subtitle: 'PM · Dev · Analyst',
+  subtitle: 'Full-Stack · Backend · Systems',
   route: '/what-i-do',
   tag: 'Capabilities',
   gradient: 'linear-gradient(135deg, #0d0825, #1a0a40)',
@@ -185,8 +192,8 @@ export const workItem: BentoItem = {
   span: 3,
   Icon: TbBriefcase,
   description: {
-    en: 'A compact view of product, business, and engineering work across enterprise teams and internal platform development.',
-    id: 'Ringkasan padat pekerjaan produk, bisnis, dan rekayasa di tim enterprise maupun pengembangan platform internal.',
+    en: 'Hands-on engineering experience, system architectures, and technical workflows across enterprise teams and internal platform development.',
+    id: 'Pengalaman rekayasa perangkat lunak, arsitektur sistem, dan alur kerja teknis di tim enterprise maupun pengembangan platform internal.',
   },
 }
 
@@ -222,19 +229,19 @@ export const bentoItems = [
 
 export const roleItems: RoleItem[] = [
   {
-    title: 'Product Management',
-    description: 'Roadmapping, discovery, PRD, prioritization',
-    Icon: TbRocket,
-  },
-  {
-    title: 'Web Development',
-    description: 'React, Node.js, Laravel, REST APIs, VPS deployment',
+    title: 'Full-Stack Engineering',
+    description: 'React, Next.js, TypeScript, Node.js, NestJS, Tailwind CSS',
     Icon: TbCode,
   },
   {
-    title: 'Business Analysis',
-    description: 'Process mapping, TELOS framework, reports',
-    Icon: TbReportAnalytics,
+    title: 'Backend & Cloud Systems',
+    description: 'RESTful APIs, PostgreSQL, Redis, Cloudflare Workers, VPS Deployment',
+    Icon: TbTerminal2,
+  },
+  {
+    title: 'Automation & AI Systems',
+    description: 'LLM orchestration, RAG pipelines, Bot development, Workflow automations',
+    Icon: TbSparkles,
   },
 ]
 
@@ -313,10 +320,16 @@ export const aboutTechStack: ToolItem[] = [
   { name: 'React', category: 'Frontend', Icon: SiReact },
   { name: 'Next.js', category: 'Frontend', Icon: SiNextdotjs },
   { name: 'Tailwind CSS', category: 'Styling', Icon: SiTailwindcss },
+  { name: 'SCSS', category: 'Styling', Icon: SiSass },
+  { name: 'shadcn/ui', category: 'Styling', Icon: SiShadcnui },
   { name: 'JavaScript', category: 'Language', Icon: SiJavascript },
   { name: 'TypeScript', category: 'Language', Icon: SiTypescript },
+  { name: 'Python', category: 'Language', Icon: SiPython },
+  { name: 'Golang', category: 'Language', Icon: SiGo },
   { name: 'Node.js', category: 'Backend', Icon: SiNodedotjs },
   { name: 'Express', category: 'Backend', Icon: SiExpress },
+  { name: 'NestJS', category: 'Backend', Icon: SiNestjs },
+  { name: 'FastAPI', category: 'Backend', Icon: SiFastapi },
   { name: 'Laravel', category: 'Backend', Icon: SiLaravel },
   { name: 'Bootstrap', category: 'Styling', Icon: SiBootstrap },
   { name: 'GAS', category: 'Automation', Icon: SiGoogleappsscript },
@@ -346,7 +359,7 @@ export const aboutTools: ToolItem[] = [
 ]
 
 export const certificationItems: CertificationItem[] = [
-   {
+  {
     title: 'Build an AI Agent',
     issuer: 'IBM SkillsBuild',
     period: { en: 'July - July 2026', id: 'Juli - Juli 2026' },
@@ -357,7 +370,7 @@ export const certificationItems: CertificationItem[] = [
     Icon: TbSparkles,
     image: '/Certification/IBM-3.png',
   },
-   {
+  {
     title: 'Lab: Troubleshoot Your Code using Bob IDE',
     issuer: 'IBM SkillsBuild',
     period: { en: 'July - July 2026', id: 'Juli - Juli 2026' },
@@ -368,7 +381,7 @@ export const certificationItems: CertificationItem[] = [
     Icon: TbSparkles,
     image: '/Certification/IBM-2.png',
   },
-   {
+  {
     title: 'Introduction to Large Language Models',
     issuer: 'IBM SkillsBuild',
     period: { en: 'July - July 2026', id: 'Juli - Juli 2026' },
@@ -488,7 +501,7 @@ export const certificationItems: CertificationItem[] = [
     Icon: TbCode,
     image: '/Certification/BasicWeb.jpg',
   },
-   {
+  {
     title: 'Basic SQL',
     issuer: 'Dicoding',
     period: { en: 'September 2023 - September 2026', id: 'September 2023 - September 2026' },
@@ -503,42 +516,42 @@ export const certificationItems: CertificationItem[] = [
 
 export const projectDetails: ProjectDetailItem[] = [
   {
-  slug: 'procurement-ecosystem-mapping',
-  title: 'Procurement OCR & AI Compliance Checker (PoC)',
-  eyebrow: 'PT Bank Mandiri / Enterprise Workflow',
-  subtitle:
-    'Built out of a recurring problem in daily procurement work — missing written clauses and mismatched data between documents. Developed an MVP using Azure Document Intelligence (OCR) and Generative AI (Vertex AI) as an early guard to catch these errors before they slip through.',
-  period: '2025 - 2026',
-  organization: 'PT Bank Mandiri',
-  role: 'Research And Development',
-  route: '/project/procurement-ecosystem-mapping',
-  images: [
-    '/projects/mandiri-1.png',
-    '/projects/mandiri-2.png',
-    '/projects/mandiri-3.png',
-  ],
-  keyPoints: [
-    'Noticed a recurring problem in daily procurement work: missing written information and data mismatches between related documents.',
-    'Mapped the procurement application ecosystem and document flow to understand where these inconsistencies originated.',
-    'Built an MVP in Google Apps Script integrating Azure Document Intelligence (OCR) and Generative AI (Vertex AI) as an early guard to automatically flag missing or conflicting information against SOP requirements.',
-    'Validated the Proof of Concept using anonymized past documents, with sensitive figures and data removed or altered, to demonstrate feasibility without exposing confidential information.',
-  ],
-  tools: [
-    'Google Apps Script',
-    'Azure Document Intelligence (OCR)',
-    'Vertex AI (Generative AI)',
-    'System Mapping',
-    'Workflow Analysis',
-  ],
-  resultHighlights: [
-    'Working MVP built on Google Apps Script',
-    'Early-guard checkpoint against document errors',
-    'Validated PoC using anonymized historical documents',
-  ],
-  finalOutput:
-    'This project started from a problem I lived with daily, not one assigned to me — repeatedly catching missing clauses or mismatched data between documents. Turning that frustration into a working MVP taught me how everyday friction, if paid attention to, can become the seed of a real product solution.',
-  Icon: TbMap,
-},
+    slug: 'procurement-ecosystem-mapping',
+    title: 'Procurement OCR & AI Compliance Checker (PoC)',
+    eyebrow: 'PT Bank Mandiri / Enterprise Workflow',
+    subtitle:
+      'Built out of a recurring problem in daily procurement work — missing written clauses and mismatched data between documents. Developed an MVP using Azure Document Intelligence (OCR) and Generative AI (Vertex AI) as an early guard to catch these errors before they slip through.',
+    period: '2025 - 2026',
+    organization: 'PT Bank Mandiri',
+    role: 'Research And Development',
+    route: '/project/procurement-ecosystem-mapping',
+    images: [
+      '/projects/mandiri-1.png',
+      '/projects/mandiri-2.png',
+      '/projects/mandiri-3.png',
+    ],
+    keyPoints: [
+      'Noticed a recurring problem in daily procurement work: missing written information and data mismatches between related documents.',
+      'Mapped the procurement application ecosystem and document flow to understand where these inconsistencies originated.',
+      'Built an MVP in Google Apps Script integrating Azure Document Intelligence (OCR) and Generative AI (Vertex AI) as an early guard to automatically flag missing or conflicting information against SOP requirements.',
+      'Validated the Proof of Concept using anonymized past documents, with sensitive figures and data removed or altered, to demonstrate feasibility without exposing confidential information.',
+    ],
+    tools: [
+      'Google Apps Script',
+      'Azure Document Intelligence (OCR)',
+      'Vertex AI (Generative AI)',
+      'System Mapping',
+      'Workflow Analysis',
+    ],
+    resultHighlights: [
+      'Working MVP built on Google Apps Script',
+      'Early-guard checkpoint against document errors',
+      'Validated PoC using anonymized historical documents',
+    ],
+    finalOutput:
+      'This project started from a problem I lived with daily, not one assigned to me — repeatedly catching missing clauses or mismatched data between documents. Turning that frustration into a working MVP taught me how everyday friction, if paid attention to, can become the seed of a real product solution.',
+    Icon: TbMap,
+  },
   {
     slug: 'internal-staff-management-platform',
     title: 'Internal Staff Management Platform',

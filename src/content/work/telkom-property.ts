@@ -45,10 +45,10 @@ export const telkomPropertyCaseStudy: CaseStudy = {
     direction: 'auto',
     nodes: [
       {
-        id: 'stakeholders',
+        id: 'requirements',
         type: 'actor',
-        label: { en: 'Business Stakeholders', id: 'Stakeholder Bisnis' },
-        description: { en: 'Defines property management business objectives and release goals', id: 'Menentukan sasaran bisnis dan target rilis' },
+        label: { en: 'System Scope & Requirements', id: 'Spesifikasi & Kebutuhan Sistem' },
+        description: { en: 'Defines architectural scope, API contracts, and release milestones', id: 'Menentukan batasan arsitektur teknis, kontrak API, dan target rilis' },
       },
       {
         id: 'backlog-planning',
@@ -71,7 +71,7 @@ export const telkomPropertyCaseStudy: CaseStudy = {
       },
     ],
     edges: [
-      { from: 'stakeholders', to: 'backlog-planning', label: { en: 'Requirements', id: 'Kebutuhan' } },
+      { from: 'requirements', to: 'backlog-planning', label: { en: 'Specs & Scope', id: 'Spesifikasi & Scope' } },
       { from: 'backlog-planning', to: 'squad-execution', label: { en: 'Sprint delivery', id: 'Eksekusi sprint' } },
       { from: 'squad-execution', to: 'testing-release', label: { en: 'Release gate', id: 'Tahap rilis' } },
     ],

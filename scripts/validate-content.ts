@@ -10,6 +10,9 @@ import edulocal from '../src/content/projects/edulocal.ts'
 import watchSite from '../src/content/projects/watch-site.ts'
 import metaLeadBot from '../src/content/projects/meta-lead-bot.ts'
 import telegramPosBot from '../src/content/projects/telegram-pos-bot.ts'
+import caatisHrms from '../src/content/projects/caatis-hrms.ts'
+import pulseflowWebhook from '../src/content/projects/pulseflow-webhook.ts'
+import barbergoMobile from '../src/content/projects/barbergo-mobile.ts'
 
 import bankMandiri from '../src/content/work/bank-mandiri.ts'
 import telkomProperty from '../src/content/work/telkom-property.ts'
@@ -27,6 +30,9 @@ const rawEntries = [
   watchSite,
   metaLeadBot,
   telegramPosBot,
+  caatisHrms,
+  pulseflowWebhook,
+  barbergoMobile,
   bankMandiri,
   telkomProperty,
   caatis,
@@ -58,35 +64,29 @@ function scanTodos(obj: unknown, slug: string, currentPath = '') {
 for (const entry of rawEntries) {
   const result = caseStudySchema.safeParse(entry)
   if (!result.success) {
+    console.error(`✗ [Invalid] ${entry.kind.padEnd(7)} | ${entry.slug}`)
+    console.error(JSON.stringify(result.error.format(), null, 2))
     hasSchemaError = true
-    console.error(`\n❌ [Validation Failed] ${entry.slug}:`)
-    for (const issue of result.error.issues) {
-      console.error(`   - Field: ${issue.path.join('.')} | Error: ${issue.message}`)
-    }
   } else {
     console.log(`✓ [Valid] ${entry.kind.padEnd(7)} | ${entry.slug}`)
+    scanTodos(entry, entry.slug)
   }
-
-  scanTodos(entry, entry.slug)
 }
 
-console.log('\n' + '-'.repeat(60))
-console.log(`TODO Report: ${todos.length} item(s) pending author data`)
-console.log('-'.repeat(60))
-
 if (todos.length > 0) {
-  for (const t of todos) {
-    console.log(`[${t.slug}] ${t.path} -> "${t.text.trim()}"`)
-  }
+  console.log('\n' + '-'.repeat(60))
+  console.log(`TODO Report: ${todos.length} item(s) pending author data`)
+  console.log('-'.repeat(60))
+  todos.forEach(({ slug, path, text }) => {
+    console.log(`[${slug}] ${path} -> "${text}"`)
+  })
   console.log('\nNote: Fields with "TODO:" are automatically excluded from the public live site.')
-} else {
-  console.log('All fields are fully populated with no pending TODOs.')
 }
 
 console.log('='.repeat(60))
 
 if (hasSchemaError) {
-  console.error('\nBuild aborted: Zod schema validation errors found above.')
+  console.error('Validation failed: One or more case study schemas are invalid.')
   process.exit(1)
 } else {
   console.log('All case study schemas passed Zod validation.\n')

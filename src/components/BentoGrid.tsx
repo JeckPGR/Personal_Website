@@ -8,6 +8,7 @@ import {
 } from 'react-icons/tb'
 import { Link } from 'react-router-dom'
 import meImage from '../assets/Me.png'
+import RotatingTechOrbit from './RotatingTechOrbit'
 import { certificationItems, workItems } from '../data/portfolio'
 import { workExperiences } from '../data/work'
 import { useCopy } from '../hooks/useCopy'
@@ -299,14 +300,15 @@ function BentoGrid() {
         to="/about"
         className="order-2 min-h-85 sm:min-h-95 md:min-h-105 lg:order-0 lg:min-h-0 lg:[grid-area:profile]"
       >
+        <RotatingTechOrbit />
         <img
           src={meImage}
           alt="Ahmad Dzaky Ar Razi"
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 z-1 h-full w-full object-cover object-[center_20%] lg:object-[center_20%]"
+          className="pointer-events-none absolute inset-0 z-2 h-full w-full object-cover object-[center_20%] lg:object-[center_20%]"
         />
-        <div className="absolute inset-0 z-2 bg-[var(--app-photo-veil)]" />
+        <div className="pointer-events-none absolute inset-0 z-3 bg-[var(--app-photo-veil)]" />
         <div className="relative z-10 flex h-full min-h-85 flex-col justify-end p-4 sm:min-h-95 md:min-h-105 lg:min-h-0 lg:p-3.5 xl:p-4">
           <span className="w-fit rounded-md border border-[rgba(80,200,120,0.3)] bg-green-bg px-2.5 py-0.5 text-[9.5px] font-medium text-[#6fd99a] lg:text-[8.5px]">
             {t('home.openToWork')}

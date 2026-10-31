@@ -56,28 +56,28 @@ export const workExperiences: WorkExperience[] = [
     // 3 gambar bisa ditaro disini
     showcase: [],
     summary: {
-      en: 'Research and development work inside strategic procurement, mapping the application ecosystem and shaping improvement recommendations grounded in real user workflows.',
-      id: 'Kerja riset dan pengembangan di unit strategic procurement, memetakan ekosistem aplikasi dan menyusun rekomendasi perbaikan yang berangkat dari alur kerja pengguna sebenarnya.',
+      en: 'Research and development engineering in strategic procurement, mapping enterprise application topology and architecting technical workflow improvements.',
+      id: 'Kerja riset dan pengembangan rekayasa sistem di strategic procurement, memetakan topologi ekosistem aplikasi dan menyusun rekomendasi perbaikan alur kerja teknis pengguna.',
     },
     tags: ['Research & Development', 'Procurement Systems', 'Enterprise'],
     bullets: {
       en: [
-        'Supported procurement applications and process improvement initiatives by analyzing business workflows, user needs, and existing system limitations.',
-        'Learned three core procurement workflows by working closely with internal teams across Contract, Processing, and supporting functions.',
-        'Mapped 11 procurement-related applications, including their roles and integrations, to build a comprehensive understanding of the organization’s procurement ecosystem.',
-        'Collaborated with cross-functional teams (Contract, Processing, and Supporting units) to identify pain points, validate user needs, and generate feature improvement ideas based on direct user feedback.',
-        'Contributed to application architecture recommendations aligned with business needs, team capabilities, existing system limitations, and long-term sustainability.',
-        'Participated in the validation of 280+ bank guarantees and documented recurring issues to support process evaluation and improvement.',
-        'Developed and presented an evaluation report comparing four improvement options for the bank guarantee process, with a final recommendation based on TELOS framework analysis.',
+        'Supported enterprise procurement applications and workflow optimization initiatives by analyzing technical pipelines, system integrations, and data flow bottlenecks.',
+        'Analyzed and deconstructed three core technical procurement workflows alongside operational teams across Contract, Processing, and Supporting functions.',
+        'Mapped integration topologies and data flows across 11 enterprise procurement applications to identify data exchange frictions.',
+        'Collaborated with cross-functional teams to identify technical workflow bottlenecks, validate system inputs and outputs, and formulate engineering improvement solutions.',
+        'Contributed to application architecture and workflow recommendations aligned with engineering capabilities, system performance, and long-term maintainability.',
+        'Conducted technical validation audits on 280+ bank guarantee records, systematically logging defect patterns to inform automated validation pipelines.',
+        'Engineered and presented a technical evaluation report benchmarking four architectural workflow options using the TELOS feasibility framework.',
       ],
       id: [
-        'Mendukung aplikasi procurement dan inisiatif perbaikan proses melalui analisis alur kerja bisnis, kebutuhan pengguna, dan keterbatasan sistem yang berjalan.',
-        'Mempelajari tiga alur kerja inti procurement dengan bekerja erat bersama tim internal di unit Contract, Processing, dan fungsi pendukung.',
-        'Memetakan 11 aplikasi terkait procurement beserta peran dan integrasinya untuk membangun pemahaman menyeluruh atas ekosistem procurement perusahaan.',
-        'Berkolaborasi dengan tim lintas fungsi (Contract, Processing, dan unit Supporting) untuk mengidentifikasi pain point, memvalidasi kebutuhan pengguna, dan merumuskan ide perbaikan fitur berdasarkan masukan langsung pengguna.',
-        'Berkontribusi pada rekomendasi arsitektur aplikasi yang selaras dengan kebutuhan bisnis, kapabilitas tim, keterbatasan sistem, dan keberlanjutan jangka panjang.',
-        'Terlibat dalam validasi 280+ bank garansi serta mendokumentasikan isu yang berulang untuk mendukung evaluasi dan perbaikan proses.',
-        'Menyusun dan mempresentasikan laporan evaluasi yang membandingkan empat opsi perbaikan proses bank garansi, lengkap dengan rekomendasi akhir berbasis analisis kerangka TELOS.',
+        'Mendukung efisiensi sistem procurement dan inisiatif optimasi proses melalui analisis alur kerja teknis, integrasi sistem, dan mitigasi bottleneck aliran data.',
+        'Mempelajari dan membedah tiga alur kerja teknis inti procurement bersama tim operasional di unit Kontrak, Pemrosesan, dan unit pendukung.',
+        'Memetakan topologi integrasi dan aliran data 11 aplikasi pengadaan enterprise untuk mengidentifikasi titik friksi pertukaran data antar sistem.',
+        'Berkolaborasi dengan tim lintas fungsi untuk mengidentifikasi bottleneck alur kerja teknis, memvalidasi input-output sistem, dan merumuskan solusi rekayasa aplikasi.',
+        'Berkontribusi pada perancangan arsitektur dan alur kerja aplikasi yang selaras dengan kapabilitas teknis tim, performa sistem, dan integrasi jangka panjang.',
+        'Menjalankan audit validasi teknis pada 280+ berkas jaminan bank serta mendokumentasikan pola anomali data untuk mendukung alur kerja validasi otomatis.',
+        'Menyusun dan mempresentasikan laporan evaluasi teknis yang membandingkan 4 jalur arsitektur alur kerja bank garansi berbasis analisis kerangka TELOS.',
       ],
     },
     highlights: {
@@ -114,26 +114,26 @@ export const workExperiences: WorkExperience[] = [
     // 3 gambar bisa ditaro disini
     showcase: [],
     summary: {
-      en: 'Coordinated an IT delivery team end to end, aligning scope, backlog, and testing to keep a technology-based product on track toward release.',
-      id: 'Mengoordinasikan tim delivery IT dari hulu ke hilir, menyelaraskan scope, backlog, dan pengujian agar produk berbasis teknologi tetap sesuai jalur menuju rilis.',
+      en: 'Coordinated end-to-end IT delivery workflows and engineering sprints, aligning technical architecture, developer backlogs, and system testing through production release.',
+      id: 'Mengoordinasikan alur kerja tim delivery IT dan sprint engineering dari hulu ke hilir, menyelaraskan arsitektur teknis, backlog pengembang, dan testing sistem menuju rilis produksi.',
     },
     tags: ['IT Project Management', 'Project Manager', 'Delivery'],
     bullets: {
       en: [
-        'Managed project coordination for a technology-based product by aligning scope, requirements, timelines, risks, changes, and resource allocation.',
-        'Worked closely with a cross-functional technology team of 10 members including frontend, backend, mobile developers, QA, UI/UX designers, and security specialists.',
-        'Managed and tracked 50+ project backlogs using internal project management tools to ensure structured task tracking and delivery.',
-        'Translated business and user requirements into clear project documentation to help the development team understand product needs and expected outcomes.',
-        'Coordinated system testing, performance testing, and user acceptance testing to ensure product readiness before deployment.',
-        'Supported communication between technical and non-technical stakeholders to maintain alignment throughout the product development process.',
+        'Managed technical delivery workflows for an integrated software product, aligning architectural scope, sprint milestones, release schedules, and module dependencies.',
+        'Worked closely with a multi-disciplinary engineering squad of 10 members spanning frontend, backend, mobile developers, QA, UI/UX engineers, and security specialists.',
+        'Managed and tracked 50+ technical backlog items, user stories, and bug tickets using internal workflow tracking systems to maintain structured engineering velocity.',
+        'Translated operational workflows and feature specifications into unambiguous technical requirements, API contracts, and acceptance criteria for developers.',
+        'Coordinated end-to-end testing pipelines including system integration testing, performance stress tests, and user acceptance testing before production rollout.',
+        'Orchestrated technical communication channels and cross-module API synchronization to ensure clean system integration across all client and backend layers.',
       ],
       id: [
-        'Mengelola koordinasi proyek untuk produk berbasis teknologi dengan menyelaraskan scope, kebutuhan, timeline, risiko, perubahan, dan alokasi sumber daya.',
-        'Bekerja erat dengan tim teknologi lintas fungsi beranggotakan 10 orang, mencakup developer frontend, backend, mobile, QA, desainer UI/UX, dan spesialis keamanan.',
-        'Mengelola dan memantau 50+ backlog proyek menggunakan tools manajemen proyek internal agar pelacakan tugas dan delivery tetap terstruktur.',
-        'Menerjemahkan kebutuhan bisnis dan pengguna menjadi dokumentasi proyek yang jelas agar tim pengembang memahami kebutuhan produk dan hasil yang diharapkan.',
-        'Mengoordinasikan system testing, performance testing, dan user acceptance testing untuk memastikan kesiapan produk sebelum deployment.',
-        'Menjembatani komunikasi antara stakeholder teknis dan non-teknis agar keselarasan terjaga sepanjang proses pengembangan produk.',
+        'Mengelola alur kerja delivery teknis untuk sistem digital terintegrasi, menyelaraskan batasan teknis (scope), arsitektur, timeline rilis, dan dependensi antar modul.',
+        'Bekerja erat dengan tim engineer lintas disiplin beranggotakan 10 orang, mencakup frontend, backend, mobile developer, QA, desainer UI/UX, dan security engineer.',
+        'Mengelola dan memantau 50+ tiket backlog teknis, user stories, dan bug fixes menggunakan sistem pelacakan proyek internal agar alur kerja engineering tetap terstruktur.',
+        'Menerjemahkan alur kerja sistem dan kebutuhan operasional menjadi spesifikasi teknis, skema data, dan acceptance criteria yang siap dieksekusi oleh tim developer.',
+        'Mengoordinasikan alur pengujian komprehensif mencakup system integration testing, performance load testing, dan UAT sebelum deployment ke server produksi.',
+        'Menjembatani alur komunikasi teknis dan sinkronisasi dependensi API antar developer untuk memastikan kelancaran integrasi sistem.',
       ],
     },
     highlights: {
@@ -170,8 +170,8 @@ export const workExperiences: WorkExperience[] = [
     // 3 gambar bisa ditaro disini
     showcase: [],
     summary: {
-      en: 'Designed and built an internal staff management platform that centralized scheduling and payroll across multiple F&B outlets.',
-      id: 'Merancang dan membangun platform manajemen staf internal yang memusatkan penjadwalan dan penggajian di beberapa outlet F&B.',
+      en: 'Designed and engineered an internal staff management web platform and automated payroll engine to streamline multi-outlet operational workflows.',
+      id: 'Merancang dan membangun platform web manajemen staf internal dan sistem penggajian otomatis untuk menyederhanakan alur kerja operasional multi-outlet.',
     },
     tags: ['Fullstack Developer', 'Internal Platform', 'F&B Operations'],
     bullets: {
@@ -222,8 +222,8 @@ export const workExperiences: WorkExperience[] = [
     // 3 gambar bisa ditaro disini
     showcase: [],
     summary: {
-      en: 'Mentored students across web development lab classes, strengthening their grasp of core web concepts and hands-on troubleshooting.',
-      id: 'Membimbing mahasiswa di kelas praktikum pengembangan web, memperkuat pemahaman mereka atas konsep inti web dan kemampuan troubleshooting langsung.',
+      en: 'Mentored students through web engineering lab sessions, reinforcing full-stack development workflows, asynchronous debugging, and RESTful API architecture.',
+      id: 'Membimbing mahasiswa dalam praktikum rekayasa web, memperdalam alur kerja pengembangan full-stack, debugging asinkron, dan arsitektur RESTful API.',
     },
     tags: ['Web Development', 'Mentoring', 'Lab Assistant'],
     bullets: {
@@ -274,8 +274,8 @@ export const workExperiences: WorkExperience[] = [
     // 3 gambar bisa ditaro disini
     showcase: [],
     summary: {
-      en: 'Built spreadsheet-based operational systems and automations that streamlined order management and saved the team hours of manual work each week.',
-      id: 'Membangun sistem operasional berbasis spreadsheet beserta otomasinya untuk merapikan manajemen pesanan dan menghemat berjam-jam kerja manual tim setiap minggu.',
+      en: 'Engineered automated data pipelines and integrated operational workflows, eliminating manual bottlenecks and accelerating order fulfillment.',
+      id: 'Membangun pipeline otomasi data dan alur kerja operasional terintegrasi untuk mengeliminasi bottleneck manual dan mempercepat pelacakan transaksi.',
     },
     tags: ['Business Process', 'Automation', 'IT Support'],
     bullets: {

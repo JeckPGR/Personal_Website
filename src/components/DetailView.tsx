@@ -396,19 +396,48 @@ function DetailView({
     Location: TbMapPin,
   }
 
+  const isWork = backTo === '/work'
+
   // ─── Table of Contents (ON THIS PAGE) ───
   const tocItems = useMemo(() => {
     const items: Array<{ id: string; label: string }> = [
       { id: 'overview', label: language === 'id' ? 'Ringkasan' : 'Overview' },
     ]
     if (businessProblem) {
-      items.push({ id: 'problem', label: language === 'id' ? 'Masalah Bisnis' : 'Problem' })
+      items.push({
+        id: 'problem',
+        label: isWork
+          ? language === 'id'
+            ? 'Tantangan Alur Kerja'
+            : 'Workflow Challenge'
+          : language === 'id'
+          ? 'Tantangan Sistem'
+          : 'System Challenge',
+      })
     }
     if (solutionFit) {
-      items.push({ id: 'solution', label: language === 'id' ? 'Solusi Produk / Sistem' : 'Solution Fit' })
+      items.push({
+        id: 'solution',
+        label: isWork
+          ? language === 'id'
+            ? 'Solusi & Implementasi Teknis'
+            : 'Technical Solution'
+          : language === 'id'
+          ? 'Solusi & Arsitektur Sistem'
+          : 'System Solution',
+      })
     }
     if (systemFlow?.nodes?.length) {
-      items.push({ id: 'flow', label: language === 'id' ? 'Alur Produk' : 'Product Flow' })
+      items.push({
+        id: 'flow',
+        label: isWork
+          ? language === 'id'
+            ? 'Alur Kerja'
+            : 'Workflow'
+          : language === 'id'
+          ? 'Alur Sistem'
+          : 'System Flow',
+      })
     }
     if (architecture?.nodes?.length) {
       items.push({ id: 'architecture', label: language === 'id' ? 'Arsitektur' : 'Architecture' })
@@ -441,6 +470,7 @@ function DetailView({
     showcase,
     quote,
     language,
+    isWork,
   ])
 
   const [activeSection, setActiveSection] = useState<string>('overview')
@@ -707,11 +737,17 @@ function DetailView({
               </motion.div>
             </section>
 
-            {/* 01. Business Problem */}
+            {/* 01. Workflow / System Challenge */}
             {businessProblem ? (
               <section id="problem" className="scroll-mt-28 w-full">
                 <h2 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-                  {language === 'id' ? 'Masalah Bisnis' : 'Problem'}
+                  {isWork
+                    ? language === 'id'
+                      ? 'Tantangan Alur Kerja'
+                      : 'Workflow Challenge'
+                    : language === 'id'
+                    ? 'Tantangan & Latar Belakang Masalah'
+                    : 'Problem & Engineering Challenge'}
                 </h2>
                 <p className="mt-4 text-[15px] sm:text-[16.5px] leading-[1.85] text-text-secondary">
                   {businessProblem}
@@ -723,7 +759,13 @@ function DetailView({
             {solutionFit ? (
               <section id="solution" className="scroll-mt-28 w-full">
                 <h2 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-                  {language === 'id' ? 'Solusi Produk / Sistem' : 'Solution Fit'}
+                  {isWork
+                    ? language === 'id'
+                      ? 'Solusi & Implementasi Teknis'
+                      : 'Technical Solution & Implementation'
+                    : language === 'id'
+                    ? 'Solusi & Arsitektur Sistem'
+                    : 'System Architecture & Solution'}
                 </h2>
                 <p className="mt-4 text-[15px] sm:text-[16.5px] leading-[1.85] text-text-secondary">
                   {solutionFit}
@@ -731,15 +773,27 @@ function DetailView({
               </section>
             ) : null}
 
-            {/* 03. Business & Product Flow */}
+            {/* 03. Workflow / System Pipeline */}
             {systemFlow?.nodes?.length ? (
               <section id="flow" className="scroll-mt-28 w-full">
                 <div className="mb-6">
                   <h2 className="font-heading text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
-                    {language === 'id' ? 'Alur Bisnis & Proses Produk' : 'Product & Business Flow'}
+                    {isWork
+                      ? language === 'id'
+                        ? 'Alur Kerja Sistem'
+                        : 'System Workflow & Pipeline'
+                      : language === 'id'
+                      ? 'Alur Sistem & Eksekusi'
+                      : 'System & Execution Flow'}
                   </h2>
                   <p className="mt-1.5 text-[12.5px] text-text-muted">
-                    {language === 'id' ? 'Visualisasi alur sistem dari pemicu awal hingga output selesai' : 'End-to-end operational pipeline from initial trigger to completed output'}
+                    {isWork
+                      ? language === 'id'
+                        ? 'Visualisasi alur kerja teknis dari tahap awal hingga deliverable selesai'
+                        : 'End-to-end technical workflow pipeline from initial trigger to completed deliverable'
+                      : language === 'id'
+                      ? 'Visualisasi alur sistem dari pemicu awal hingga output selesai'
+                      : 'End-to-end operational pipeline from initial trigger to completed output'}
                   </p>
                 </div>
 

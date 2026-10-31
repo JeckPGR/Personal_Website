@@ -521,5 +521,149 @@ export const projects: ProjectItem[] = [
       id: 'Saya ingin kasir bisa mencatat penjualan tanpa alat POS khusus, cukup lewat Telegram. Kasir mengetik pesan singkat, aturan regex membaca format yang standar, dan AI hanya turun tangan kalau ada salah ketik. Pencatatan tetap cepat dan rekap harian langsung muncul..',
     },
   },
+  {
+    slug: 'caatis-hrms',
+    route: '/project/caatis-hrms',
+    title: 'CAATIS Multi-Outlet Staff & Payroll Engine',
+    category: 'Web-App',
+    context: 'Client Project / Multi-Branch Web App',
+    description: {
+      en: 'A full-stack internal operations platform and automated payroll engine designed for multi-branch F&B operations. Centralizes shift scheduling, digital attendance tracking, and complex wage rule computation across 4 physical outlets with 30+ staff.',
+      id: 'Platform web operasional internal dan mesin penggajian otomatis untuk manajemen multi-cabang F&B. Menyatukan penjadwalan shift, pencatatan absensi digital, dan kalkulasi aturan upah kompleks di 4 outlet fisik dengan lebih dari 30 staf.',
+    },
+    stack: ['React', 'TypeScript', 'Node.js', 'Express.js', 'PostgreSQL', 'Tailwind CSS', 'VPS Deployment', 'Nginx'],
+    accent: '#10b981',
+    Icon: TbWorld,
+    thumbnail: '/Works/CAATIS.png',
+    showcase: [],
+    keyPoints: {
+      en: [
+        'Architected and implemented a relational database schema in PostgreSQL to model branch locations, employee roles, dynamic shift schedules, and immutable punch logs.',
+        'Developed high-performance RESTful APIs using Express.js and TypeScript with robust input validation and transaction integrity.',
+        'Engineered an automated wage computation algorithm that accounts for base hours, overtime rates, attendance penalties, and holiday bonuses with zero manual calculation errors.',
+        'Crafted a responsive administrative console with React and Tailwind CSS, giving outlet managers real-time shift oversight and instant month-end payroll exports.',
+        'Configured production VPS deployment utilizing Nginx reverse proxy, PM2 process management, and SSL certificate automation.',
+      ],
+      id: [
+        'Merancang dan mengimplementasikan skema database relasional di PostgreSQL untuk memodelkan relasi cabang, peran karyawan, jadwal shift, dan log absensi.',
+        'Mengembangkan RESTful API berkinerja tinggi menggunakan Express.js dan TypeScript dengan validasi input ketat dan integritas transaksi database.',
+        'Membangun algoritma kalkulasi upah otomatis yang menghitung jam kerja pokok, tarif lembur, penalti keterlambatan, dan bonus shift tanpa risiko salah hitung manual.',
+        'Merancang antarmuka admin yang responsif dengan React dan Tailwind CSS untuk memudahkan manajer memantau absensi shift dan mengekspor rekapitulasi gaji.',
+        'Mengonfigurasi deployment server VPS produksi dengan reverse proxy Nginx, process manager PM2, dan sertifikat SSL terotomasi.',
+      ],
+    },
+    resultHighlights: {
+      en: [
+        '4 physical branches centralized',
+        '30+ active employees managed',
+        'Zero calculation error payroll',
+      ],
+      id: [
+        '4 cabang fisik terintegrasi',
+        '30+ staf aktif terkelola',
+        'Zero error kalkulasi penggajian',
+      ],
+    },
+    finalOutput: {
+      en: 'Developing the CAATIS platform reinforced the value of clean data modeling and modular backend architecture. Building an internal tool that people rely on daily for accurate livelihoods demanded strict correctness and dependable system uptime.',
+      id: 'Mengembangkan platform CAATIS mempertegas pentingnya pemodelan data yang bersih dan arsitektur backend yang modular. Membangun sistem yang digunakan setiap hari untuk urusan krusial seperti absensi dan gaji menuntut akurasi mutlak dan stabilitas performa tinggi.',
+    },
+  },
+  {
+    slug: 'pulseflow-webhook',
+    route: '/project/pulseflow-webhook',
+    title: 'PulseFlow High-Throughput Webhook Engine',
+    category: 'Automation & Bot',
+    context: 'Personal Project / Distributed Event Pipeline',
+    description: {
+      en: 'A resilient, high-concurrency webhook ingestion and processing pipeline built with Node.js, BullMQ, Redis, and PostgreSQL. Safely buffers sudden incoming request bursts, cryptographically verifies signatures, and guarantees at-least-once message delivery.',
+      id: 'Pipeline penanganan dan pemrosesan webhook berkonkurensi tinggi yang dibangun dengan Node.js, BullMQ, Redis, dan PostgreSQL. Menahan lonjakan traffic mendadak, memverifikasi tanda tangan kriptografi (HMAC), dan menjamin pengiriman event dengan mekanisme at-least-once.',
+    },
+    stack: ['Node.js', 'TypeScript', 'Express.js', 'Redis', 'BullMQ', 'PostgreSQL', 'Docker', 'HMAC SHA-256'],
+    accent: '#6366f1',
+    Icon: TbRobot,
+    thumbnail: '/Projects/Inotrive.png',
+    showcase: [],
+    keyPoints: {
+      en: [
+        'Engineered an edge ingestion endpoint capable of parsing, validating, and acknowledging thousands of webhook payloads per second under tight latency constraints.',
+        'Implemented cryptographic webhook signature verification using HMAC SHA-256 timing-safe comparisons to block spoofing attacks.',
+        'Integrated Redis and BullMQ distributed queues to decouple incoming request ingestion from downstream processing workers, preventing service crashes during traffic spikes.',
+        'Designed an exponential-backoff retry strategy paired with Dead Letter Queues (DLQ) to ensure failed events are isolated for inspection rather than silently dropped.',
+        'Added an observability dashboard interface to monitor queue latency, throughput metrics, worker concurrency, and failure patterns in real time.',
+      ],
+      id: [
+        'Membangun endpoint ingestion yang mampu menerima, memvalidasi, dan mengonfirmasi ribuan payload webhook per detik dengan latensi respons minimal.',
+        'Menerapkan verifikasi tanda tangan kriptografi HMAC SHA-256 menggunakan perbandingan timing-safe untuk mencegah request spoofing.',
+        'Mengintegrasikan antrean terdistribusi Redis dan BullMQ untuk memisahkan penerimaan request dari worker pemrosesan, mencegah server tumbang saat lonjakan traffic.',
+        'Merancang strategi retry otomatis dengan exponential backoff dan Dead Letter Queue (DLQ) agar event yang gagal dapat diinvestigasi tanpa hilang.',
+        'Menambahkan dasbor observability untuk memantau throughput, latensi antrean, konkurensi worker, dan tingkat kegagalan secara real-time.',
+      ],
+    },
+    resultHighlights: {
+      en: [
+        'Throughput >2,000 req/sec',
+        '99.9% event delivery guarantee',
+        'Automated Dead Letter recovery',
+      ],
+      id: [
+        'Throughput >2.000 req/detik',
+        'Garansi delivery event 99.9%',
+        'Pemulihan Dead Letter Queue otomatis',
+      ],
+    },
+    finalOutput: {
+      en: 'PulseFlow was born from my interest in distributed system resiliency. It demonstrated how asynchronous queuing and decoupling ingestion from processing can make an application virtually impervious to traffic spikes.',
+      id: 'PulseFlow lahir dari eksplorasi ketahanan sistem terdistribusi. Proyek ini membuktikan bagaimana arsitektur asynchronous queue yang memisahkan penerimaan data dari pemrosesan worker dapat membuat sistem tetap stabil di tengah lonjakan traffic tinggi.',
+    },
+  },
+  {
+    slug: 'barbergo-mobile',
+    route: '/project/barbergo-mobile',
+    title: 'BarberGo Mobile Grooming & Real-Time Booking',
+    category: 'Mobile App',
+    context: 'Personal Project / Cross-Platform Flutter App',
+    description: {
+      en: 'A cross-platform mobile application built with Flutter and Supabase that modernizes salon & barbershop visits with real-time queue slot availability, stylist portfolios, and push notifications.',
+      id: 'Aplikasi mobile cross-platform yang dibangun dengan Flutter dan Supabase untuk memodernisasi reservasi barbershop melalui ketersediaan slot antrean real-time, portofolio barber, dan notifikasi jadwal langsung.',
+    },
+    stack: ['Flutter', 'Dart', 'Supabase', 'PostgreSQL', 'Riverpod', 'State Management', 'REST API'],
+    accent: '#f59e0b',
+    Icon: TbDeviceMobile,
+    thumbnail: '/Projects/PajaBarbershop.png',
+    showcase: [],
+    keyPoints: {
+      en: [
+        'Engineered cross-platform mobile client for Android and iOS using Flutter following Clean Architecture and Riverpod state management.',
+        'Integrated Supabase Realtime subscriptions to sync appointment slot availability instantly across clients without manual pull-to-refresh.',
+        'Built a fluid multi-step booking funnel: service selection, barber profile inspection, slot reservation, and instant booking summary generation.',
+        'Implemented local SQLite cache for offline-first browsing of past haircut history and saved stylist preferences.',
+        'Designed responsive UI adhering to modern Material 3 design guidelines with support for both dark and light modes.',
+      ],
+      id: [
+        'Mengembangkan aplikasi mobile cross-platform Android dan iOS memakai Flutter dengan arsitektur Clean Code dan state management Riverpod.',
+        'Mengintegrasikan Supabase Realtime subscriptions untuk sinkronisasi ketersediaan slot antrean secara langsung antar perangkat tanpa perlu refresh manual.',
+        'Membangun alur booking multi-step yang intuitif: pemilihan paket layanan, peninjauan profil & galeri barber, penentuan jam, hingga ringkasan reservasi.',
+        'Menerapkan caching data lokal untuk memungkinkan pelanggan melihat riwayat kunjungan dan preferensi potongan rambut saat offline.',
+        'Merancang antarmuka mobile responsif berstandar Material 3 dengan dukungan tema gelap dan terang secara mulus.',
+      ],
+    },
+    resultHighlights: {
+      en: [
+        'Cross-platform Android & iOS',
+        'Real-time slot synchronization',
+        'Offline-first haircut history',
+      ],
+      id: [
+        'Cross-platform Android & iOS',
+        'Sinkronisasi slot real-time',
+        'Riwayat potongan offline-first',
+      ],
+    },
+    finalOutput: {
+      en: 'BarberGo allowed me to explore real-time mobile state synchronization and reactive UI design. Ensuring an effortless, snappy booking experience while keeping server load minimal reinforced the importance of event-driven architectures.',
+      id: 'BarberGo memberi ruang untuk mengeksplorasi sinkronisasi state mobile real-time dan reaktivitas UI. Memastikan pengalaman pengguna tetap gegas dan mulus sambil menjaga efisiensi kueri database memperkuat pemahaman saya mengenai arsitektur event-driven.',
+    },
+  },
 ]
 

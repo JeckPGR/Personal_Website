@@ -11,6 +11,9 @@ import edulocalCaseStudy from './projects/edulocal.ts'
 import watchSiteCaseStudy from './projects/watch-site.ts'
 import metaLeadBotCaseStudy from './projects/meta-lead-bot.ts'
 import telegramPosBotCaseStudy from './projects/telegram-pos-bot.ts'
+import caatisHrmsCaseStudy from './projects/caatis-hrms.ts'
+import pulseflowWebhookCaseStudy from './projects/pulseflow-webhook.ts'
+import barbergoMobileCaseStudy from './projects/barbergo-mobile.ts'
 
 // Import work experiences
 import bankMandiriCaseStudy from './work/bank-mandiri.ts'
@@ -29,6 +32,9 @@ export const projectCaseStudies: CaseStudy[] = [
   watchSiteCaseStudy,
   metaLeadBotCaseStudy,
   telegramPosBotCaseStudy,
+  caatisHrmsCaseStudy,
+  pulseflowWebhookCaseStudy,
+  barbergoMobileCaseStudy,
 ].map(sanitizeCaseStudy)
 
 export const workCaseStudies: CaseStudy[] = [

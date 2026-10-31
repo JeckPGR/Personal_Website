@@ -47,8 +47,8 @@ const copy = {
   // ─── About page ───
   'about.tag': { en: 'About', id: 'Tentang' },
   'about.headline': {
-    en: 'Product-minded builder with a practical engineering core.',
-    id: 'Membangun produk dengan pola pikir tajam dan fondasi teknis yang kuat.',
+    en: 'An engineer who builds products, from messy business problem/needs to working system.',
+    id: 'Engineer yang membangun produk, dari masalah / kebutuhan bisnis sampai sistem yang berjalan.',
   },
   'about.stats.roles': { en: 'Roles', id: 'Peran' },
   'about.stats.projects': { en: 'Projects', id: 'Proyek' },
@@ -79,8 +79,8 @@ const copy = {
   'work.tag': { en: 'Work', id: 'Pengalaman' },
   'work.title': { en: 'Work experience.', id: 'Pengalaman kerja.' },
   'work.description': {
-    en: 'Roles across enterprise teams and internal platform work. Hover a row for a quick preview, click to open the full breakdown.',
-    id: 'Peran di tim enterprise dan pengembangan platform internal. Arahkan kursor untuk pratinjau, klik untuk membuka rinciannya.',
+    en: 'Roles across enterprise teams and internal platform engineering. Hover a row for a quick preview, click to open the full workflow breakdown.',
+    id: 'Pengalaman teknis di tim enterprise dan rekayasa platform internal. Arahkan kursor untuk pratinjau, klik untuk membuka rincian alur kerja lengkap.',
   },
   'work.count': { en: 'All experience', id: 'Semua pengalaman' },
 
@@ -96,8 +96,8 @@ const copy = {
   'certification.tag': { en: 'Certification', id: 'Sertifikasi' },
   'certification.title': { en: 'Certification', id: 'Sertifikasi' },
   'certification.description': {
-    en: 'A compact record of product, project, and technology learning that supports my work across discovery, delivery, and implementation.',
-    id: 'Catatan ringkas pembelajaran produk, proyek, dan teknologi yang menopang kerja saya dari discovery sampai implementasi.',
+    en: 'A record of software engineering, system architecture, and technology learning that supports my work across design, development, and scalable implementation.',
+    id: 'Catatan pembelajaran rekayasa perangkat lunak, arsitektur sistem, dan teknologi yang menopang kerja saya dari perancangan hingga implementasi skalabel.',
   },
   'certification.count': { en: 'Learning', id: 'Pembelajaran' },
 
@@ -140,32 +140,32 @@ const copy = {
   'home.openToWork': { en: 'Open to Work', id: 'Terbuka untuk Kerja' },
   'home.findMore': { en: 'Find more', id: 'Selengkapnya' },
   'home.tagline': {
-    en: 'Product-minded builder for digital systems.',
-    id: 'Pembangun sistem digital dengan pola pikir produk.',
+    en: 'Software engineer with product sense.',
+    id: 'Software engineer yang paham produk.',
   },
   'home.taglineSub': {
-    en: 'Developer, project manager, and aspiring Product Manager, working across discovery, delivery, and development.',
-    id: 'Developer, project manager, dan calon Product Manager yang bekerja lintas discovery, delivery, dan pengembangan.',
+    en: 'I build full-stack web systems and AI automation, mostly in TypeScript. Golang is next.',
+    id: 'Saya membangun sistem web full-stack dan otomasi AI, kebanyakan dengan TypeScript. Golang menyusul.',
   },
   'home.aboutBlurb': {
-    en: 'Information Technology graduate with 2 years of experience in full-stack development and hands-on experience in project management, I’m now also deepening my knowledge in Product Management. I build products like Inotrive and Yayzi to practice creating real value, while keeping my technical understanding sharp so I stay aware of what’s technologically possible. My goal is to be a Product Manager with strong product sense and flexible technical depth.',
-    id: 'Lulusan Teknologi Informasi dengan 2 tahun pengalaman di pengembangan full-stack dan pengalaman langsung mengelola proyek, kini saya juga memperdalam Product Management. Saya membangun produk seperti Inotrive dan Yayzi untuk melatih diri menciptakan nilai nyata, sambil menjaga pemahaman teknis tetap tajam agar selalu paham apa yang mungkin secara teknologi. Tujuan saya adalah menjadi Product Manager dengan product sense yang kuat dan kedalaman teknis yang lentur.',
+    en: 'Software engineer with 3 years in JavaScript/TypeScript and Python, now learning Golang and AI agents. ',
+    id: 'Software engineer dengan 3 tahun di JavaScript/TypeScript dan Python, sekarang mendalami Golang dan AI agent. ',
   },
   'home.heroSub': {
-    en: 'Product-minded engineer focused on digitalization, workflow automation, and operational efficiency',
-    id: 'Engineer dengan pola pikir produk yang fokus pada digitalisasi, otomasi alur kerja, dan efisiensi operasional',
+    en: 'Full-stack engineer building web systems and AI automation.',
+    id: 'Engineer full-stack yang membangun sistem web dan otomasi AI.',
   },
 
   // ─── Home floating cards ───
-  'home.techSystems': { en: 'Tech Systems', id: 'Sistem Teknologi' },
+  'home.techSystems': { en: 'Software Systems', id: 'Arsitektur Software' },
   'home.techSystemsSub': {
-    en: 'Code / API / Automation',
-    id: 'Kode / API / Otomasi',
+    en: 'Full-Stack / API / Cloud',
+    id: 'Full-Stack / API / Cloud',
   },
-  'home.productThinking': { en: 'Product Thinking', id: 'Pola Pikir Produk' },
+  'home.productThinking': { en: 'Engineering Workflow', id: 'Alur Rekayasa' },
   'home.productThinkingSub': {
-    en: 'Discovery / Users / Data',
-    id: 'Discovery / Pengguna / Data',
+    en: 'Clean Code / Architecture / CI-CD',
+    id: 'Clean Code / Arsitektur / CI-CD',
   },
 
   // ─── Home project previews ───
